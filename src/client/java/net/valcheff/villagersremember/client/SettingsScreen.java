@@ -151,9 +151,14 @@ public class SettingsScreen extends Screen {
 			minecraft.gui.setScreen(parent);
 			return;
 		} else {
-			mode = Mode.SERVER;
-			waystones = settings.waystones();
-			values = JsonParser.parseString(settings.json()).getAsJsonObject();
+			try {
+				values = JsonParser.parseString(settings.json()).getAsJsonObject();
+				mode = Mode.SERVER;
+				waystones = settings.waystones();
+			} catch (RuntimeException e) {
+				// Settings this client can't read: nothing to edit here.
+				mode = Mode.DENIED;
+			}
 			invalid.clear();
 		}
 		rebuildWidgets();

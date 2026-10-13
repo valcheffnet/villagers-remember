@@ -23,11 +23,16 @@ import java.util.Map;
  * Only players with permission level 3 (the same as the operator commands) or the owner of a single player world get
  * the settings or may change them.
  * Vanilla clients never send the request, so the server never sends them anything.
+ * <p>
+ * Every packet carries one JSON string, so a field added later doesn't break an older client or server; missing fields
+ * read as their defaults. A change that older versions can't read gets new channel names (as the "config*" channels of
+ * 1.0.0-test.4 were replaced here): a client and server that don't share a channel just don't talk, the screen then
+ * shows the local settings, and nobody is disconnected.
  */
 public final class ConfigSync {
 	/** Client asks for the settings. */
 	public record Request() implements CustomPacketPayload {
-		public static final Type<Request> TYPE = new Type<>(VillagersRemember.id("config_request"));
+		public static final Type<Request> TYPE = new Type<>(VillagersRemember.id("settings_request"));
 		public static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.unit(new Request());
 
 		@Override
@@ -38,7 +43,7 @@ public final class ConfigSync {
 
 	/** Client sends changed settings (the whole file as JSON). */
 	public record Update(String json) implements CustomPacketPayload {
-		public static final Type<Update> TYPE = new Type<>(VillagersRemember.id("config_update"));
+		public static final Type<Update> TYPE = new Type<>(VillagersRemember.id("settings_update"));
 		public static final StreamCodec<RegistryFriendlyByteBuf, Update> CODEC =
 			ByteBufCodecs.stringUtf8(1 << 16).map(Update::new, Update::json).cast();
 
@@ -48,15 +53,40 @@ public final class ConfigSync {
 		}
 	}
 
-	/** Server answers: the settings as JSON when the player may change them, or an empty string when not. */
+	/**
+	 * Server answers: the settings as JSON when the player may change them (empty when not), whether the last change was
+	 * saved, and whether waystones are there. Sent as {"settings": ..., "allowed": ..., "saved": ..., "waystones": ...}.
+	 */
 	public record Settings(String json, boolean allowed, boolean saved, boolean waystones) implements CustomPacketPayload {
-		public static final Type<Settings> TYPE = new Type<>(VillagersRemember.id("config"));
-		public static final StreamCodec<RegistryFriendlyByteBuf, Settings> CODEC = StreamCodec.composite(
-			ByteBufCodecs.stringUtf8(1 << 16), Settings::json,
-			ByteBufCodecs.BOOL, Settings::allowed,
-			ByteBufCodecs.BOOL, Settings::saved,
-			ByteBufCodecs.BOOL, Settings::waystones,
-			Settings::new);
+		public static final Type<Settings> TYPE = new Type<>(VillagersRemember.id("settings"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, Settings> CODEC =
+			ByteBufCodecs.stringUtf8(1 << 16).map(Settings::read, Settings::write).cast();
+
+		private String write() {
+			JsonObject out = new JsonObject();
+			out.addProperty("settings", json);
+			out.addProperty("allowed", allowed);
+			out.addProperty("saved", saved);
+			out.addProperty("waystones", waystones);
+			return out.toString();
+		}
+
+		private static Settings read(String text) {
+			try {
+				JsonObject in = JsonParser.parseString(text).getAsJsonObject();
+				return new Settings(string(in, "settings"), bool(in, "allowed"), bool(in, "saved"), bool(in, "waystones"));
+			} catch (RuntimeException e) {
+				return new Settings("", false, false, false);
+			}
+		}
+
+		private static String string(JsonObject in, String key) {
+			return in.has(key) && in.get(key).isJsonPrimitive() ? in.get(key).getAsString() : "";
+		}
+
+		private static boolean bool(JsonObject in, String key) {
+			return in.has(key) && in.get(key).isJsonPrimitive() && in.get(key).getAsBoolean();
+		}
 
 		@Override
 		public Type<Settings> type() {

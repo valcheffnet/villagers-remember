@@ -1261,6 +1261,19 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return "ok";
 		});
 		check(result.equals("ok"), "settings screen: " + result);
+		// The answer is one JSON string: fields from a newer version are skipped, missing ones read as defaults.
+		String codec = sp.getServer().computeOnServer(server -> {
+			var buf = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), server.registryAccess());
+			net.minecraft.network.codec.ByteBufCodecs.STRING_UTF8.encode(buf, "{\"settings\":\"{}\",\"allowed\":true,\"from_the_future\":5}");
+			var read = net.valcheff.villagersremember.ConfigSync.Settings.CODEC.decode(buf);
+			if (!read.allowed() || read.saved() || read.waystones() || !read.json().equals("{}")) return "newer message read as " + read;
+			var out = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), server.registryAccess());
+			var sent = new net.valcheff.villagersremember.ConfigSync.Settings("{\"a\":1}", true, true, true);
+			net.valcheff.villagersremember.ConfigSync.Settings.CODEC.encode(out, sent);
+			var back = net.valcheff.villagersremember.ConfigSync.Settings.CODEC.decode(out);
+			return back.equals(sent) ? "ok" : "round trip " + back;
+		});
+		check(codec.equals("ok"), "settings packet: " + codec);
 	}
 
 	/**
