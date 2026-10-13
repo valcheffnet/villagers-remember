@@ -58,6 +58,7 @@ public final class VillagersRemember implements ModInitializer {
 		VillagerHeads.load();
 		Icons.load();
 		TextWidth.load();
+		ConfigSync.register();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(s -> {
 			server = s;

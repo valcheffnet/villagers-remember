@@ -12,6 +12,7 @@ First release, for Minecraft 26.3 on Fabric. Server-side: players join with a va
 - Treasury: daily income from villagers who trust you, sent to the ender chest.
 - Fame and titles in chat and TAB, weekly contracts and legendary items, monthly village orders for the whole server, one patron per village.
 - An advancement tab, a chronicle book and a profession collection.
-- Two economy switches for server owners: `/errands emeralds on|off` and `/errands xp <multiplier>`.
+- Two economy switches for server owners: `/errands emeralds on|off` (off by default) and `/errands xp <multiplier>`.
+- A settings screen for clients with the mod (Mod Menu or `/villagersremember`). Admins edit the server's settings from it.
 - Players can only use the commands about their own progress; everything else needs permission level 3.
 - English and Bulgarian.

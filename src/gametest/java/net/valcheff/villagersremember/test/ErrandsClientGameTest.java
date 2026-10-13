@@ -85,6 +85,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			sp.getServer().runCommand("time set day");
 			sp.getServer().runCommand("weather clear");
 			sp.getServer().runCommand("difficulty easy");
+			// Emerald rewards are off unless the server turns them on; most checks below count emeralds.
+			check(!new ErrandsConfig().emeraldRewards, "emerald rewards on by default");
+			sp.getServer().runCommand("errands emeralds on");
 
 			BlockPos base = sp.getServer().computeOnServer(ErrandsClientGameTest::setUpVillage);
 			context.waitTicks(40);
@@ -438,6 +441,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			partialDelivery(sp);
 			rewardSwitches(sp);
 			commandPermissions(sp);
+			settingsScreen(context, sp);
 			trials(context, sp, villagers);
 			treasury(context, sp, bell);
 			uniqueNames(sp);
@@ -1223,6 +1227,33 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		});
 		check(result.equals("ok"), "reward switches: " + result);
 		check(ErrandsConfig.INSTANCE.emeraldRewards && ErrandsConfig.INSTANCE.xpMultiplier == 1.0, "reward switches restored");
+	}
+
+	/** The settings screen of a client with the mod reads and saves the server's settings; players without level 3 can't. */
+	private static void settingsScreen(ClientGameTestContext context, TestSingleplayerContext sp) {
+		context.runOnClient(mc -> mc.gui.setScreen(new net.valcheff.villagersremember.client.SettingsScreen(null)));
+		context.waitFor(mc -> mc.gui.screen() instanceof net.valcheff.villagersremember.client.SettingsScreen s && s.loaded(), 100);
+		context.takeScreenshot("settings-1-server");
+		context.runOnClient(mc -> {
+			var screen = (net.valcheff.villagersremember.client.SettingsScreen) mc.gui.screen();
+			screen.setForTest("xpMultiplier", new com.google.gson.JsonPrimitive(1.5));
+			screen.setForTest("emeraldRewards", new com.google.gson.JsonPrimitive(false));
+			screen.saveForTest();
+		});
+		context.waitFor(mc -> !(mc.gui.screen() instanceof net.valcheff.villagersremember.client.SettingsScreen), 100);
+		String result = sp.getServer().computeOnServer(server -> {
+			ErrandsConfig cfg = ErrandsConfig.INSTANCE;
+			if (cfg.xpMultiplier != 1.5 || cfg.emeraldRewards) return "server has x" + cfg.xpMultiplier + " emeralds " + cfg.emeraldRewards;
+			ErrandsConfig copy = ErrandsConfig.fromJson(ErrandsConfig.toJson(cfg));
+			copy.xpMultiplier = 3;
+			if (net.valcheff.villagersremember.ConfigSync.apply("nobody", net.valcheff.villagersremember.ConfigSync.canEdit(
+				net.minecraft.server.permissions.PermissionSet.NO_PERMISSIONS), ErrandsConfig.toJson(copy)) || cfg.xpMultiplier != 1.5) return "saved without permission";
+			if (net.valcheff.villagersremember.ConfigSync.canEdit(net.minecraft.server.permissions.LevelBasedPermissionSet.GAMEMASTER)) return "level 2 may edit";
+			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands xp 1");
+			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands emeralds on");
+			return "ok";
+		});
+		check(result.equals("ok"), "settings screen: " + result);
 	}
 
 	/** A player without permissions sees only the commands about their own progress, plus the dialog plumbing. */

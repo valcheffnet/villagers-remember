@@ -30,7 +30,7 @@ Each pack asks for more work. A first errand takes about five minutes: a stack o
 
 ## Rewards
 
-Daily errands pay emeralds, experience and standing, sized by the work: a few emeralds for a five-minute job, 40 to 56 emeralds' worth for a half-hour one.
+Daily errands pay experience and standing, sized by the work. Emerald rewards are off by default so that trading keeps its worth; a server that wants them runs `/errands emeralds on`. Then errands pay emeralds as well: a few for a five-minute job, 40 to 56 emeralds' worth for a half-hour one.
 
 Items come once. The first trial of trust of each tier with a profession gives one of its items: golden carrots, a treasure map, enchanted books. The first time a villager of a profession makes you their Best friend, you choose its top reward: Fortune or Silk Touch on a netherite pickaxe, Sharpness or Smite on the sword, a map to a mansion. Gear comes with Unbreaking III and Mending, and the enchantments stay a surprise until you hand the trial in. The smiths reforge each kind of piece once: forge a few iron swords, get one back enchanted, stone at the start up to netherite at the top.
 
@@ -40,7 +40,7 @@ Your standing sets your prices. A Best friend in a Hero village trades 40% cheap
 
 ## Treasury
 
-Villagers who trust you put a share of their work aside for you every day. The treasury lists every village you have found with what it pays a day; one button sends the emeralds to your ender chest. Each village keeps three days of income at most, and helping five villages at Friend or better raises all of it by 25%.
+With emerald rewards on, villagers who trust you put a share of their work aside for you every day. The treasury lists every village you have found with what it pays a day; one button sends the emeralds to your ender chest. Each village keeps three days of income at most, and helping five villages at Friend or better raises all of it by 25%.
 
 ## End game
 
@@ -66,7 +66,9 @@ Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into th
 
 ## Configuration
 
-`config/villagersremember.json` is created on first start with every setting and a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villagersremember/ErrandsConfig.java)). Some of them:
+Players who install the mod on their client get a settings screen, from Mod Menu or with `/villagersremember`. On a server that runs the mod, admins (permission level 3) see and change the server's settings there; in single player the world's owner always can. Every change is written to the server log.
+
+The same settings live in `config/villagersremember.json`, created on first start, with a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villagersremember/ErrandsConfig.java)). Some of them:
 
 | Setting | Default | |
 |---|---|---|
@@ -78,7 +80,7 @@ Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into th
 | `fameTitles` | `true` | Titles in chat and TAB. Turn off if another plugin or mod manages teams. |
 | `tierEmeraldsPerMinute` | `0.6 ... 1.6` | Pay per minute of work, by pack. |
 | `groupOrders` | `true` | `groupOrderDays` 30; per regular player (online on `groupRegularDays` 3 days of the month): `groupOrderScale` 1.0 of the size, `groupRewardEmeralds` 80. |
-| `emeraldRewards` | `true` | `false` stops emeralds from errands, contracts, village orders and the treasury. Same as `/errands emeralds off`. |
+| `emeraldRewards` | `false` | `false` stops emeralds from errands, contracts, village orders and the treasury. Same as `/errands emeralds off`. |
 | `xpMultiplier` | `1.0` | Experience from errands, contracts and village orders. Same as `/errands xp`. |
 | `contracts` | `true` | `contractMinutes` 90, `contractMaxEmeralds` 160, `contractsForLegend` 3. |
 | `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |

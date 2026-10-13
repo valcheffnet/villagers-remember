@@ -6,10 +6,20 @@ base {
 	archivesName = 'villagers-remember'
 }
 
+repositories {
+	maven {
+		name = 'TerraformersMC'
+		url = 'https://maven.terraformersmc.com/releases/'
+	}
+}
+
 loom {
+	splitEnvironmentSourceSets()
+
 	mods {
 		"villagersremember" {
 			sourceSet sourceSets.main
+			sourceSet sourceSets.client
 		}
 	}
 }
@@ -28,6 +38,10 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Optional: Mod Menu shows the settings button. Not bundled, not required.
+	clientCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	localRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 def templateProps = [

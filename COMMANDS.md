@@ -10,6 +10,8 @@ Everything lives under `/errands`. Players can only use the first group, which s
 | `/errands book` | Opens the chronicle, a book with your finished errands and your standing in each village. |
 | `/errands village` | Tells you about the village you stand in: its name, bells, residents and your standing there. |
 
+With the mod on the client, `/villagersremember` opens the settings screen (also in Mod Menu). It shows the server's settings only to admins.
+
 The journal and the villager screens open from the game too: right-click a villager to talk (sneak + right-click trades straight away), or right-click a village bell. The commands are there for when no villager is around.
 
 ## For operators
@@ -18,7 +20,7 @@ The journal and the villager screens open from the game too: right-click a villa
 
 | Command | What it does |
 |---|---|
-| `/errands emeralds [on\|off]` | Shows or switches emerald rewards. Off: errands, contracts and village orders pay no emeralds, and villages stop filling the treasury (what is already there can still be sent). Experience and standing are paid as usual. Saved in the config. |
+| `/errands emeralds [on\|off]` | Shows or switches emerald rewards (off by default). Off: errands, contracts and village orders pay no emeralds, and villages stop filling the treasury (what is already there can still be sent). Experience and standing are paid as usual. Saved in the config. |
 | `/errands xp [multiplier]` | Shows or sets the experience from errands, contracts and village orders, times the usual amount (0 to 10, default 1). Saved in the config. |
 | `/errands reload` | Reloads the config and the errand pools (datapacks under `data/<namespace>/errands/`). |
 | `/errands reset <player>` | Wipes a player's errands and all of their standing, everywhere. |

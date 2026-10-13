@@ -28,7 +28,7 @@ public final class ErrandsConfig {
 	/** How many errands one player may have accepted at the same time. */
 	public int maxActiveErrands = 5;
 	/** Settings changed meaning in version 2 (effort-based rewards); older files get the new defaults for those. */
-	public int configVersion = 3;
+	public int configVersion = 4;
 	/**
 	 * Errands are sized in minutes of work (TIERS.md section 4); the pay is minutes x this, in emeralds' worth (split
 	 * into emeralds and experience), by pack T1..T5. T1 pays emeralds or experience. Repeatable errands give no items.
@@ -85,7 +85,7 @@ public final class ErrandsConfig {
 	 * False: errands, contracts and village orders pay no emeralds, and villages stop putting emeralds into the
 	 * treasury; what is already there can still be sent. Experience and standing are paid as usual. /errands emeralds on|off.
 	 */
-	public boolean emeraldRewards = true;
+	public boolean emeraldRewards = false;
 	/** Experience from errands, contracts and village orders, times their usual amount. /errands xp <multiplier>. */
 	public double xpMultiplier = 1.0;
 	/** Experience points granted per emerald of reward budget. */
@@ -175,6 +175,10 @@ public final class ErrandsConfig {
 			groupRewardEmeralds = defaults.groupRewardEmeralds;
 			groupOrderScale = defaults.groupOrderScale;
 		}
+		if (configVersion < 4) {
+			// Version 4: emerald rewards are off unless the server turns them on.
+			emeraldRewards = defaults.emeraldRewards;
+		}
 		configVersion = defaults.configVersion;
 		if (tierEmeraldsPerMinute == null || tierEmeraldsPerMinute.length != 5) tierEmeraldsPerMinute = defaults.tierEmeraldsPerMinute;
 		if (treasuryShare == null || treasuryShare.length != 5) treasuryShare = defaults.treasuryShare;
@@ -208,6 +212,28 @@ public final class ErrandsConfig {
 		villageRadius = Math.clamp(villageRadius, 16, 256);
 		markerRange = Math.clamp(markerRange, 4, 48);
 		return this;
+	}
+
+	/** The settings as JSON, the same as the config file. */
+	public static String toJson(ErrandsConfig config) {
+		return GSON.toJson(config);
+	}
+
+	/** Settings from JSON (as sent by the config screen), checked like the file is; null if it can't be read. */
+	public static ErrandsConfig fromJson(String json) {
+		try {
+			ErrandsConfig config = GSON.fromJson(json, ErrandsConfig.class);
+			return config == null ? null : config.sanitized();
+		} catch (Exception e) {
+			VillagersRemember.LOG.warn("Could not read settings: {}", e.toString());
+			return null;
+		}
+	}
+
+	/** Uses these settings from now on and writes them to the file. */
+	public static void replace(ErrandsConfig config) {
+		INSTANCE = config;
+		save();
 	}
 
 	public int errandsFor(int villagerLevel) {
