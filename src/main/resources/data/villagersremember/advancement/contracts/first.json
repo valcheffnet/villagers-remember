@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:trust/best_friend",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:written_book"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.contracts.first.title",
+      "fallback": "Under Contract"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.contracts.first.description",
+      "fallback": "Complete a contract for a Best friend"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

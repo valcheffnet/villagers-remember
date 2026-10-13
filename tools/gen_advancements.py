@@ -1,4 +1,4 @@
-"""Writes the mod's advancement tree (data/villageerrands/advancement/**.json) and its en/bg names.
+"""Writes the mod's advancement tree (data/villagersremember/advancement/**.json) and its en/bg names.
 
 Every advancement has one "impossible" criterion: Milestones.java grants it when its condition holds, so the ids
 here must match the ones there. Titles use translate + fallback: a vanilla client shows the English fallback, a
@@ -11,13 +11,13 @@ import os
 import shutil
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-OUT = os.path.join(ROOT, "src/main/resources/data/villageerrands/advancement")
-LANG = os.path.join(ROOT, "src/main/resources/assets/villageerrands/lang")
+OUT = os.path.join(ROOT, "src/main/resources/data/villagersremember/advancement")
+LANG = os.path.join(ROOT, "src/main/resources/assets/villagersremember/lang")
 
 # id, parent, icon, frame, (en title, en description), (bg title, bg description)
 A = [
-    ("root", None, "bell", "task", ("Village Errands", "Lend a villager a hand"),
-     ("Селски поръчки", "Подай ръка на селянин")),
+    ("root", None, "bell", "task", ("Villagers Remember", "Lend a villager a hand"),
+     ("Селяните помнят", "Подай ръка на селянин")),
 
     ("errands/first", "root", "writable_book", "task", ("Odd Jobs", "Complete an errand for a villager"),
      ("Дребна работа", "Изпълни поръчка за селянин")),
@@ -119,7 +119,7 @@ def icon_of(icon):
 
 
 def key(aid, part):
-    return "advancement.villageerrands." + aid.replace("/", ".") + "." + part
+    return "advancement.villagersremember." + aid.replace("/", ".") + "." + part
 
 
 def main():
@@ -140,7 +140,7 @@ def main():
             display["background"] = "minecraft:gui/advancements/backgrounds/adventure"
         data = {}
         if parent:
-            data["parent"] = "villageerrands:" + parent
+            data["parent"] = "villagersremember:" + parent
         data["criteria"] = {"done": {"trigger": "minecraft:impossible"}}
         data["display"] = display
         data["requirements"] = [["done"]]
@@ -154,7 +154,7 @@ def main():
     for lang, values in (("en_us", en), ("bg_bg", bg)):
         p = os.path.join(LANG, lang + ".json")
         d = json.load(open(p, encoding="utf-8"))
-        d = {k: v for k, v in d.items() if not k.startswith("advancement.villageerrands.")}
+        d = {k: v for k, v in d.items() if not k.startswith("advancement.villagersremember.")}
         d.update(values)
         with open(p, "w", encoding="utf-8") as f:
             f.write(json.dumps(d, ensure_ascii=False, indent="\t") + "\n")

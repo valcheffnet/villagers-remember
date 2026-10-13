@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:fletching_table"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.collection.fletcher.title",
+      "fallback": "Fletcher's Book"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.collection.fletcher.description",
+      "fallback": "Complete every errand a fletcher gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

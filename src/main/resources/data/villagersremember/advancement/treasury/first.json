@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:root",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:ender_chest"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.treasury.first.title",
+      "fallback": "First Wages"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.treasury.first.description",
+      "fallback": "Send treasury emeralds to your Ender Chest"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:smoker"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.collection.butcher.title",
+      "fallback": "Butcher's Book"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.collection.butcher.description",
+      "fallback": "Complete every errand a butcher gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

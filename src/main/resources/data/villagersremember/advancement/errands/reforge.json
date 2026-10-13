@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/first",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:anvil"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.errands.reforge.title",
+      "fallback": "Reforged"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.errands.reforge.description",
+      "fallback": "Complete a reforge errand for a smith"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "parent": "villagersremember:contracts/first",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_sword",
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      }
+    },
+    "title": {
+      "translate": "advancement.villagersremember.contracts.legend.title",
+      "fallback": "Legendary"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.contracts.legend.description",
+      "fallback": "Earn a legendary item"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

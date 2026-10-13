@@ -1,4 +1,4 @@
-"""Writes the errand lore lines (lore.*) into src/main/resources/assets/villageerrands/lang/{en_us,bg_bg}.json.
+"""Writes the errand lore lines (lore.*) into src/main/resources/assets/villagersremember/lang/{en_us,bg_bg}.json.
 
 Keys: lore.<profession>.<action>.<n> are variants for any errand of that kind; lore.<profession>.<action>.<target>
 is used instead for that exact target. The mod picks a variant from the errand id, so an errand keeps its line.
@@ -7,7 +7,7 @@ Run: python tools/gen_lore.py
 import json
 import os
 
-LANG = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villageerrands", "lang")
+LANG = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villagersremember", "lang")
 
 # key suffix -> (en, bg). Variants are ".1", ".2"; anything else is a target path.
 LORE = {

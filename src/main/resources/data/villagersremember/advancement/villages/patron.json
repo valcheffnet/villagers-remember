@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:villages/hero",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:beacon"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.villages.patron.title",
+      "fallback": "Patron"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.villages.patron.description",
+      "fallback": "Become the patron of a village"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

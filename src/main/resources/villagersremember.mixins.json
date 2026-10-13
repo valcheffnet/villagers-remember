@@ -1,0 +1,25 @@
+{
+	"required": true,
+	"package": "net.valcheff.villagersremember.mixin",
+	"compatibilityLevel": "JAVA_${java_version}",
+	"mixins": [
+		"BredAnimalsTriggerMixin",
+		"BrewedPotionTriggerMixin",
+		"CuredZombieVillagerTriggerMixin",
+		"EnchantedItemTriggerMixin",
+		"FilledBucketTriggerMixin",
+		"FishingRodHookedTriggerMixin",
+		"ItemStackCraftedMixin",
+		"ItemUsedOnLocationTriggerMixin",
+		"PlayerInteractTriggerMixin",
+		"SummonedEntityTriggerMixin",
+		"TameAnimalTriggerMixin",
+		"TradeTriggerMixin",
+		"VillagerInvoker",
+		"EntityNameAccessor",
+		"VillagerPricesMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

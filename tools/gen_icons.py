@@ -1,4 +1,4 @@
-"""Builds src/main/resources/assets/villageerrands/icons.json: item id -> "atlas|sprite" for inline text icons.
+"""Builds src/main/resources/assets/villagersremember/icons.json: item id -> "atlas|sprite" for inline text icons.
 
 A dedicated server has no textures, so the sprite each item uses is looked up here from the client jar.
 Items drawn from a block model use one of the block's textures from the blocks atlas.
@@ -11,7 +11,7 @@ import zipfile
 
 JAR = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
     "~/.gradle/caches/fabric-loom/26.3/minecraft-client.jar")
-OUT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villageerrands", "icons.json")
+OUT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villagersremember", "icons.json")
 BLOCK_KEYS = ["front", "side", "all", "texture", "end", "top", "cross", "particle"]
 
 

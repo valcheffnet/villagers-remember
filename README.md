@@ -1,8 +1,16 @@
-# Village Errands
+# Villagers Remember: Quests, Trust & Fair Trades
 
-Villagers in vanilla Minecraft trade and that's it. With this mod they ask you for help. The farmer needs 20 bread baked, the cleric wants zombies cleared off the road, the cartographer sends you to find a shipwreck. Do the job, bring what was asked, and get paid. Keep helping and the villagers start to know you, trust you, and give you better work.
+**Server-side. Vanilla clients welcome.**
 
-The whole mod runs on the server. Players join with a normal vanilla client and install nothing: the screens are vanilla dialogs, the markers are vanilla text displays, and the names come in each player's own language.
+Villagers in vanilla Minecraft trade and that's it. With this mod they ask you for help. The farmer needs 20 bread baked, the cleric wants zombies cleared off the road, the cartographer sends you to find a shipwreck. Do the job, bring what was asked, and get paid. Keep helping and every villager remembers it: they greet you by how well they know you, give you better work, sell to you cheaper and one day make you the patron of their village.
+
+The whole mod runs on the server. Players join with a normal vanilla client and install nothing. The screens are vanilla dialogs, the markers are vanilla text displays, and the names come in each player's own language.
+
+## What makes it different
+
+Most quest mods give a village a board or a quest master, and every player has to install the mod. Here each villager is a person with their own memory of you. Lena the farmer may be your best friend while the butcher next door has never heard of you. That trust shows up where you already look: the prices in the trading screen go down for friends and up for people who hurt the village.
+
+Rewards are tuned to the work. Every errand pays more than the same goods would fetch from a villager, so an errand never earns less than plain trading. Big jobs are for the whole server: a monthly village order sized by how many people play, paid by what each of them brought.
 
 ## Talking to villagers
 
@@ -10,7 +18,7 @@ Right-click a villager and they greet you the way your standing deserves. "Yes? 
 
 Every villager with a job offers a few errands a day, more as their trade level grows. Each errand is one or more of 21 kinds of tasks: craft, smelt, mine, harvest, fish, breed, tame, kill, brew, enchant, visit a structure or a biome, and so on. Taking an item to a villager is counted apart from making it, so you can't just buy what was asked.
 
-Right-click the village bell for the board: all of the village's errands, its residents, your standing, the treasury and the weekly order. Sneak + right-click rings the bell as usual.
+Right-click the village bell for the board: all of the village's errands, its residents, your standing, the treasury and the village order. Sneak + right-click rings the bell as usual.
 
 ## Standing and trust
 
@@ -50,7 +58,7 @@ Villagers who trust you put a share of their work aside for you every day. The t
 - A sidebar tracker for the errands you follow, "!" over villagers with work for you and "?" when you can hand something in.
 - A chronicle book with your errands, villages, fame and collection (`/errands book`).
 - A villager who turns into a zombie villager and is cured keeps your standing, errands and name.
-- Errands are datapack JSON (`data/<namespace>/village_errands/*.json`), so packs can add their own.
+- Errands are datapack JSON (`data/<namespace>/errands/*.json`), so packs can add their own.
 
 ## Install
 
@@ -58,7 +66,7 @@ Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into th
 
 ## Configuration
 
-`config/villageerrands.json` is created on first start with every setting and a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villageerrands/ErrandsConfig.java)). Some of them:
+`config/villagersremember.json` is created on first start with every setting and a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villagersremember/ErrandsConfig.java)). Some of them:
 
 | Setting | Default | |
 |---|---|---|

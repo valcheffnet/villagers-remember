@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:villages/known",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:white_banner"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.villages.respected.title",
+      "fallback": "Respected"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.villages.respected.description",
+      "fallback": "Earn respect in a village"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

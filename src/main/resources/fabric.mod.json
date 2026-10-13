@@ -1,27 +1,27 @@
 {
 	"schemaVersion": 1,
-	"id": "villageerrands",
+	"id": "villagersremember",
 	"version": "${version}",
-	"name": "Village Errands",
+	"name": "Villagers Remember",
 	"description": "Villagers ask you for help: craft, hunt, fish, explore. Earn their trust, better prices, a share of their work and the title of patron. Server-side, works with vanilla clients.",
 	"authors": [
 		"SasnycoN"
 	],
 	"contact": {
-		"homepage": "https://github.com/valcheffnet/village-errands",
-		"sources": "https://github.com/valcheffnet/village-errands",
-		"issues": "https://github.com/valcheffnet/village-errands/issues"
+		"homepage": "https://github.com/valcheffnet/villagers-remember",
+		"sources": "https://github.com/valcheffnet/villagers-remember",
+		"issues": "https://github.com/valcheffnet/villagers-remember/issues"
 	},
 	"license": "LicenseRef-All-Rights-Reserved",
-	"icon": "assets/villageerrands/icon.png",
+	"icon": "assets/villagersremember/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.valcheff.villageerrands.VillageErrands"
+			"net.valcheff.villagersremember.VillagersRemember"
 		]
 	},
 	"mixins": [
-		"villageerrands.mixins.json"
+		"villagersremember.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.0",

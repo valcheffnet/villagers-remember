@@ -1,0 +1,20 @@
+package net.valcheff.villagersremember.mixin;
+
+import net.minecraft.advancements.triggers.BredAnimalsTrigger;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.animal.Animal;
+import net.valcheff.villagersremember.Actions;
+import net.valcheff.villagersremember.Objective;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(BredAnimalsTrigger.class)
+abstract class BredAnimalsTriggerMixin {
+	@Inject(method = "trigger", at = @At("HEAD"))
+	private void villagersremember$bred(ServerPlayer player, Animal parent, Animal partner, AgeableMob child, CallbackInfo ci) {
+		Actions.record(player, Objective.Type.BREED, 1, o -> o.matchesEntity(parent.getType()));
+	}
+}

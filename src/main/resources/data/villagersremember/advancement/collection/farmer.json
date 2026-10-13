@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:composter"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.collection.farmer.title",
+      "fallback": "Farmer's Book"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.collection.farmer.description",
+      "fallback": "Complete every errand a farmer gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

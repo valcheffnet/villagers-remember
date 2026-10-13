@@ -1,0 +1,33 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_pickaxe",
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      }
+    },
+    "title": {
+      "translate": "advancement.villagersremember.errands.top.title",
+      "fallback": "Masterwork"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.errands.top.description",
+      "fallback": "Earn a master's top reward"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

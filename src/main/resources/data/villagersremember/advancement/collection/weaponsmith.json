@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:grindstone"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.collection.weaponsmith.title",
+      "fallback": "Weaponsmith's Book"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.collection.weaponsmith.description",
+      "fallback": "Complete every errand a weaponsmith gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

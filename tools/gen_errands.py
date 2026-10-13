@@ -1,4 +1,4 @@
-"""Generates the built-in errand pools in src/main/resources/data/villageerrands/village_errands/.
+"""Generates the built-in errand pools in src/main/resources/data/villagersremember/errands/.
 
 Each profession has five packs (tiers T1-T5, TIERS.md section 4). A villager offers errands only from the pack of the
 player's tier with that villager.
@@ -15,9 +15,9 @@ import math
 import os
 import zipfile
 
-OUT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "data", "villageerrands", "village_errands")
+OUT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "data", "villagersremember", "errands")
 JAR = os.path.expanduser("~/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-common-deobf/26.3/minecraft-common-deobf-26.3.jar")
-NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villageerrands", "vanilla_names", "en_us.json")
+NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villagersremember", "vanilla_names", "en_us.json")
 
 # Minutes one daily errand takes, by pack.
 WINDOW = {1: (4, 8), 2: (8, 12), 3: (12, 18), 4: (18, 25), 5: (25, 35)}
@@ -156,8 +156,8 @@ REWARDS = {
     "shepherd": [item("painting", 4, 8, 0.4, T2), loot("minecraft:chests/village/village_shepherd", 3, T3),
                  item("white_banner", 4, 8, 1.0, T4)],
     "librarian": [item("bookshelf", 4, 8, 1.0, T2), enchant("book", 15, 20, 0.4, T3), enchant("book", 25, 30, 0.4, T4)],
-    "cartographer": [item("map", 2, 4, 0.6, T2), loot("villageerrands:top/map_buried_treasure", 3, T3),
-                     loot("villageerrands:top/map_monument", 5, T4)],
+    "cartographer": [item("map", 2, 4, 0.6, T2), loot("villagersremember:top/map_buried_treasure", 3, T3),
+                     loot("villagersremember:top/map_monument", 5, T4)],
     "cleric": [item("experience_bottle", 8, 16, 0.4, T2), loot("minecraft:chests/village/village_temple", 3, T3),
                item("experience_bottle", 32, 48, 0.4, T4)],
     "armorer": [item("iron_ingot", 16, 32, 0.3, T2), loot("minecraft:chests/village/village_armorer", 3, T3),
@@ -749,7 +749,7 @@ def check(prof, task, items, entities):
 
 # ---- the audit table for the user: every task, what it takes, minutes, pay ----
 AUDIT = os.path.join(os.path.dirname(__file__), "..", "docs", "TASK_AUDIT.md")
-BG_NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villageerrands", "vanilla_names", "bg_bg.json")
+BG_NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villagersremember", "vanilla_names", "bg_bg.json")
 VERB = {"deliver": "донеси", "craft": "направи", "smelt": "изпечи", "station": "изсечи", "kill": "убий", "catch": "хвани",
         "breed": "развъди", "tame": "опитоми", "shear": "остражи", "harvest": "ожъни", "mine": "изкопай", "plant": "посади",
         "bonemeal": "натори", "fill_bucket": "напълни кофа", "visit_structure": "посети", "visit_biome": "посети",

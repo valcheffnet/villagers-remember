@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:lectern"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.collection.librarian.title",
+      "fallback": "Librarian's Book"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.collection.librarian.description",
+      "fallback": "Complete every errand a librarian gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

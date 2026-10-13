@@ -1,6 +1,6 @@
 """Draws the mod icon: a golden village bell with the yellow "!" of an errand, pixel art on a green tile.
 
-Writes src/main/resources/assets/villageerrands/icon.png (128 px) and art/icon-512.png.
+Writes src/main/resources/assets/villagersremember/icon.png (128 px) and art/icon-512.png.
 Run: python tools/gen_icon.py
 """
 import os
@@ -67,7 +67,7 @@ def main():
     for y, row in enumerate(rows):
         for x, c in enumerate(row):
             img.putpixel((x, y), COLORS[c])
-    out = os.path.join(ROOT, "src/main/resources/assets/villageerrands/icon.png")
+    out = os.path.join(ROOT, "src/main/resources/assets/villagersremember/icon.png")
     img.resize((128, 128), Image.NEAREST).save(out)
     os.makedirs(os.path.join(ROOT, "art"), exist_ok=True)
     img.resize((512, 512), Image.NEAREST).save(os.path.join(ROOT, "art/icon-512.png"))

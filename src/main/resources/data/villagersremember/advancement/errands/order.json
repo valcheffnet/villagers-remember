@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/first",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:barrel"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.errands.order.title",
+      "fallback": "Bulk Order"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.errands.order.description",
+      "fallback": "Complete an order for several goods"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

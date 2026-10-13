@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:trust/acquaintance",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:shield"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.trust.trial.title",
+      "fallback": "Trust Earned"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.trust.trial.description",
+      "fallback": "Pass a trial of trust"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

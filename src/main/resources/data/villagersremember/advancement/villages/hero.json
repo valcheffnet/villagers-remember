@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:villages/respected",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:poppy"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.villages.hero.title",
+      "fallback": "Beloved"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.villages.hero.description",
+      "fallback": "Become the hero of a village through errands"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:explore/five",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:filled_map"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.explore.fifteen.title",
+      "fallback": "Village Atlas"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.explore.fifteen.description",
+      "fallback": "Discover 15 villages"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

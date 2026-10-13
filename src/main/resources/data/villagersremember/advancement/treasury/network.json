@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:treasury/income",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:lodestone"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.treasury.network.title",
+      "fallback": "Village Network"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.treasury.network.description",
+      "fallback": "Be a Friend of 5 villages for the full network bonus"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 # License
 
-Village Errands
+Villagers Remember
 Copyright (c) 2026 SasnycoN. All rights reserved.
 
 This is not an open source license. The source code is public so you can read it and report bugs, but the mod and its code stay the property of the author.
@@ -22,9 +22,9 @@ This is not an open source license. The source code is public so you can read it
 
 The mod is provided "as is", without warranty of any kind. The author is not liable for any damage or data loss caused by using it.
 
-For permission requests or questions, open an issue at https://github.com/valcheffnet/village-errands/issues
+For permission requests or questions, open an issue at https://github.com/valcheffnet/villagers-remember/issues
 
 ## Third-party content
 
-- Villager head textures (`assets/villageerrands/heads.json`) are skins made by the community and listed on minecraft-heads.com. They are credited to that site and are not covered by this license.
-- Item, block and entity names in `assets/villageerrands/vanilla_names/` are Minecraft's own translations, the property of Mojang Studios, included so the server can show names in each player's language.
+- Villager head textures (`assets/villagersremember/heads.json`) are skins made by the community and listed on minecraft-heads.com. They are credited to that site and are not covered by this license.
+- Item, block and entity names in `assets/villagersremember/vanilla_names/` are Minecraft's own translations, the property of Mojang Studios, included so the server can show names in each player's language.

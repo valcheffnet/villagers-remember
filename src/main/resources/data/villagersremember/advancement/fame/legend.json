@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:fame/benefactor",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:nether_star"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.fame.legend.title",
+      "fallback": "Legend"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.fame.legend.description",
+      "fallback": "Earn the title Legend"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

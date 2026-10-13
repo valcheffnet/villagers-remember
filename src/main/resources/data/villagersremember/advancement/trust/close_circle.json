@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:trust/best_friend",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:campfire"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.trust.close_circle.title",
+      "fallback": "Close Circle"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.trust.close_circle.description",
+      "fallback": "Become Best friends with 5 villagers"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

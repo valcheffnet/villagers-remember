@@ -18,7 +18,7 @@ The journal and the villager screens open from the game too: right-click a villa
 
 | Command | What it does |
 |---|---|
-| `/errands reload` | Reloads the config and the errand pools (datapacks under `data/<namespace>/village_errands/`). |
+| `/errands reload` | Reloads the config and the errand pools (datapacks under `data/<namespace>/errands/`). |
 | `/errands reset <player>` | Wipes a player's errands and all of their standing, everywhere. |
 | `/errands village name <name>` | Renames the village you stand in. Everyone sees the new name, in any language. |
 | `/errands villages` | Lists every village the mod knows: id, name, centre, residents, working residents, bells. Click the coordinates to get a `/tp` command in the chat box. |

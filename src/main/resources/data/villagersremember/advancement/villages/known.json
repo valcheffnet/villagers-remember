@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:root",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:oak_door"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.villages.known.title",
+      "fallback": "Known Around Here"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.villages.known.description",
+      "fallback": "Become Known in a village"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

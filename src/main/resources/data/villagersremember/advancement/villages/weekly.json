@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:villages/known",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:hay_block"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.villages.weekly.title",
+      "fallback": "Many Hands"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.villages.weekly.description",
+      "fallback": "Help finish a village order"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:treasury/first",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:emerald_block"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.treasury.income.title",
+      "fallback": "Steady Income"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.treasury.income.description",
+      "fallback": "Earn 10 emeralds a day from your treasuries"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:contracts/legend",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:dragon_egg"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.contracts.all_legends.title",
+      "fallback": "Hall of Legends"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.contracts.all_legends.description",
+      "fallback": "Collect every legendary item"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

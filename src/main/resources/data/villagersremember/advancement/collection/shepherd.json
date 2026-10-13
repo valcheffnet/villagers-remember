@@ -1,0 +1,30 @@
+{
+  "parent": "villagersremember:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:loom"
+    },
+    "title": {
+      "translate": "advancement.villagersremember.collection.shepherd.title",
+      "fallback": "Shepherd's Book"
+    },
+    "description": {
+      "translate": "advancement.villagersremember.collection.shepherd.description",
+      "fallback": "Complete every errand a shepherd gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

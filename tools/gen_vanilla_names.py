@@ -12,7 +12,7 @@ MC = "26.3"
 HOME = os.path.expanduser("~")
 CLIENT = os.path.join(HOME, ".gradle/caches/fabric-loom", MC, "minecraft-client.jar")
 ASSETS = os.path.join(HOME, ".gradle/caches/fabric-loom/assets")
-OUT = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/villageerrands/vanilla_names")
+OUT = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/villagersremember/vanilla_names")
 LANGUAGES = ["en_us", "bg_bg"]
 PREFIXES = ("item.minecraft.", "block.minecraft.", "entity.minecraft.", "biome.minecraft.", "merchant.level.")
 

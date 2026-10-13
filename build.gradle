@@ -3,12 +3,12 @@ plugins {
 }
 
 base {
-	archivesName = 'village-errands'
+	archivesName = 'villagers-remember'
 }
 
 loom {
 	mods {
-		"villageerrands" {
+		"villagersremember" {
 			sourceSet sourceSets.main
 		}
 	}
@@ -17,7 +17,7 @@ loom {
 fabricApi {
 	configureTests {
 		createSourceSet = true
-		modId = "villageerrands-test"
+		modId = "villagersremember-test"
 		enableGameTests = false
 		enableClientGameTests = true
 		eula = true
@@ -54,6 +54,6 @@ java {
 
 jar {
 	from("LICENSE.md") {
-		rename { "LICENSE_village-errands.md" }
+		rename { "LICENSE_villagers-remember.md" }
 	}
 }
