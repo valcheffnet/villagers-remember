@@ -254,7 +254,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				player.getInventory().clearContent();
 				Errand order = null;
 				for (int i = 0; i < 400 && order == null; i++) {
-					for (Errand e : ErrandGenerator.generate(new UUID(42, i), i, "minecraft:toolsmith", "minecraft:plains", 5, Optional.empty(), 4)) {
+					for (Errand e : ErrandGenerator.generate(new UUID(42, i), i, "minecraft:toolsmith", "minecraft:plains", 5, Optional.empty(), 3)) {
 						if (e.title().isPresent()) {
 							order = e;
 							break;
@@ -670,11 +670,11 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		});
 		check(patron.equals("ok"), "patron: " + patron);
 
-		// The weekly order, brought in parts through the button.
+		// The village order (monthly), brought in parts through the button.
 		String kind = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
 			var village = net.valcheff.villageerrands.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			var view = net.valcheff.villageerrands.Weekly.current(server, village).orElseThrow();
+			var view = net.valcheff.villageerrands.GroupOrder.current(server, village).orElseThrow();
 			player.getInventory().clearContent();
 			Item item = switch (view.kind()) {
 				case FOOD -> Items.BREAD;
@@ -690,16 +690,16 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		context.getInput().pressKey(options -> options.keyUse);
 		waitForDialog(context, null);
 		context.takeScreenshot("dlg-14-board-patron");
-		press(context, label -> label.contains("Weekly order"));
-		context.takeScreenshot("dlg-15-weekly");
+		press(context, label -> label.contains("Village order"));
+		context.takeScreenshot("dlg-15-village-order");
 		if (!kind.equals("defend")) {
 			press(context, label -> label.contains("Give what I have"));
 			int progress = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
 				var village = net.valcheff.villageerrands.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-				return net.valcheff.villageerrands.Weekly.current(server, village).orElseThrow().order().progress;
+				return net.valcheff.villageerrands.GroupOrder.current(server, village).orElseThrow().order().progress;
 			});
-			check(progress == 32, "weekly order got " + progress + " of 32 " + kind);
+			check(progress == 32, "village order got " + progress + " of 32 " + kind);
 		} else {
 			// A monster killed inside the village counts.
 			int progress = sp.getServer().computeOnServer(server -> {
@@ -709,7 +709,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				server.overworld().addFreshEntity(zombie);
 				zombie.hurtServer(server.overworld(), player.damageSources().playerAttack(player), 1000);
 				var village = net.valcheff.villageerrands.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-				return net.valcheff.villageerrands.Weekly.current(server, village).orElseThrow().order().progress;
+				return net.valcheff.villageerrands.GroupOrder.current(server, village).orElseThrow().order().progress;
 			});
 			check(progress == 1, "defend order counted " + progress);
 		}
@@ -734,19 +734,19 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		});
 		check("Bodilovo Upper".equals(renamed), "renamed through the dialog to " + renamed);
 		closeScreen(context);
-		String weekly = sp.getServer().computeOnServer(server -> {
+		String villageOrder = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
 			player.getEnderChestInventory().clearContent();
-			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands weekly here add " + player.getScoreboardName() + " 100000");
+			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands order here add " + player.getScoreboardName() + " 100000");
 			var village = net.valcheff.villageerrands.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			var view = net.valcheff.villageerrands.Weekly.current(server, village).orElseThrow();
+			var view = net.valcheff.villageerrands.GroupOrder.current(server, village).orElseThrow();
 			if (!view.order().settled || !view.done()) return "not settled " + view.order().progress + "/" + view.target();
 			int emeralds = player.getEnderChestInventory().countItem(Items.EMERALD);
-			if (emeralds != Math.round(ErrandsConfig.INSTANCE.weeklyRewardEmeralds)) return "paid " + emeralds;
-			if (state(server).weeklyDone != 1) return "weekly done " + state(server).weeklyDone;
+			if (emeralds != Math.round(ErrandsConfig.INSTANCE.groupRewardEmeralds)) return "paid " + emeralds;
+			if (state(server).weeklyDone != 1) return "orders done " + state(server).weeklyDone;
 			return "ok";
 		});
-		check(weekly.equals("ok"), "weekly: " + weekly);
+		check(villageOrder.equals("ok"), "village order: " + villageOrder);
 
 		// A contract with a Best friend: the third one for the profession brings its legendary item.
 		String contract = sp.getServer().computeOnServer(server -> {
@@ -769,8 +769,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (c == null) return "no contract offered";
 			if (!ErrandGenerator.shown(server.overworld(), ErrandGenerator.Giver.of(v), state).stream().anyMatch(ErrandGenerator::isContract)) return "contract not shown";
 			String prof = ErrandText.path(c.profession());
-			// Two tasks, sized by value: well beyond a plain top-pack errand.
-			if (c.objectives().size() < 2 || c.value() < 40) return "contract too light: " + c.objectives().size() + " objectives, value " + c.value();
+			// Three parts, at least two of them things to go and do, about 90 minutes; currency only, once a week.
+			long actions = c.objectives().stream().filter(o -> switch (o.type()) {
+				case DELIVER, CRAFT, SMELT, STATION, PLANT, BONEMEAL, TRADE -> false;
+				default -> true;
+			}).count();
+			if (c.objectives().size() < 3 || actions < 2 || c.value() < 60) return "contract too light: " + c.objectives() + ", minutes " + c.value();
+			if (c.item().isPresent() || c.emeralds() > ErrandsConfig.INSTANCE.contractMaxEmeralds || !c.id().contains("/w")) return "contract pay " + c;
 			System.out.println("CONTRACT " + ErrandText.task(player, c).getString() + ": " + c.objectives().stream()
 				.map(o -> o.type() + " " + o.count() + " " + o.target()).toList() + " value " + Math.round(c.value()) + ", " + c.emeralds() + " emeralds");
 			state.contracts.put(prof, 2);
@@ -903,17 +908,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			StringBuilder seen = new StringBuilder();
 			for (String p : List.of("farmer", "fisherman", "shepherd", "librarian", "cartographer", "cleric", "armorer", "weaponsmith",
 				"toolsmith", "butcher", "leatherworker", "mason", "fletcher")) {
-				Errand top = null;
-				for (int i = 0; i < 300 && top == null; i++) {
-					for (Errand e : ErrandGenerator.generate(new UUID(77, i), i, "minecraft:" + p, "minecraft:plains", 5, Optional.empty(), 5)) {
-						if (e.item().map(r -> r.kind() == net.valcheff.villageerrands.ErrandPools.RewardKind.TOP).orElse(false)) {
-							top = e;
-							break;
-						}
-					}
-				}
-				if (top == null) return p + " has no top reward";
-				List<ItemStack> given = top.item().get().create(level, 0, player.position());
+				List<ItemStack> given = new Errand.ItemReward(net.valcheff.villageerrands.ErrandPools.RewardKind.TOP, "minecraft:" + p, 1, 77)
+					.create(level, 0, player.position());
 				if (given.isEmpty() || given.stream().anyMatch(ItemStack::isEmpty)) return p + " top reward is empty";
 				seen.append(p).append('=').append(given.getFirst().getHoverName().getString()).append(' ');
 			}
@@ -947,21 +943,23 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		});
 		check(result.equals("ok"), "top rewards: " + result);
 
-		// The player picks the option: the farmer's carrots instead of the hoe, with the real button.
+		// The top reward comes once per profession, with the first Best-friend trial; the player picks the option
+		// (the farmer's carrots instead of the hoe) with the real button.
 		String label = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			state(server).active.clear();
-			for (int i = 0; i < 300; i++) {
-				for (Errand e : ErrandGenerator.generate(new UUID(78, i), i, "minecraft:farmer", "minecraft:plains", 5, Optional.empty(), 5)) {
-					if (e.item().map(r -> r.kind() == net.valcheff.villageerrands.ErrandPools.RewardKind.TOP).orElse(false)) {
-						ErrandService.accept(player, e);
-						return ErrandText.task(player, e).getString();
-					}
-				}
-			}
-			return "";
+			ErrandsData.PlayerState state = state(server);
+			state.active.clear();
+			state.flags.remove("top:farmer");
+			UUID farmer = new UUID(0xFA4L, 1);
+			state.villagerRep.put(farmer, Reputation.VILLAGER_TIERS[4]);
+			state.trialsPassed.put(farmer, 3);
+			var giver = new ErrandGenerator.Giver(farmer, "minecraft:farmer", "minecraft:plains", 5, Optional.empty());
+			Errand trial = ErrandGenerator.trial(server.overworld(), giver, state).orElse(null);
+			if (trial == null || !trial.item().map(r -> r.kind() == net.valcheff.villageerrands.ErrandPools.RewardKind.TOP).orElse(false)) return "";
+			ErrandService.accept(player, trial);
+			return ErrandText.task(player, trial).getString();
 		});
-		check(!label.isEmpty(), "no farmer top errand");
+		check(!label.isEmpty(), "no farmer top trial");
 		// A full inventory: the errand is not handed in, nothing is dropped.
 		sp.getServer().runCommand("errands finish @p");
 		String full = sp.getServer().computeOnServer(server -> {
@@ -1000,7 +998,18 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				if (st.is(Items.GOLDEN_CARROT)) carrots += st.getCount();
 				if (st.is(Items.DIAMOND_HOE)) hoes++;
 			}
-			return carrots >= 64 && hoes == 0 ? "ok" : "carrots " + carrots + ", hoes " + hoes;
+			if (carrots < 64 || hoes != 0) return "carrots " + carrots + ", hoes " + hoes;
+			// A second farmer's Best-friend trial pays currency only: the top reward was given already.
+			ErrandsData.PlayerState state = state(server);
+			if (!state.flags.contains("top:farmer")) return "top reward not recorded";
+			UUID second = new UUID(0xFA4L, 2);
+			state.villagerRep.put(second, Reputation.VILLAGER_TIERS[4]);
+			state.trialsPassed.put(second, 3);
+			Errand again = ErrandGenerator.trial(server.overworld(),
+				new ErrandGenerator.Giver(second, "minecraft:farmer", "minecraft:plains", 5, Optional.empty()), state).orElseThrow();
+			state.villagerRep.remove(second);
+			state.trialsPassed.remove(second);
+			return again.item().isEmpty() && again.emeralds() + again.xp() > 0 ? "ok" : "second trial item " + again.item();
 		});
 		check(handed.equals("ok"), "chosen top reward: " + handed);
 	}
@@ -1140,12 +1149,36 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			for (String p : List.of("farmer", "fisherman", "shepherd", "librarian", "cartographer", "cleric", "armorer", "weaponsmith",
 				"toolsmith", "butcher", "leatherworker", "mason", "fletcher")) {
 				for (int tier = 1; tier <= 5; tier++) {
-					int n = ErrandGenerator.generate(new UUID(7, tier), 0, "minecraft:" + p, "minecraft:plains", 5, Optional.empty(), tier).size();
-					if (n < 3) return p + " T" + tier + " has " + n + " errands";
+					List<Errand> pack = ErrandGenerator.generate(new UUID(7, tier), 0, "minecraft:" + p, "minecraft:plains", 5, Optional.empty(), tier);
+					if (pack.size() < 3) return p + " T" + tier + " has " + pack.size() + " errands";
+					double[] window = {0, 4, 8, 12, 18, 25, 35};
+					for (Errand e : pack) {
+						boolean reforge = e.item().map(r -> r.kind() == net.valcheff.villageerrands.ErrandPools.RewardKind.ENCHANT_MAX).orElse(false);
+						if (e.item().isPresent() && !reforge) return p + " T" + tier + " daily with an item: " + e.item().get();
+						if (reforge) continue;
+						if (e.value() < window[tier] * 0.8 || e.value() > window[tier + 1] * 1.25) return p + " T" + tier + " " + e.id() + " takes " + e.value() + " min";
+					}
 				}
 			}
 			state.villagerRep.remove(id);
 			state.trialsPassed.remove(id);
+			// A reforge done once is not offered again.
+			UUID smith = new UUID(0x5717L, 1);
+			var smithGiver = new ErrandGenerator.Giver(smith, "minecraft:weaponsmith", "minecraft:plains", 5, Optional.empty());
+			state.villagerRep.put(smith, Reputation.VILLAGER_TIERS[2]);
+			state.trialsPassed.put(smith, 2);
+			Errand sword = null;
+			for (int d = 0; d < 200 && sword == null; d++) {
+				for (Errand e : ErrandGenerator.generate(smith, d, "minecraft:weaponsmith", "minecraft:plains", 5, Optional.empty(), 3)) {
+					if (e.main().target().equals("minecraft:iron_sword") && e.item().isPresent()) sword = e;
+				}
+			}
+			if (sword == null) return "no iron sword reforge";
+			state.collection.computeIfAbsent("weaponsmith", k -> new java.util.LinkedHashSet<>()).add("reforge.iron_sword");
+			boolean again = ErrandGenerator.reforgeDone(state, sword);
+			state.villagerRep.remove(smith);
+			state.trialsPassed.remove(smith);
+			if (!again) return "a done reforge is still offered";
 			return "ok";
 		});
 		check(result.equals("ok"), "packs: " + result);

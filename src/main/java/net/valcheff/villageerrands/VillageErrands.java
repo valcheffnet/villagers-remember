@@ -63,12 +63,12 @@ public final class VillageErrands implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(VillageRegistry::tick);
 		ServerTickEvents.END_SERVER_TICK.register(Hud::tick);
 		ServerTickEvents.END_SERVER_TICK.register(ActionHooks::tick);
-		ServerTickEvents.END_SERVER_TICK.register(Weekly::tick);
+		ServerTickEvents.END_SERVER_TICK.register(GroupOrder::tick);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, s) -> {
 			var player = handler.getPlayer();
 			Fame.updateTeam(player);
 			Patron.onJoin(player);
-			Weekly.deliverMail(player);
+			GroupOrder.deliverMail(player);
 			Milestones.check(player);
 		});
 		PlayerBlockBreakEvents.AFTER.register(ActionHooks::blockBroken);

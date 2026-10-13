@@ -27,7 +27,6 @@ public final class Fame {
 	public static final int DISCOVER = 5;
 	public static final int HERO = 50;
 	public static final int PATRON = 100;
-	public static final int WEEKLY_POOL = 40;
 
 	public static int title(int fame) {
 		int t = 0;

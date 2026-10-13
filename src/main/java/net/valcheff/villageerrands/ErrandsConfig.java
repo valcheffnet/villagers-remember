@@ -26,10 +26,13 @@ public final class ErrandsConfig {
 	public boolean respectedBonusErrand = true;
 	/** How many errands one player may have accepted at the same time. */
 	public int maxActiveErrands = 5;
-	/** Reward budget = value of what is asked x this, by pack T1..T5. */
-	public double[] tierRewardMultiplier = {1.3, 1.4, 1.5, 1.65, 1.8};
-	/** Chance that part of the reward is an item, by pack T1..T5. T1 pays emeralds or experience only. */
-	public double[] tierItemChance = {0.0, 0.3, 0.5, 0.6, 0.7};
+	/** Settings changed meaning in version 2 (effort-based rewards); older files get the new defaults for those. */
+	public int configVersion = 2;
+	/**
+	 * Errands are sized in minutes of work (TIERS.md section 4); the pay is minutes x this, in emeralds' worth (split
+	 * into emeralds and experience), by pack T1..T5. T1 pays emeralds or experience. Repeatable errands give no items.
+	 */
+	public double[] tierEmeraldsPerMinute = {0.6, 0.8, 1.0, 1.3, 1.6};
 	/** Treasury: emeralds a day one working resident sets aside, by the player's tier with them (Stranger..Best friend). */
 	public double[] treasuryShare = {0.0, 0.25, 0.5, 0.8, 1.2};
 	/** Treasury: multiplier by the player's village tier (Stranger..Hero). */
@@ -43,27 +46,29 @@ public final class ErrandsConfig {
 	/** Trust trial: how much more it asks than an errand of the pack it unlocks, and how much more it pays. */
 	public double trialCountFactor = 1.5;
 	public double trialRewardMultiplier = 2.0;
-	/** Chance that a T5 errand's item is the profession's top reward. */
-	public double topRewardChance = 0.5;
-	/** Contracts: one hard errand a day from each Best friend; how much more it asks and pays. */
+	/**
+	 * Contracts: one big job a game week from each Best friend, three tasks of the top packs together about this
+	 * many minutes, paid at the T5 rate x the multiplier, emeralds up to the cap.
+	 */
 	public boolean contracts = true;
-	public double contractCountFactor = 2.0;
-	/** Emeralds' worth of goods a contract asks for in all (split between its two tasks). */
-	public double contractValue = 96;
-	public double contractRewardMultiplier = 2.5;
+	public double contractMinutes = 90;
+	public double contractRewardMultiplier = 1.2;
+	public int contractMaxEmeralds = 160;
 	/** Contracts completed for one profession that bring its legendary item. */
 	public int contractsForLegend = 3;
 	/** Fame titles (Helper, Benefactor, Legend) in front of player names in chat and TAB. */
 	public boolean fameTitles = true;
 	/** A patron of a village trades there at this discount. */
 	public double patronDiscount = 0.45;
-	/** Weekly orders: one big order per village for all players. */
-	public boolean weeklyOrders = true;
-	/** Size of weekly orders (1.0: 1024 food, 512 logs, 1536 stone, 192 iron, 256 wool, 100 monsters). */
-	public double weeklyOrderScale = 1.0;
-	/** Emeralds a finished weekly order pays out in all, by share; a helper needs at least this share to be paid. */
-	public double weeklyRewardEmeralds = 192;
-	public double weeklyMinShare = 0.02;
+	/** Village orders: one huge order per village for all players, every this many game days (30: a game month). */
+	public boolean groupOrders = true;
+	public int groupOrderDays = 30;
+	/** Size of village orders (1.0: 4096 food, 2048 logs, 6144 stone, 768 iron, 1024 wool, 400 monsters). */
+	public double groupOrderScale = 1.0;
+	/** Emeralds a finished village order pays out in all, by share (plus as much again in experience, fame and
+	 * standing); a helper needs at least this share to be paid. */
+	public double groupRewardEmeralds = 640;
+	public double groupMinShare = 0.02;
 	/** Experience points granted per emerald of reward budget. */
 	public double xpPerEmerald = 6.0;
 	public int maxEmeraldsPerErrand = 64;
@@ -132,8 +137,12 @@ public final class ErrandsConfig {
 		for (int i = 0; i < 5; i++) errandsPerLevel[i] = Math.clamp(errandsPerLevel[i], 0, 6);
 		maxActiveErrands = Math.clamp(maxActiveErrands, 1, 27);
 		ErrandsConfig defaults = new ErrandsConfig();
-		if (tierRewardMultiplier == null || tierRewardMultiplier.length != 5) tierRewardMultiplier = defaults.tierRewardMultiplier;
-		if (tierItemChance == null || tierItemChance.length != 5) tierItemChance = defaults.tierItemChance;
+		if (configVersion < 2) {
+			// Version 1 sized rewards by the value of goods; these keys now mean something else.
+			contractRewardMultiplier = defaults.contractRewardMultiplier;
+			configVersion = 2;
+		}
+		if (tierEmeraldsPerMinute == null || tierEmeraldsPerMinute.length != 5) tierEmeraldsPerMinute = defaults.tierEmeraldsPerMinute;
 		if (treasuryShare == null || treasuryShare.length != 5) treasuryShare = defaults.treasuryShare;
 		if (treasuryVillageMultiplier == null || treasuryVillageMultiplier.length != 5) treasuryVillageMultiplier = defaults.treasuryVillageMultiplier;
 		treasuryDailyCap = Math.clamp(treasuryDailyCap, 0.0, 10000.0);
@@ -141,8 +150,7 @@ public final class ErrandsConfig {
 		networkBonusPerVillage = Math.clamp(networkBonusPerVillage, 0.0, 10.0);
 		networkBonusMax = Math.clamp(networkBonusMax, 0.0, 10.0);
 		for (int i = 0; i < 5; i++) {
-			tierRewardMultiplier[i] = Math.clamp(tierRewardMultiplier[i], 0.0, 100.0);
-			tierItemChance[i] = Math.clamp(tierItemChance[i], 0.0, 1.0);
+			tierEmeraldsPerMinute[i] = Math.clamp(tierEmeraldsPerMinute[i], 0.0, 100.0);
 		}
 		xpPerEmerald = Math.clamp(xpPerEmerald, 0.0, 1000.0);
 		maxEmeraldsPerErrand = Math.clamp(maxEmeraldsPerErrand, 0, 64 * 9);
@@ -151,14 +159,15 @@ public final class ErrandsConfig {
 		maxDiscount = Math.clamp(maxDiscount, 0.0, 0.95);
 		surchargePerNegativePoint = Math.clamp(surchargePerNegativePoint, 0.0, 1.0);
 		maxSurcharge = Math.clamp(maxSurcharge, 0.0, 10.0);
-		contractCountFactor = Math.clamp(contractCountFactor, 0.1, 10.0);
-		contractValue = Math.clamp(contractValue, 1.0, 100000.0);
+		contractMinutes = Math.clamp(contractMinutes, 1.0, 10000.0);
 		contractRewardMultiplier = Math.clamp(contractRewardMultiplier, 0.0, 100.0);
+		contractMaxEmeralds = Math.clamp(contractMaxEmeralds, 0, 64 * 27);
 		contractsForLegend = Math.clamp(contractsForLegend, 1, 100);
 		patronDiscount = Math.clamp(patronDiscount, 0.0, 0.95);
-		weeklyOrderScale = Math.clamp(weeklyOrderScale, 0.01, 100.0);
-		weeklyRewardEmeralds = Math.clamp(weeklyRewardEmeralds, 0.0, 100000.0);
-		weeklyMinShare = Math.clamp(weeklyMinShare, 0.0, 1.0);
+		groupOrderDays = Math.clamp(groupOrderDays, 1, 3650);
+		groupOrderScale = Math.clamp(groupOrderScale, 0.01, 100.0);
+		groupRewardEmeralds = Math.clamp(groupRewardEmeralds, 0.0, 100000.0);
+		groupMinShare = Math.clamp(groupMinShare, 0.0, 1.0);
 		villageRadius = Math.clamp(villageRadius, 16, 256);
 		markerRange = Math.clamp(markerRange, 4, 48);
 		return this;

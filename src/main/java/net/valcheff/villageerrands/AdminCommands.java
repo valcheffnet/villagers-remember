@@ -123,13 +123,13 @@ public final class AdminCommands {
 						.executes(ctx -> fame(ctx.getSource(), player(ctx), "set", IntegerArgumentType.getInteger(ctx, "points")))))
 					.then(Commands.literal("add").then(Commands.argument("points", IntegerArgumentType.integer(1, 1000000))
 						.executes(ctx -> fame(ctx.getSource(), player(ctx), "add", IntegerArgumentType.getInteger(ctx, "points")))))))
-			.then(Commands.literal("weekly")
+			.then(Commands.literal("order")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.argument("village", StringArgumentType.string()).suggests(VILLAGES)
-					.executes(ctx -> weekly(ctx.getSource(), village(ctx), null, 0))
+					.executes(ctx -> order(ctx.getSource(), village(ctx), null, 0))
 					.then(Commands.literal("add").then(Commands.argument("player", EntityArgument.player())
 						.then(Commands.argument("amount", IntegerArgumentType.integer(1, 100000))
-							.executes(ctx -> weekly(ctx.getSource(), village(ctx), player(ctx), IntegerArgumentType.getInteger(ctx, "amount"))))))))
+							.executes(ctx -> order(ctx.getSource(), village(ctx), player(ctx), IntegerArgumentType.getInteger(ctx, "amount"))))))))
 			.then(Commands.literal("patron")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.argument("village", StringArgumentType.string()).suggests(VILLAGES)
@@ -162,24 +162,17 @@ public final class AdminCommands {
 		return state.fame;
 	}
 
-	private static int weekly(CommandSourceStack source, VillageRegistry.Village village, ServerPlayer helper, int amount) {
-		Optional<Weekly.View> view = Weekly.current(source.getServer(), village);
+	private static int order(CommandSourceStack source, VillageRegistry.Village village, ServerPlayer helper, int amount) {
+		Optional<GroupOrder.View> view = GroupOrder.current(source.getServer(), village);
 		if (view.isEmpty()) {
-			source.sendFailure(Component.literal("Weekly orders are turned off"));
+			source.sendFailure(Component.literal("Village orders are turned off"));
 			return 0;
 		}
-		if (helper != null) {
-			ErrandsData.Weekly order = view.get().order();
-			int add = Math.min(amount, Math.max(0, view.get().target() - order.progress));
-			order.progress += add;
-			order.contrib.merge(helper.getUUID(), add, Integer::sum);
-			ErrandsData.get(source.getServer()).setDirty();
-			if (order.progress >= view.get().target()) Weekly.settle(source.getServer(), ErrandsData.villageKey(village.center), order);
-		}
-		Weekly.View v = view.get();
+		if (helper != null) GroupOrder.add(source.getServer(), village, view.get(), helper.getUUID(), amount);
+		GroupOrder.View v = view.get();
 		StringBuilder who = new StringBuilder();
 		v.order().contrib.forEach((id, n) -> who.append(' ').append(id.toString(), 0, 8).append('=').append(n));
-		source.sendSuccess(() -> Component.literal("Weekly order of #" + village.id + ": " + v.kind().key() + " "
+		source.sendSuccess(() -> Component.literal("Village order of #" + village.id + ": " + v.kind().key() + " "
 			+ Math.min(v.order().progress, v.target()) + "/" + v.target() + ", " + v.daysLeft() + " days left" + (v.order().settled ? ", paid" : "")
 			+ (who.isEmpty() ? "" : ", helpers:" + who)), helper != null);
 		return v.order().progress;

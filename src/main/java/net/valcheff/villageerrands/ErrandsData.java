@@ -93,8 +93,9 @@ public final class ErrandsData extends SavedData {
 		/** Emeralds sent from the treasury so far, weekly orders helped to finish. */
 		public int treasurySent;
 		public int weeklyDone;
-		/** Emeralds owed to the player (weekly order shares while offline, or a full ender chest). */
+		/** Emeralds and experience owed to the player (village order shares while offline, or a full ender chest). */
 		public int mail;
+		public int mailXp;
 
 		public Active find(String errandId) {
 			for (Active a : active) if (a.errand.id().equals(errandId)) return a;
@@ -117,16 +118,20 @@ public final class ErrandsData extends SavedData {
 
 	private final Map<UUID, PlayerState> players = new HashMap<>();
 
-	/** A village's weekly order, shared by every player: what is done and who did how much. */
-	public static final class Weekly {
-		public long week;
+	/** A village's monthly order, shared by every player: what is done and who did how much. */
+	public static final class VillageOrder {
+		public long period;
+		/** The kind of order (GroupOrder.Kind key). */
+		public String kind;
 		public int progress;
 		public final Map<UUID, Integer> contrib = new HashMap<>();
 		public boolean settled;
+		/** A weekly order saved by 1.0, carried into the current month once. */
+		public boolean carried;
 	}
 
-	/** Village key -> its weekly order (the current week, or the last one until it is settled). */
-	public final Map<String, Weekly> weekly = new HashMap<>();
+	/** Village key -> its order (the current month, or the last one until it is settled). */
+	public final Map<String, VillageOrder> orders = new HashMap<>();
 
 	public Map<UUID, PlayerState> players() {
 		return players;
@@ -200,12 +205,30 @@ public final class ErrandsData extends SavedData {
 			if (paid != null) p.paidUntil.merge(keepKey, paid, Math::max);
 			if (p.patronOf.remove(goneKey)) p.patronOf.add(keepKey);
 		}
-		weekly.remove(goneKey);
+		orders.remove(goneKey);
 		setDirty();
 	}
 
 	public void prune(long today) {
-		for (PlayerState p : players.values()) p.done.values().removeIf(day -> day < today - KEEP_DONE_DAYS);
+		// A contract lasts a game week, so its id is kept longer: it must not come back the same week.
+		for (PlayerState p : players.values()) {
+			p.done.entrySet().removeIf(e -> e.getValue() < today - (e.getKey().endsWith("/contract") ? 8 : KEEP_DONE_DAYS));
+		}
+	}
+
+	private static VillageOrder loadOrder(CompoundTag w) {
+		VillageOrder order = new VillageOrder();
+		order.progress = w.getIntOr("progress", 0);
+		order.settled = w.getBooleanOr("settled", false);
+		order.carried = w.getBooleanOr("carried", false);
+		CompoundTag c = w.getCompoundOrEmpty("contrib");
+		for (String k : c.keySet()) {
+			try {
+				order.contrib.put(UUID.fromString(k), c.getIntOr(k, 0));
+			} catch (IllegalArgumentException ignored) {
+			}
+		}
+		return order;
 	}
 
 	private static Active loadActive(CompoundTag a) {
@@ -281,26 +304,30 @@ public final class ErrandsData extends SavedData {
 			state.treasurySent = p.getIntOr("treasury_sent", 0);
 			state.weeklyDone = p.getIntOr("weekly_done", 0);
 			state.mail = p.getIntOr("mail", 0);
+			state.mailXp = p.getIntOr("mail_xp", 0);
 			p.getListOrEmpty("history").compoundStream().forEach(h -> {
 				state.history.add(Errand.load(h.getCompoundOrEmpty("errand")));
 				state.historyDays.add(h.getLongOr("day", 0L));
 			});
 		}
+		CompoundTag orders = tag.getCompoundOrEmpty("group_orders");
+		for (String key : orders.keySet()) {
+			CompoundTag w = orders.getCompoundOrEmpty(key);
+			VillageOrder order = loadOrder(w);
+			order.period = w.getLongOr("period", 0L);
+			order.kind = w.getStringOr("kind", "");
+			if (order.kind.isEmpty()) order.kind = null;
+			data.orders.put(key, order);
+		}
+		// Weekly orders of 1.0: carried into this month's order, keeping what was brought and by whom.
 		CompoundTag weekly = tag.getCompoundOrEmpty("weekly");
 		for (String key : weekly.keySet()) {
 			CompoundTag w = weekly.getCompoundOrEmpty(key);
-			Weekly order = new Weekly();
-			order.week = w.getLongOr("week", 0L);
-			order.progress = w.getIntOr("progress", 0);
-			order.settled = w.getBooleanOr("settled", false);
-			CompoundTag c = w.getCompoundOrEmpty("contrib");
-			for (String k : c.keySet()) {
-				try {
-					order.contrib.put(UUID.fromString(k), c.getIntOr(k, 0));
-				} catch (IllegalArgumentException ignored) {
-				}
-			}
-			data.weekly.put(key, order);
+			if (data.orders.containsKey(key) || w.getBooleanOr("settled", false)) continue;
+			VillageOrder order = loadOrder(w);
+			order.kind = GroupOrder.kind(key, w.getLongOr("week", 0L)).key();
+			order.carried = true;
+			data.orders.put(key, order);
 		}
 		return data;
 	}
@@ -383,21 +410,24 @@ public final class ErrandsData extends SavedData {
 			p.putInt("treasury_sent", state.treasurySent);
 			p.putInt("weekly_done", state.weeklyDone);
 			p.putInt("mail", state.mail);
+			p.putInt("mail_xp", state.mailXp);
 			all.put(e.getKey().toString(), p);
 		}
 		root.put("players", all);
-		CompoundTag weeklyTag = new CompoundTag();
-		weekly.forEach((key, order) -> {
+		CompoundTag ordersTag = new CompoundTag();
+		orders.forEach((key, order) -> {
 			CompoundTag w = new CompoundTag();
-			w.putLong("week", order.week);
+			w.putLong("period", order.period);
+			if (order.kind != null) w.putString("kind", order.kind);
 			w.putInt("progress", order.progress);
 			w.putBoolean("settled", order.settled);
+			w.putBoolean("carried", order.carried);
 			CompoundTag c = new CompoundTag();
 			order.contrib.forEach((k, v) -> c.putInt(k.toString(), v));
 			w.put("contrib", c);
-			weeklyTag.put(key, w);
+			ordersTag.put(key, w);
 		});
-		root.put("weekly", weeklyTag);
+		root.put("group_orders", ordersTag);
 		return root;
 	}
 }

@@ -15,7 +15,7 @@
     },
     "description": {
       "translate": "advancement.villageerrands.villages.weekly.description",
-      "fallback": "Help finish a village's weekly order"
+      "fallback": "Help finish a village order"
     },
     "frame": "task",
     "show_toast": true,

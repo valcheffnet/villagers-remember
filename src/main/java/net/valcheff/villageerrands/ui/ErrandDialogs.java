@@ -267,13 +267,13 @@ public final class ErrandDialogs {
 		buttons.add(button(player, Component.empty().append(Icons.of(Items.PLAYER_HEAD))
 				.append(Lang.tr(player, "board.residents", village.workers().size()).withStyle(ChatFormatting.AQUA)),
 			null, MENU_WIDTH, p -> residents(p, bell, village.center)));
-		net.valcheff.villageerrands.Weekly.current(level.getServer(), village).ifPresent(view -> {
+		net.valcheff.villageerrands.GroupOrder.current(level.getServer(), village).ifPresent(view -> {
 			MutableComponent label = Component.empty().append(Icons.of(view.kind().icon))
-				.append(Lang.tr(player, "weekly.button", Math.min(view.order().progress, view.target()), view.target())
+				.append(Lang.tr(player, "group.button", Math.min(view.order().progress, view.target()), view.target())
 					.withStyle(view.done() ? ChatFormatting.GREEN : ChatFormatting.GOLD));
 			if (view.done()) label.append(Component.literal(" ✔").withStyle(ChatFormatting.GREEN));
-			buttons.add(button(player, label, Lang.tr(player, "weekly." + view.kind().key() + ".name"), MENU_WIDTH,
-				p -> weekly(p, bell, village.center)));
+			buttons.add(button(player, label, Lang.tr(player, "group." + view.kind().key() + ".name"), MENU_WIDTH,
+				p -> villageOrder(p, bell, village.center)));
 		});
 		buttons.add(treasuryButton(player, p -> board(p, bell, village.center), MENU_WIDTH));
 		buttons.add(journalButton(player, p -> board(p, bell, village.center), MENU_WIDTH));
@@ -349,35 +349,35 @@ public final class ErrandDialogs {
 		player.openDialog(Holder.direct(new MultiActionDialog(common, List.of(save), Optional.of(back), 1)));
 	}
 
-	/** The village's weekly order: what is wanted, how far it is, who helped, and a button to bring what you have. */
-	private static void weekly(ServerPlayer player, GlobalPos bell, GlobalPos center) {
+	/** The village's monthly order: what is wanted, how far it is, who helped, and a button to bring what you have. */
+	private static void villageOrder(ServerPlayer player, GlobalPos bell, GlobalPos center) {
 		DialogActions.begin(player);
 		ServerLevel level = (ServerLevel) player.level();
 		Optional<VillageRegistry.Village> found = VillageRegistry.get(level.getServer()).byCenter(center);
-		Optional<net.valcheff.villageerrands.Weekly.View> current = found.flatMap(v -> net.valcheff.villageerrands.Weekly.current(level.getServer(), v));
+		Optional<net.valcheff.villageerrands.GroupOrder.View> current = found.flatMap(v -> net.valcheff.villageerrands.GroupOrder.current(level.getServer(), v));
 		if (current.isEmpty()) {
 			player.connection.send(net.minecraft.network.protocol.common.ClientboundClearDialogPacket.INSTANCE);
 			return;
 		}
 		VillageRegistry.Village village = found.get();
-		net.valcheff.villageerrands.Weekly.View view = current.get();
+		net.valcheff.villageerrands.GroupOrder.View view = current.get();
 		String kind = view.kind().key();
 		ErrandsConfig cfg = ErrandsConfig.INSTANCE;
 		Component title = Component.empty().append(Icons.of(view.kind().icon))
-			.append(Lang.tr(player, "weekly.title", Lang.tr(player, "weekly." + kind + ".name")).withStyle(ChatFormatting.GOLD));
+			.append(Lang.tr(player, "group.title", Lang.tr(player, "group." + kind + ".name")).withStyle(ChatFormatting.GOLD));
 		int progress = Math.min(view.order().progress, view.target());
 		int mine = view.order().contrib.getOrDefault(player.getUUID(), 0);
 		MutableComponent text = Component.empty()
-			.append(ErrandText.quotedLine(Lang.raw(Lang.language(player), "weekly." + kind + ".desc")))
-			.append("\n\n").append(Lang.tr(player, "weekly." + kind + ".want", view.target()).withStyle(ChatFormatting.WHITE))
-			.append("\n").append(Component.literal(net.valcheff.villageerrands.Weekly.examples(player, view.kind())).withStyle(ChatFormatting.DARK_GRAY))
+			.append(ErrandText.quotedLine(Lang.raw(Lang.language(player), "group." + kind + ".desc")))
+			.append("\n\n").append(Lang.tr(player, "group." + kind + ".want", view.target()).withStyle(ChatFormatting.WHITE))
+			.append("\n").append(Component.literal(net.valcheff.villageerrands.GroupOrder.examples(player, view.kind())).withStyle(ChatFormatting.DARK_GRAY))
 			.append("\n\n").append(ErrandText.bar(progress, view.target(), 20))
-			.append("\n").append(view.done() ? Lang.tr(player, "weekly.done").withStyle(ChatFormatting.GREEN)
-				: Lang.tr(player, "weekly.days_left", view.daysLeft()).withStyle(ChatFormatting.GRAY))
-			.append("\n").append(Lang.tr(player, "weekly.mine", mine, Math.round(100.0 * mine / view.target())).withStyle(ChatFormatting.AQUA));
-		List<java.util.Map.Entry<java.util.UUID, Integer>> top = net.valcheff.villageerrands.Weekly.top(view.order(), 5);
+			.append("\n").append(view.done() ? Lang.tr(player, "group.done").withStyle(ChatFormatting.GREEN)
+				: Lang.tr(player, "group.days_left", view.daysLeft()).withStyle(ChatFormatting.GRAY))
+			.append("\n").append(Lang.tr(player, "group.mine", mine, Math.round(100.0 * mine / view.target())).withStyle(ChatFormatting.AQUA));
+		List<java.util.Map.Entry<java.util.UUID, Integer>> top = net.valcheff.villageerrands.GroupOrder.top(view.order(), 5);
 		if (!top.isEmpty()) {
-			text.append("\n\n").append(Lang.tr(player, "weekly.helpers").withStyle(ChatFormatting.GOLD));
+			text.append("\n\n").append(Lang.tr(player, "group.helpers").withStyle(ChatFormatting.GOLD));
 			for (var e : top) {
 				ServerPlayer online = level.getServer().getPlayerList().getPlayer(e.getKey());
 				String who = online != null ? online.getGameProfile().name()
@@ -385,24 +385,24 @@ public final class ErrandDialogs {
 				text.append("\n").append(Component.literal(who + ": " + e.getValue()).withStyle(ChatFormatting.WHITE));
 			}
 		}
-		text.append("\n\n").append(Lang.tr(player, "weekly.reward", Math.round(cfg.weeklyRewardEmeralds), Math.round(cfg.weeklyMinShare * 100))
+		text.append("\n\n").append(Lang.tr(player, "group.reward", Math.round(cfg.groupRewardEmeralds), Math.round(cfg.groupMinShare * 100))
 			.withStyle(ChatFormatting.DARK_GREEN));
 		List<DialogBody> body = List.of(new PlainMessage(text, TEXT_WIDTH));
 		List<ActionButton> buttons = new ArrayList<>();
 		if (!view.done()) {
-			if (view.kind() == net.valcheff.villageerrands.Weekly.Kind.DEFEND) {
-				buttons.add(button(player, Lang.tr(player, "weekly.defend_hint").withStyle(ChatFormatting.GRAY), null, 300,
-					p -> weekly(p, bell, center)));
+			if (view.kind() == net.valcheff.villageerrands.GroupOrder.Kind.DEFEND) {
+				buttons.add(button(player, Lang.tr(player, "group.defend_hint").withStyle(ChatFormatting.GRAY), null, 300,
+					p -> villageOrder(p, bell, center)));
 			} else {
-				int have = net.valcheff.villageerrands.Weekly.available(player, view);
-				buttons.add(button(player, have > 0 ? Lang.tr(player, "weekly.give", have).withStyle(ChatFormatting.GREEN)
-						: Lang.tr(player, "weekly.nothing").withStyle(ChatFormatting.GRAY), null, 300, p -> {
-					int given = net.valcheff.villageerrands.Weekly.contribute(p, village);
+				int have = net.valcheff.villageerrands.GroupOrder.available(player, view);
+				buttons.add(button(player, have > 0 ? Lang.tr(player, "group.give", have).withStyle(ChatFormatting.GREEN)
+						: Lang.tr(player, "group.nothing").withStyle(ChatFormatting.GRAY), null, 300, p -> {
+					int given = net.valcheff.villageerrands.GroupOrder.contribute(p, village);
 					if (given > 0) {
-						p.sendSystemMessage(Lang.tr(p, "weekly.given", given).withStyle(ChatFormatting.GREEN));
+						p.sendSystemMessage(Lang.tr(p, "group.given", given).withStyle(ChatFormatting.GREEN));
 						ErrandService.sound(p, net.minecraft.sounds.SoundEvents.VILLAGER_YES);
 					}
-					weekly(p, bell, center);
+					villageOrder(p, bell, center);
 				}));
 			}
 		}
@@ -575,6 +575,11 @@ public final class ErrandDialogs {
 		MutableComponent heading = Component.empty()
 			.append(ErrandText.task(player, errand).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 		ErrandText.lore(player, errand).ifPresent(l -> heading.append("\n\n").append(l));
+		if (ErrandGenerator.isContract(errand)) {
+			long today = ErrandGenerator.day((ServerLevel) player.level());
+			long left = (ErrandGenerator.week(today) + 1) * 7 - today;
+			heading.append("\n").append(Lang.tr(player, "contract.days_left", left).withStyle(ChatFormatting.GRAY));
+		}
 		body.add(new ItemBody(ItemStackTemplate.fromNonEmptyStack(icon), Optional.of(new PlainMessage(heading, 220)),
 			true, true, 16, 16));
 

@@ -158,6 +158,10 @@ public final class ErrandService {
 		if (trial) {
 			Reputation.passTrial(state, errand.villager(), errand.tier() - 1);
 			state.flags.add("trial");
+			// The item of a trial is given once per profession and tier; the top reward once per profession.
+			String profPath = ErrandText.path(errand.profession());
+			if (errand.item().map(i -> i.kind() == ErrandPools.RewardKind.TOP).orElse(false)) state.flags.add(ErrandGenerator.topFlag(profPath));
+			else if (errand.item().isPresent()) state.flags.add(ErrandGenerator.trialItemFlag(profPath, errand.tier() - 1));
 		}
 		int pendingBefore = Reputation.trialPending(state, errand.villager());
 		boolean villagerTierUp = Reputation.addVillager(state, player, errand.villager(), villager, errand.reputation());

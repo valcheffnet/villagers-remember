@@ -26,7 +26,7 @@ public final class Tracking {
 		// A kill counts for every accepted hunt that wants this mob.
 		Actions.record(player, Objective.Type.KILL, 1, o -> o.matchesEntity(entity.getType()));
 		// And for a village's "Defend the village" weekly order when it died inside that village.
-		Weekly.kill(player, entity);
+		GroupOrder.kill(player, entity);
 	}
 
 	/**

@@ -63,8 +63,8 @@ Tiers and the points they start at:
 |---|---|
 | `/errands fame <player>` | Shows the player's fame and title. |
 | `/errands fame <player> set <points>` / `add <points>` | Sets or adds fame. Titles: Helper at 100, Benefactor at 500, Legend at 1500. |
-| `/errands weekly <village>` | The village's weekly order: kind, progress, days left, helpers. |
-| `/errands weekly <village> add <player> <amount>` | Counts `amount` for the order as if the player had brought it. Reaching the target pays everyone out. |
+| `/errands order <village>` | The village's monthly order: kind, progress, days left, helpers. |
+| `/errands order <village> add <player> <amount>` | Counts `amount` for the order as if the player had brought it. Reaching the target pays everyone out. |
 | `/errands patron <village>` | Works out the patron again and shows who it is. |
 | `/errands patron <village> clear` | Removes the patron; the best qualifying player (if any) takes the place. |
 | `/errands legend <player> <profession>` | Gives the profession's legendary item and records it, as the third contract would. |
@@ -102,6 +102,6 @@ Two villagers in one village can share a name. They get their trade added (`Lott
 /errands give @p here Lotte.weaponsmith reforge.iron_sword
 /errands finish @p items
 /errands fame @p set 1500
-/errands weekly here add @p 500
+/errands order here add @p 500
 /errands legend @p farmer
 ```

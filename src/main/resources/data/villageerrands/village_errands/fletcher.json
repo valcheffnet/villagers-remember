@@ -2,12 +2,8 @@
   "profession": "minecraft:fletcher",
   "tasks": [
     {
-      "count": [
-        32,
-        64
-      ],
-      "value": 0.034,
       "weight": 10,
+      "value": 0.02,
       "objectives": [
         {
           "craft": "minecraft:stick"
@@ -16,6 +12,10 @@
           "deliver": "minecraft:stick"
         }
       ],
+      "count": [
+        200,
+        256
+      ],
       "tiers": [
         1,
         1
@@ -23,24 +23,20 @@
     },
     {
       "deliver": "minecraft:flint",
-      "count": [
-        32,
-        64
-      ],
-      "value": 0.05,
       "weight": 10,
+      "value": 0.05,
+      "count": [
+        80,
+        160
+      ],
       "tiers": [
         1,
         1
       ]
     },
     {
-      "count": [
-        16,
-        32
-      ],
-      "value": 0.11,
       "weight": 10,
+      "value": 0.05,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -49,6 +45,10 @@
         {
           "deliver": "minecraft:feather"
         }
+      ],
+      "count": [
+        80,
+        160
       ],
       "tiers": [
         1,
@@ -64,12 +64,12 @@
           "deliver": "minecraft:arrow"
         }
       ],
-      "count": [
-        16,
-        32
-      ],
-      "value": 0.05,
       "weight": 10,
+      "value": 0.03,
+      "count": [
+        134,
+        256
+      ],
       "tiers": [
         1,
         1
@@ -96,7 +96,7 @@
         1,
         1
       ],
-      "value": 1.8,
+      "value": 0.9,
       "weight": 8,
       "reward": {
         "enchant": "minecraft:bow",
@@ -112,12 +112,8 @@
       ]
     },
     {
-      "count": [
-        24,
-        48
-      ],
-      "value": 0.235,
       "weight": 10,
+      "value": 0.04,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -127,18 +123,18 @@
           "deliver": "minecraft:string"
         }
       ],
+      "count": [
+        200,
+        256
+      ],
       "tiers": [
         2,
         2
       ]
     },
     {
-      "count": [
-        8,
-        16
-      ],
-      "value": 0.172,
       "weight": 10,
+      "value": 0.1,
       "objectives": [
         {
           "craft": "minecraft:tripwire_hook"
@@ -147,25 +143,9 @@
           "deliver": "minecraft:tripwire_hook"
         }
       ],
-      "tiers": [
-        2,
-        2
-      ]
-    },
-    {
       "count": [
-        32,
-        64
-      ],
-      "value": 0.057,
-      "weight": 10,
-      "objectives": [
-        {
-          "craft": "minecraft:arrow"
-        },
-        {
-          "deliver": "minecraft:arrow"
-        }
+        80,
+        120
       ],
       "tiers": [
         2,
@@ -173,25 +153,8 @@
       ]
     },
     {
-      "kill": "minecraft:skeleton",
-      "count": [
-        8,
-        12
-      ],
-      "value": 0.45,
       "weight": 10,
-      "tiers": [
-        2,
-        2
-      ]
-    },
-    {
-      "count": [
-        2,
-        4
-      ],
-      "value": 0.69,
-      "weight": 10,
+      "value": 0.6,
       "objectives": [
         {
           "craft": "minecraft:bow"
@@ -200,18 +163,31 @@
           "deliver": "minecraft:bow"
         }
       ],
+      "count": [
+        14,
+        16
+      ],
       "tiers": [
-        3,
-        3
+        2,
+        2
       ]
     },
     {
-      "count": [
-        1,
-        2
-      ],
-      "value": 1.38,
+      "kill": "minecraft:skeleton",
       "weight": 10,
+      "value": 0.25,
+      "count": [
+        32,
+        48
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "weight": 10,
+      "value": 0.9,
       "objectives": [
         {
           "craft": "minecraft:crossbow"
@@ -220,19 +196,10 @@
           "deliver": "minecraft:crossbow"
         }
       ],
-      "tiers": [
-        3,
-        3
-      ]
-    },
-    {
-      "deliver": "minecraft:bamboo",
       "count": [
-        32,
-        64
+        14,
+        16
       ],
-      "value": 0.04,
-      "weight": 10,
       "tiers": [
         3,
         3
@@ -240,12 +207,12 @@
     },
     {
       "kill": "minecraft:bogged",
-      "count": [
-        4,
-        8
-      ],
-      "value": 0.5,
       "weight": 10,
+      "value": 0.5,
+      "count": [
+        24,
+        36
+      ],
       "tiers": [
         3,
         3
@@ -253,12 +220,12 @@
     },
     {
       "kill": "minecraft:stray",
-      "count": [
-        4,
-        8
-      ],
-      "value": 0.5,
       "weight": 10,
+      "value": 0.5,
+      "count": [
+        24,
+        36
+      ],
       "tiers": [
         3,
         3
@@ -270,43 +237,43 @@
         {
           "craft": "minecraft:bow",
           "count": [
-            1,
-            1
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:bow",
           "count": [
-            1,
-            1
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:crossbow",
           "count": [
-            1,
-            1
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:crossbow",
           "count": [
-            1,
-            1
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:arrow",
           "count": [
-            32,
-            32
+            139,
+            139
           ]
         },
         {
           "deliver": "minecraft:arrow",
           "count": [
-            32,
-            32
+            139,
+            139
           ]
         }
       ],
@@ -314,7 +281,7 @@
         1,
         1
       ],
-      "value": 4.84,
+      "value": 14.17,
       "weight": 6,
       "tiers": [
         3,
@@ -342,7 +309,7 @@
         1,
         1
       ],
-      "value": 2.4,
+      "value": 1.2,
       "weight": 8,
       "reward": {
         "enchant": "minecraft:crossbow",
@@ -358,12 +325,8 @@
       ]
     },
     {
-      "count": [
-        16,
-        32
-      ],
-      "value": 0.345,
       "weight": 10,
+      "value": 0.1,
       "objectives": [
         {
           "craft": "minecraft:spectral_arrow"
@@ -372,6 +335,10 @@
           "deliver": "minecraft:spectral_arrow"
         }
       ],
+      "count": [
+        180,
+        250
+      ],
       "tiers": [
         4,
         4
@@ -379,12 +346,38 @@
     },
     {
       "kill": "minecraft:pillager",
-      "count": [
-        6,
-        10
-      ],
-      "value": 1.0,
       "weight": 10,
+      "value": 0.6,
+      "count": [
+        30,
+        41
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:ghast",
+      "weight": 10,
+      "value": 1.5,
+      "count": [
+        12,
+        16
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:phantom",
+      "weight": 10,
+      "value": 0.8,
+      "count": [
+        23,
+        31
+      ],
       "tiers": [
         4,
         4
@@ -411,7 +404,7 @@
         1,
         1
       ],
-      "value": 3.6,
+      "value": 1.8,
       "weight": 8,
       "reward": {
         "enchant": "minecraft:crossbow",
@@ -427,12 +420,8 @@
       ]
     },
     {
-      "count": [
-        16,
-        32
-      ],
-      "value": 0.575,
       "weight": 10,
+      "value": 0.5,
       "objectives": [
         {
           "craft": "minecraft:wind_charge"
@@ -441,6 +430,10 @@
           "deliver": "minecraft:wind_charge"
         }
       ],
+      "count": [
+        50,
+        64
+      ],
       "tiers": [
         5,
         5
@@ -448,12 +441,29 @@
     },
     {
       "kill": "minecraft:breeze",
-      "count": [
-        6,
-        10
-      ],
-      "value": 2.0,
       "weight": 10,
+      "value": 2.5,
+      "count": [
+        10,
+        14
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:trial_chambers"
+        }
+      ],
+      "weight": 6,
+      "value": 30.0,
+      "count": [
+        1,
+        1
+      ],
       "tiers": [
         5,
         5
@@ -480,7 +490,7 @@
         1,
         1
       ],
-      "value": 1.8,
+      "value": 0.9,
       "weight": 8,
       "reward": {
         "enchant": "minecraft:bow",
@@ -500,70 +510,28 @@
     {
       "item": "minecraft:arrow",
       "count": [
-        16,
-        32
+        32,
+        64
       ],
       "value": 0.06,
       "min_tier": 2,
-      "max_tier": 3
+      "max_tier": 2
     },
     {
       "loot_table": "minecraft:chests/village/village_fletcher",
       "value": 3,
-      "min_tier": 3,
-      "max_tier": 4
-    },
-    {
-      "enchant": "minecraft:bow",
-      "levels": [
-        10,
-        18
-      ],
-      "value_per_level": 0.3,
       "min_tier": 3,
       "max_tier": 3
     },
     {
       "item": "minecraft:spectral_arrow",
       "count": [
-        16,
-        32
+        32,
+        64
       ],
       "value": 0.3,
       "min_tier": 4,
-      "max_tier": 5
-    },
-    {
-      "enchant": "minecraft:crossbow",
-      "levels": [
-        20,
-        30
-      ],
-      "value_per_level": 0.3,
-      "min_tier": 4,
       "max_tier": 4
-    },
-    {
-      "enchant": "minecraft:bow",
-      "levels": [
-        25,
-        30
-      ],
-      "value_per_level": 0.35,
-      "min_tier": 5,
-      "max_tier": 5,
-      "max_levels": true
-    },
-    {
-      "enchant": "minecraft:crossbow",
-      "levels": [
-        25,
-        30
-      ],
-      "value_per_level": 0.35,
-      "min_tier": 5,
-      "max_tier": 5,
-      "max_levels": true
     },
     {
       "top": true,

@@ -307,6 +307,8 @@ ORDERS = {
     "wedding": ("The wedding table", "Сватбената трапеза",
                 "My daughter is getting married. The table must be the finest in the valley.",
                 "Дъщеря ми се жени. Трапезата трябва да е най-богатата в долината."),
+    "rainbow": ("Every colour there is", "Всички цветове",
+                "The festival needs every colour of wool. All sixteen.", "За празника трябва вълна във всички цветове. Всичките шестнайсет."),
     "color_set": ("A set of colours", "Шарен комплект",
                   "The weavers want colour. Plain white won't do this season.", "Тъкачите искат цветове. Само бяло този сезон няма да мине."),
     "potions": ("Potion stores", "Запас за отвари",

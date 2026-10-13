@@ -1,10 +1,7 @@
 package net.valcheff.villageerrands;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,16 +21,16 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * The weekly order of a village (TIERS.md section 7): one big order for every player, e.g. "Winter stores: 1024
- * food". Anyone brings what they have, as often as they like (any part of the amount counts); the village keeps
- * the total and each player's share. When it is done every helper with at least the minimum share is paid by
- * share: emeralds (to the ender chest), fame and village standing. An order left unfinished at the end of the
- * week pays half, for what was done.
+ * The village order (TIERS.md section 7): once a game month (30 game days), one huge order for every player, e.g.
+ * "Winter stores: 4096 food". Anyone brings what they have, as often as they like (any part counts); the village
+ * keeps the total and each player's share. When it is done every helper with at least the minimum share is paid by
+ * share in emeralds (to the ender chest), experience, fame and village standing. No items. An order left unfinished
+ * when the month ends pays half, for what was done.
  */
-public final class Weekly {
+public final class GroupOrder {
 	public enum Kind {
-		FOOD(Items.BREAD, 1024), WOOD(Items.OAK_LOG, 512), STONE(Items.COBBLESTONE, 1536), IRON(Items.IRON_INGOT, 192),
-		WOOL(Items.STRING, 256), DEFEND(Items.IRON_SWORD, 100);
+		FOOD(Items.BREAD, 4096), WOOD(Items.OAK_LOG, 2048), STONE(Items.COBBLESTONE, 6144), IRON(Items.IRON_INGOT, 768),
+		WOOL(Items.STRING, 1024), DEFEND(Items.IRON_SWORD, 400);
 
 		public final Item icon;
 		public final int base;
@@ -46,6 +43,11 @@ public final class Weekly {
 		public String key() {
 			return name().toLowerCase(java.util.Locale.ROOT);
 		}
+
+		static Kind of(String key) {
+			for (Kind k : values()) if (k.key().equals(key)) return k;
+			return null;
+		}
 	}
 
 	private static final Set<Item> FOOD = Set.of(Items.WHEAT, Items.CARROT, Items.POTATO, Items.BEETROOT, Items.BREAD,
@@ -55,25 +57,33 @@ public final class Weekly {
 	private static final Set<Item> STONE = Set.of(Items.COBBLESTONE, Items.COBBLED_DEEPSLATE, Items.STONE, Items.STONE_BRICKS,
 		Items.DEEPSLATE_BRICKS, Items.ANDESITE, Items.DIORITE, Items.GRANITE, Items.TUFF);
 	private static final int CHECK_INTERVAL = 200;
+	/** Fame, experience (in emeralds' worth) and village standing a finished order shares out. */
+	public static final int FAME_POOL = 80;
+	private static final int STANDING_POOL = 80;
 
-	public record View(Kind kind, int target, ErrandsData.Weekly order, long daysLeft) {
+	public record View(Kind kind, int target, ErrandsData.VillageOrder order, long daysLeft) {
 		public boolean done() {
 			return order.progress >= target;
 		}
 	}
 
-	public static long week(long day) {
-		return Math.floorDiv(day, 7L);
+	public static long period(long day) {
+		return Math.floorDiv(day, (long) ErrandsConfig.INSTANCE.groupOrderDays);
 	}
 
-	public static Kind kind(String villageKey, long week) {
-		long h = villageKey.hashCode() * 31L + week * 0x9E3779B97F4A7C15L;
+	public static Kind kind(String villageKey, long period) {
+		long h = villageKey.hashCode() * 31L + period * 0x9E3779B97F4A7C15L;
 		h ^= h >>> 29;
 		return Kind.values()[(int) Math.floorMod(h, (long) Kind.values().length)];
 	}
 
+	public static Kind kindOf(String villageKey, ErrandsData.VillageOrder order) {
+		Kind k = order.kind != null ? Kind.of(order.kind) : null;
+		return k != null ? k : kind(villageKey, order.period);
+	}
+
 	public static int target(Kind kind) {
-		return Math.max(1, (int) Math.round(kind.base * ErrandsConfig.INSTANCE.weeklyOrderScale));
+		return Math.max(1, (int) Math.round(kind.base * ErrandsConfig.INSTANCE.groupOrderScale));
 	}
 
 	public static boolean accepts(Kind kind, ItemStack stack) {
@@ -88,26 +98,33 @@ public final class Weekly {
 		};
 	}
 
-	/** This week's order of the village; last week's is settled first. */
+	/** This month's order of the village; last month's is settled first. */
 	public static Optional<View> current(MinecraftServer server, VillageRegistry.Village village) {
-		if (!ErrandsConfig.INSTANCE.weeklyOrders) return Optional.empty();
+		if (!ErrandsConfig.INSTANCE.groupOrders) return Optional.empty();
 		long day = ErrandGenerator.day(server.overworld());
-		long week = week(day);
+		long period = period(day);
 		ErrandsData data = ErrandsData.get(server);
 		String key = ErrandsData.villageKey(village.center);
-		ErrandsData.Weekly order = data.weekly.get(key);
-		if (order != null && order.week < week) {
+		ErrandsData.VillageOrder order = data.orders.get(key);
+		if (order != null && order.period < period && !order.carried) {
 			settle(server, key, order);
 			order = null;
 		}
 		if (order == null) {
-			order = new ErrandsData.Weekly();
-			order.week = week;
-			data.weekly.put(key, order);
+			order = new ErrandsData.VillageOrder();
+			order.period = period;
+			order.kind = kind(key, period).key();
+			data.orders.put(key, order);
+			data.setDirty();
+		} else if (order.carried) {
+			// A weekly order from before 1.1 becomes this month's order, with what was brought so far.
+			order.carried = false;
+			order.period = period;
 			data.setDirty();
 		}
-		Kind kind = kind(key, week);
-		return Optional.of(new View(kind, target(kind), order, (week + 1) * 7 - day));
+		Kind kind = kindOf(key, order);
+		long days = ErrandsConfig.INSTANCE.groupOrderDays;
+		return Optional.of(new View(kind, target(kind), order, (period + 1) * days - day));
 	}
 
 	/** How many of the order's items the player has with them (as much as is still needed). */
@@ -132,7 +149,7 @@ public final class Weekly {
 			stack.shrink(n);
 			taken += n;
 		}
-		if (taken > 0) add(server, village, view, player, taken);
+		if (taken > 0) add(server, village, view, player.getUUID(), taken);
 		return taken;
 	}
 
@@ -144,13 +161,16 @@ public final class Weekly {
 		if (village.isEmpty()) return;
 		Optional<View> view = current(server, village.get());
 		if (view.isEmpty() || view.get().kind() != Kind.DEFEND || view.get().done()) return;
-		add(server, village.get(), view.get(), player, 1);
+		add(server, village.get(), view.get(), player.getUUID(), 1);
 	}
 
-	private static void add(MinecraftServer server, VillageRegistry.Village village, View view, ServerPlayer player, int amount) {
-		ErrandsData.Weekly order = view.order();
-		order.progress += amount;
-		order.contrib.merge(player.getUUID(), amount, Integer::sum);
+	/** Counts {@code amount} for a player (also used by the operator command). */
+	public static void add(MinecraftServer server, VillageRegistry.Village village, View view, UUID player, int amount) {
+		ErrandsData.VillageOrder order = view.order();
+		int add = Math.min(amount, Math.max(0, view.target() - order.progress));
+		if (add <= 0) return;
+		order.progress += add;
+		order.contrib.merge(player, add, Integer::sum);
 		ErrandsData.get(server).setDirty();
 		if (order.progress >= view.target() && !order.settled) {
 			settle(server, ErrandsData.villageKey(village.center), order);
@@ -159,14 +179,14 @@ public final class Weekly {
 
 	/**
 	 * Pays every helper with at least the minimum share: the whole reward when the order is done, half of what was
-	 * earned when the week ended first.
+	 * earned when the month ended first.
 	 */
-	public static void settle(MinecraftServer server, String key, ErrandsData.Weekly order) {
+	public static void settle(MinecraftServer server, String key, ErrandsData.VillageOrder order) {
 		if (order.settled) return;
 		order.settled = true;
 		ErrandsData data = ErrandsData.get(server);
 		data.setDirty();
-		Kind kind = kind(key, order.week);
+		Kind kind = kindOf(key, order);
 		int target = target(kind);
 		if (order.progress <= 0) return;
 		ErrandsConfig cfg = ErrandsConfig.INSTANCE;
@@ -176,21 +196,23 @@ public final class Weekly {
 			.flatMap(c -> VillageRegistry.get(server).byCenter(c));
 		for (Map.Entry<UUID, Integer> e : order.contrib.entrySet()) {
 			double share = (double) e.getValue() / Math.max(target, order.progress);
-			if (share < cfg.weeklyMinShare) continue;
+			if (share < cfg.groupMinShare) continue;
 			ErrandsData.PlayerState state = data.player(e.getKey());
-			int emeralds = Math.max(1, (int) Math.round(cfg.weeklyRewardEmeralds * share * pay));
-			int fame = Math.max(1, (int) Math.round(Fame.WEEKLY_POOL * share * pay));
+			int emeralds = Math.max(1, (int) Math.round(cfg.groupRewardEmeralds * share * pay));
+			int xp = Math.max(1, (int) Math.round(cfg.groupRewardEmeralds * share * pay * cfg.xpPerEmerald));
+			int fame = Math.max(1, (int) Math.round(FAME_POOL * share * pay));
 			state.mail += emeralds;
+			state.mailXp += xp;
 			if (done) state.weeklyDone++;
-			village.ifPresent(v -> Reputation.addVillage(state, Optional.of(v.center), Math.max(1, (int) Math.round(40 * share * pay))));
+			village.ifPresent(v -> Reputation.addVillage(state, Optional.of(v.center), Math.max(1, (int) Math.round(STANDING_POOL * share * pay))));
 			ServerPlayer player = server.getPlayerList().getPlayer(e.getKey());
 			if (player != null) {
 				String name = village.map(v -> ErrandText.villageName(player, v.center)).orElse("?");
-				player.sendSystemMessage(Lang.tr(player, done ? "weekly.paid" : "weekly.paid_partial",
-					Lang.tr(player, "weekly." + kind.key() + ".name"), name, emeralds).withStyle(ChatFormatting.GOLD));
+				player.sendSystemMessage(Lang.tr(player, done ? "group.paid" : "group.paid_partial",
+					Lang.tr(player, "group." + kind.key() + ".name"), name, emeralds).withStyle(ChatFormatting.GOLD));
 				if (done) {
-					Hud.title(player, Lang.tr(player, "weekly.done_title").withStyle(ChatFormatting.GOLD),
-						Lang.tr(player, "weekly." + kind.key() + ".name").withStyle(ChatFormatting.YELLOW));
+					Hud.title(player, Lang.tr(player, "group.done_title").withStyle(ChatFormatting.GOLD),
+						Lang.tr(player, "group." + kind.key() + ".name").withStyle(ChatFormatting.YELLOW));
 					player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
 						SoundSource.PLAYERS, 0.8f, 1.0f);
 				}
@@ -203,10 +225,15 @@ public final class Weekly {
 		}
 	}
 
-	/** Emeralds owed to the player go to their ender chest; what does not fit waits for the next time. */
+	/** Emeralds owed to the player go to their ender chest (what does not fit waits), owed experience to them. */
 	public static void deliverMail(ServerPlayer player) {
 		ErrandsData data = ErrandsData.get(player.level().getServer());
 		ErrandsData.PlayerState state = data.player(player.getUUID());
+		if (state.mailXp > 0) {
+			player.giveExperiencePoints(state.mailXp);
+			state.mailXp = 0;
+			data.setDirty();
+		}
 		if (state.mail <= 0) return;
 		int sent = 0;
 		var chest = player.getEnderChestInventory();
@@ -219,42 +246,40 @@ public final class Weekly {
 			if (moved < n) break;
 		}
 		data.setDirty();
-		if (sent > 0) player.sendSystemMessage(Lang.tr(player, "weekly.mail", sent).withStyle(ChatFormatting.GREEN));
-		if (state.mail > 0) player.sendSystemMessage(Lang.tr(player, "weekly.mail_full", state.mail).withStyle(ChatFormatting.RED));
+		if (sent > 0) player.sendSystemMessage(Lang.tr(player, "group.mail", sent).withStyle(ChatFormatting.GREEN));
+		if (state.mail > 0) player.sendSystemMessage(Lang.tr(player, "group.mail_full", state.mail).withStyle(ChatFormatting.RED));
 	}
 
-	/** Settles orders of weeks that have ended, and brings online players what they are owed. */
+	/** Settles orders of months that have ended, and brings online players what they are owed. */
 	public static void tick(MinecraftServer server) {
 		if (server.getTickCount() % CHECK_INTERVAL != 0) return;
 		ErrandsData data = ErrandsData.get(server);
-		long week = week(ErrandGenerator.day(server.overworld()));
-		for (Map.Entry<String, ErrandsData.Weekly> e : new ArrayList<>(data.weekly.entrySet())) {
-			if (e.getValue().week < week) {
+		long period = period(ErrandGenerator.day(server.overworld()));
+		for (Map.Entry<String, ErrandsData.VillageOrder> e : new ArrayList<>(data.orders.entrySet())) {
+			if (e.getValue().period < period && !e.getValue().carried) {
 				settle(server, e.getKey(), e.getValue());
-				data.weekly.remove(e.getKey());
+				data.orders.remove(e.getKey());
 				data.setDirty();
 			}
 		}
+		if (server.getTickCount() % 6000 != 0) return;
 		for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-			if (data.player(player.getUUID()).mail > 0 && server.getTickCount() % 6000 == 0) deliverMail(player);
+			ErrandsData.PlayerState state = data.player(player.getUUID());
+			if (state.mail > 0 || state.mailXp > 0) deliverMail(player);
 		}
 	}
 
 	/** The biggest helpers, most first. */
-	public static List<Map.Entry<UUID, Integer>> top(ErrandsData.Weekly order, int n) {
+	public static List<Map.Entry<UUID, Integer>> top(ErrandsData.VillageOrder order, int n) {
 		return order.contrib.entrySet().stream().sorted(Comparator.comparingInt((Map.Entry<UUID, Integer> e) -> -e.getValue()))
 			.limit(n).toList();
 	}
 
 	/** Item names accepted by an order, for its description. */
 	public static String examples(ServerPlayer player, Kind kind) {
-		return Lang.raw(Lang.language(player), "weekly." + kind.key() + ".items");
+		return Lang.raw(Lang.language(player), "group." + kind.key() + ".items");
 	}
 
-	static Item item(String path) {
-		return BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(path));
-	}
-
-	private Weekly() {
+	private GroupOrder() {
 	}
 }

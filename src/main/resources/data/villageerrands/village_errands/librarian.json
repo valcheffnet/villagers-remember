@@ -2,12 +2,8 @@
   "profession": "minecraft:librarian",
   "tasks": [
     {
-      "count": [
-        32,
-        64
-      ],
-      "value": 0.057,
       "weight": 10,
+      "value": 0.03,
       "objectives": [
         {
           "craft": "minecraft:paper"
@@ -16,18 +12,18 @@
           "deliver": "minecraft:paper"
         }
       ],
+      "count": [
+        134,
+        256
+      ],
       "tiers": [
         1,
         1
       ]
     },
     {
-      "count": [
-        16,
-        32
-      ],
-      "value": 0.13,
       "weight": 10,
+      "value": 0.05,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -37,18 +33,18 @@
           "deliver": "minecraft:feather"
         }
       ],
+      "count": [
+        80,
+        160
+      ],
       "tiers": [
         1,
         1
       ]
     },
     {
-      "count": [
-        8,
-        16
-      ],
-      "value": 0.28,
       "weight": 10,
+      "value": 0.2,
       "objectives": [
         {
           "kill": "minecraft:squid",
@@ -58,6 +54,10 @@
           "deliver": "minecraft:ink_sac"
         }
       ],
+      "count": [
+        20,
+        40
+      ],
       "tiers": [
         1,
         1
@@ -65,24 +65,20 @@
     },
     {
       "deliver": "minecraft:sugar_cane",
-      "count": [
-        32,
-        64
-      ],
-      "value": 0.05,
       "weight": 10,
+      "value": 0.025,
+      "count": [
+        160,
+        256
+      ],
       "tiers": [
         1,
         1
       ]
     },
     {
-      "count": [
-        8,
-        16
-      ],
-      "value": 0.345,
       "weight": 10,
+      "value": 0.15,
       "objectives": [
         {
           "craft": "minecraft:book"
@@ -91,18 +87,18 @@
           "deliver": "minecraft:book"
         }
       ],
+      "count": [
+        54,
+        80
+      ],
       "tiers": [
         2,
         2
       ]
     },
     {
-      "count": [
-        6,
-        12
-      ],
-      "value": 0.23,
       "weight": 10,
+      "value": 0.2,
       "objectives": [
         {
           "craft": "minecraft:candle"
@@ -111,18 +107,18 @@
           "deliver": "minecraft:candle"
         }
       ],
+      "count": [
+        40,
+        60
+      ],
       "tiers": [
         2,
         2
       ]
     },
     {
-      "count": [
-        4,
-        8
-      ],
-      "value": 0.46,
       "weight": 10,
+      "value": 0.1,
       "objectives": [
         {
           "craft": "minecraft:lantern"
@@ -130,6 +126,10 @@
         {
           "deliver": "minecraft:lantern"
         }
+      ],
+      "count": [
+        80,
+        120
       ],
       "tiers": [
         2,
@@ -143,24 +143,20 @@
           "min_level": 10
         }
       ],
-      "count": [
-        1,
-        2
-      ],
-      "value": 2.0,
       "weight": 6,
+      "value": 2.0,
+      "count": [
+        4,
+        6
+      ],
       "tiers": [
         2,
         2
       ]
     },
     {
-      "count": [
-        6,
-        12
-      ],
-      "value": 1.38,
       "weight": 10,
+      "value": 0.6,
       "objectives": [
         {
           "craft": "minecraft:bookshelf"
@@ -169,18 +165,18 @@
           "deliver": "minecraft:bookshelf"
         }
       ],
+      "count": [
+        20,
+        30
+      ],
       "tiers": [
         3,
         3
       ]
     },
     {
-      "count": [
-        4,
-        8
-      ],
-      "value": 0.69,
       "weight": 10,
+      "value": 0.9,
       "objectives": [
         {
           "craft": "minecraft:writable_book"
@@ -188,6 +184,10 @@
         {
           "deliver": "minecraft:writable_book"
         }
+      ],
+      "count": [
+        14,
+        16
       ],
       "tiers": [
         3,
@@ -200,43 +200,43 @@
         {
           "craft": "minecraft:bookshelf",
           "count": [
-            8,
-            8
+            17,
+            17
           ]
         },
         {
           "deliver": "minecraft:bookshelf",
           "count": [
-            8,
-            8
+            17,
+            17
           ]
         },
         {
           "craft": "minecraft:lectern",
           "count": [
-            2,
-            2
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:lectern",
           "count": [
-            2,
-            2
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:lantern",
           "count": [
-            4,
-            4
+            8,
+            8
           ]
         },
         {
           "deliver": "minecraft:lantern",
           "count": [
-            4,
-            4
+            8,
+            8
           ]
         }
       ],
@@ -244,7 +244,7 @@
         1,
         1
       ],
-      "value": 18.46,
+      "value": 15.0,
       "weight": 6,
       "tiers": [
         3,
@@ -253,24 +253,20 @@
     },
     {
       "kill": "minecraft:witch",
-      "count": [
-        2,
-        4
-      ],
-      "value": 1.5,
       "weight": 10,
+      "value": 1.5,
+      "count": [
+        8,
+        12
+      ],
       "tiers": [
         3,
         3
       ]
     },
     {
-      "count": [
-        4,
-        8
-      ],
-      "value": 2.2,
       "weight": 10,
+      "value": 0.5,
       "objectives": [
         {
           "kill": "minecraft:enderman",
@@ -280,18 +276,18 @@
           "deliver": "minecraft:ender_pearl"
         }
       ],
+      "count": [
+        36,
+        50
+      ],
       "tiers": [
         4,
         4
       ]
     },
     {
-      "count": [
-        8,
-        16
-      ],
-      "value": 0.52,
       "weight": 10,
+      "value": 0.4,
       "objectives": [
         {
           "kill": "minecraft:glow_squid",
@@ -301,18 +297,18 @@
           "deliver": "minecraft:glow_ink_sac"
         }
       ],
+      "count": [
+        45,
+        62
+      ],
       "tiers": [
         4,
         4
       ]
     },
     {
-      "count": [
-        2,
-        4
-      ],
-      "value": 1.725,
       "weight": 10,
+      "value": 0.4,
       "objectives": [
         {
           "craft": "minecraft:clock"
@@ -321,19 +317,10 @@
           "deliver": "minecraft:clock"
         }
       ],
-      "tiers": [
-        4,
-        4
-      ]
-    },
-    {
-      "kill": "minecraft:enderman",
       "count": [
-        4,
-        8
+        45,
+        62
       ],
-      "value": 1.2,
-      "weight": 10,
       "tiers": [
         4,
         4
@@ -346,24 +333,20 @@
           "min_level": 30
         }
       ],
+      "weight": 6,
+      "value": 4.0,
       "count": [
-        1,
-        1
+        5,
+        6
       ],
-      "value": 5.0,
-      "weight": 5,
       "tiers": [
         4,
         4
       ]
     },
     {
-      "count": [
-        6,
-        12
-      ],
-      "value": 2.3,
       "weight": 10,
+      "value": 1.0,
       "objectives": [
         {
           "craft": "minecraft:ender_eye"
@@ -372,6 +355,10 @@
           "deliver": "minecraft:ender_eye"
         }
       ],
+      "count": [
+        25,
+        35
+      ],
       "tiers": [
         5,
         5
@@ -379,12 +366,12 @@
     },
     {
       "kill": "minecraft:evoker",
-      "count": [
-        1,
-        2
-      ],
-      "value": 8.0,
       "weight": 10,
+      "value": 10.0,
+      "count": [
+        3,
+        3
+      ],
       "tiers": [
         5,
         5
@@ -393,16 +380,32 @@
     {
       "objectives": [
         {
-          "enchant": "",
-          "min_level": 30
+          "visit_structure": "minecraft:stronghold"
         }
       ],
+      "weight": 8,
+      "value": 30.0,
       "count": [
-        2,
-        3
+        1,
+        1
       ],
-      "value": 5.0,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:ancient_city"
+        }
+      ],
       "weight": 6,
+      "value": 30.0,
+      "count": [
+        1,
+        1
+      ],
       "tiers": [
         5,
         5
@@ -413,62 +416,32 @@
     {
       "item": "minecraft:bookshelf",
       "count": [
-        2,
-        4
+        4,
+        8
       ],
       "value": 1.0,
       "min_tier": 2,
-      "max_tier": 3
+      "max_tier": 2
     },
     {
       "enchant": "minecraft:book",
       "levels": [
-        10,
-        18
+        15,
+        20
       ],
       "value_per_level": 0.4,
       "min_tier": 3,
       "max_tier": 3
     },
     {
-      "item": "minecraft:experience_bottle",
-      "count": [
-        4,
-        8
-      ],
-      "value": 0.4,
-      "min_tier": 3,
-      "max_tier": 4
-    },
-    {
       "enchant": "minecraft:book",
       "levels": [
-        20,
+        25,
         30
       ],
       "value_per_level": 0.4,
       "min_tier": 4,
-      "max_tier": 5
-    },
-    {
-      "item": "minecraft:ender_pearl",
-      "count": [
-        2,
-        4
-      ],
-      "value": 1.0,
-      "min_tier": 4,
-      "max_tier": 5
-    },
-    {
-      "item": "minecraft:experience_bottle",
-      "count": [
-        16,
-        32
-      ],
-      "value": 0.4,
-      "min_tier": 5,
-      "max_tier": 5
+      "max_tier": 4
     },
     {
       "top": true,

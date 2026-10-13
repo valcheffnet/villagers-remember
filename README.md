@@ -18,11 +18,13 @@ You earn standing with every villager and with the village as a whole. Villager 
 
 Village tiers (Known, Friend, Respected, Hero of the Village) need points and enough residents who trust you that much. Each tier makes rewards 5% bigger and enchanted rewards stronger.
 
-Packs have a material ladder for the smiths: stone at the start, then copper, iron, diamond and netherite. A master weaponsmith won't pay you with an iron sword.
+Each pack asks for more work. A first errand takes about five minutes: a stack of wheat, a few rabbits. A top-pack errand takes half an hour and can't be pulled out of a chest: an elder guardian, a woodland mansion, a pair of zombie villagers to cure, a trident. The game assumes you have the usual farms, so farmable goods stay in the low packs.
 
 ## Rewards
 
-Emeralds, experience and items, worth what the job asked. Some smiths reforge a piece you make into an enchanted one of the same material. At the top pack every profession has a top reward you choose yourself: Fortune or Silk Touch on the netherite pickaxe, Sharpness or Smite on the sword, a treasure map to a mansion or a monument. Gear comes with Unbreaking III and Mending, and the enchantments stay a surprise until you hand the errand in.
+Daily errands pay emeralds, experience and standing, sized by the work: a few emeralds for a five-minute job, 40 to 56 emeralds' worth for a half-hour one.
+
+Items come once. The first trial of trust of each tier with a profession gives one of its items: golden carrots, a treasure map, enchanted books. The first time a villager of a profession makes you their Best friend, you choose its top reward: Fortune or Silk Touch on a netherite pickaxe, Sharpness or Smite on the sword, a map to a mansion. Gear comes with Unbreaking III and Mending, and the enchantments stay a surprise until you hand the trial in. The smiths reforge each kind of piece once: forge a few iron swords, get one back enchanted, stone at the start up to netherite at the top.
 
 ## Prices
 
@@ -35,8 +37,8 @@ Villagers who trust you put a share of their work aside for you every day. The t
 ## End game
 
 - Fame from everything you do, with titles in chat and TAB: Helper, Benefactor, Legend. A Legend finds rare goods with the wandering trader.
-- Contracts: a Best friend gives you one hard job a day. The third contract for a profession brings its legendary item, named after the villager who gave it ("Lena's Hoe") and enchanted to the limit.
-- Weekly orders: every village posts one big order for everyone on the server, like 1024 food before winter or 100 monsters cleared out of the village. Bring any amount, any time. When it's done everyone is paid by their share.
+- Contracts: once a week every Best friend has a big job in three parts, about an hour and a half of work, paid in emeralds, experience, standing and fame. The third contract for a profession brings its legendary item, named after the villager who gave it ("Lena's Hoe") and enchanted to the limit.
+- Village orders: once a game month every village posts one huge order for everyone on the server, like 4096 food before winter or 400 monsters cleared out of the village. Bring any amount, any time. When it's done everyone is paid by their share.
 - Patron: the Hero of a village who has passed every trial with five of its villagers can become its patron. A village has one patron, the one with the most standing; anyone who does more takes the place, and the whole server hears about it. The patron's head is shown at the bell, they trade there at 45% off and they can give the village a name.
 - A collection for every profession: do each of its errands once.
 - Its own advancement tab, 45 of them.
@@ -66,8 +68,9 @@ Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into th
 | `tradeDiscounts` | `true` | Prices by standing. `maxDiscount` 0.40, `maxSurcharge` 0.50, `patronDiscount` 0.45. |
 | `treasuryDailyCap` | `64` | Most emeralds one village pays a day. |
 | `fameTitles` | `true` | Titles in chat and TAB. Turn off if another plugin or mod manages teams. |
-| `weeklyOrders` | `true` | `weeklyOrderScale` 1.0 sizes the orders, `weeklyRewardEmeralds` 192 is the payout. |
-| `contracts` | `true` | `contractsForLegend` 3 contracts per legendary item. |
+| `tierEmeraldsPerMinute` | `0.6 ... 1.6` | Pay per minute of work, by pack. |
+| `groupOrders` | `true` | `groupOrderDays` 30, `groupOrderScale` 1.0 sizes the orders, `groupRewardEmeralds` 640 is the payout. |
+| `contracts` | `true` | `contractMinutes` 90, `contractMaxEmeralds` 160, `contractsForLegend` 3. |
 | `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |
 
 Run `/errands reload` after editing.

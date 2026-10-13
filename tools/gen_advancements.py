@@ -57,8 +57,8 @@ A = [
      ("Любимец", "Стани герой на село с поръчки")),
     ("villages/patron", "villages/hero", "beacon", "challenge", ("Patron", "Become the patron of a village"),
      ("Покровител", "Стани покровител на село")),
-    ("villages/weekly", "villages/known", "hay_block", "task", ("Many Hands", "Help finish a village's weekly order"),
-     ("Много ръце", "Помогни да се изпълни седмична поръчка")),
+    ("villages/weekly", "villages/known", "hay_block", "task", ("Many Hands", "Help finish a village order"),
+     ("Много ръце", "Помогни да се изпълни поръчка на селото")),
 
     ("explore/first", "root", "compass", "task", ("New Neighbours", "Discover a village"),
      ("Нови съседи", "Открий село")),
