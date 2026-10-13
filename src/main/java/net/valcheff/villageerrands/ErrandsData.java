@@ -93,6 +93,8 @@ public final class ErrandsData extends SavedData {
 		/** Emeralds sent from the treasury so far, weekly orders helped to finish. */
 		public int treasurySent;
 		public int weeklyDone;
+		/** Game days the player was online lately (village orders are sized by regular players). */
+		public final java.util.TreeSet<Long> daysSeen = new java.util.TreeSet<>();
 		/** Emeralds and experience owed to the player (village order shares while offline, or a full ender chest). */
 		public int mail;
 		public int mailXp;
@@ -127,6 +129,8 @@ public final class ErrandsData extends SavedData {
 		public final Map<UUID, Integer> contrib = new HashMap<>();
 		/** What villagers would pay for each player's goods, in emeralds: the payout never falls below it. */
 		public final Map<UUID, Double> contribValue = new HashMap<>();
+		/** Regular players when the order was posted: its size and its reward are for them. 0: not set yet. */
+		public int players;
 		public boolean settled;
 		/** A weekly order saved by 1.0, carried into the current month once. */
 		public boolean carried;
@@ -223,6 +227,7 @@ public final class ErrandsData extends SavedData {
 		order.progress = w.getIntOr("progress", 0);
 		order.settled = w.getBooleanOr("settled", false);
 		order.carried = w.getBooleanOr("carried", false);
+		order.players = w.getIntOr("players", 0);
 		CompoundTag c = w.getCompoundOrEmpty("contrib");
 		for (String k : c.keySet()) {
 			try {
@@ -314,6 +319,9 @@ public final class ErrandsData extends SavedData {
 			state.weeklyDone = p.getIntOr("weekly_done", 0);
 			state.mail = p.getIntOr("mail", 0);
 			state.mailXp = p.getIntOr("mail_xp", 0);
+			p.getLongArray("days_seen").ifPresent(arr -> {
+				for (long d : arr) state.daysSeen.add(d);
+			});
 			p.getListOrEmpty("history").compoundStream().forEach(h -> {
 				state.history.add(Errand.load(h.getCompoundOrEmpty("errand")));
 				state.historyDays.add(h.getLongOr("day", 0L));
@@ -420,6 +428,7 @@ public final class ErrandsData extends SavedData {
 			p.putInt("weekly_done", state.weeklyDone);
 			p.putInt("mail", state.mail);
 			p.putInt("mail_xp", state.mailXp);
+			p.put("days_seen", new net.minecraft.nbt.LongArrayTag(state.daysSeen.stream().mapToLong(Long::longValue).toArray()));
 			all.put(e.getKey().toString(), p);
 		}
 		root.put("players", all);
@@ -431,6 +440,7 @@ public final class ErrandsData extends SavedData {
 			w.putInt("progress", order.progress);
 			w.putBoolean("settled", order.settled);
 			w.putBoolean("carried", order.carried);
+			w.putInt("players", order.players);
 			CompoundTag c = new CompoundTag();
 			order.contrib.forEach((k, v) -> c.putInt(k.toString(), v));
 			w.put("contrib", c);

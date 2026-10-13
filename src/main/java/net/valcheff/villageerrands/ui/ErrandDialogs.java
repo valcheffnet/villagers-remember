@@ -385,7 +385,9 @@ public final class ErrandDialogs {
 				text.append("\n").append(Component.literal(who + ": " + e.getValue()).withStyle(ChatFormatting.WHITE));
 			}
 		}
-		text.append("\n\n").append(Lang.tr(player, "group.reward", Math.round(cfg.groupRewardEmeralds), Math.round(cfg.groupMinShare * 100))
+		text.append("\n").append(Lang.tr(player, "group.players", Math.max(1, view.order().players)).withStyle(ChatFormatting.DARK_GRAY));
+		text.append("\n\n").append(Lang.tr(player, "group.reward", Math.round(net.valcheff.villageerrands.GroupOrder.pool(view.order().players)),
+			Math.round(cfg.groupMinShare * 100))
 			.withStyle(ChatFormatting.DARK_GREEN));
 		List<DialogBody> body = List.of(new PlainMessage(text, TEXT_WIDTH));
 		List<ActionButton> buttons = new ArrayList<>();

@@ -38,7 +38,7 @@ Villagers who trust you put a share of their work aside for you every day. The t
 
 - Fame from everything you do, with titles in chat and TAB: Helper, Benefactor, Legend. A Legend finds rare goods with the wandering trader.
 - Contracts: once a week every Best friend has a big job in three parts, about an hour and a half of work, paid in emeralds, experience, standing and fame. The third contract for a profession brings its legendary item, named after the villager who gave it ("Lena's Hoe") and enchanted to the limit.
-- Village orders: once a game month every village posts one huge order for everyone on the server, like 4096 food before winter or 400 monsters cleared out of the village. Bring any amount, any time. When it's done everyone is paid by their share.
+- Village orders: once a game month every village posts one big order for everyone on the server, sized by how many people play regularly: 512 food before winter for each of them, or 50 monsters cleared out of the village. Two friends get an order for two, a busy server one for its crowd. Bring any amount, any time. When it's done everyone is paid by their share, and never less than the goods would fetch from a villager.
 - Patron: the Hero of a village who has passed every trial with five of its villagers can become its patron. A village has one patron, the one with the most standing; anyone who does more takes the place, and the whole server hears about it. The patron's head is shown at the bell, they trade there at 45% off and they can give the village a name.
 - A collection for every profession: do each of its errands once.
 - Its own advancement tab, 45 of them.
@@ -69,7 +69,7 @@ Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into th
 | `treasuryDailyCap` | `64` | Most emeralds one village pays a day. |
 | `fameTitles` | `true` | Titles in chat and TAB. Turn off if another plugin or mod manages teams. |
 | `tierEmeraldsPerMinute` | `0.6 ... 1.6` | Pay per minute of work, by pack. |
-| `groupOrders` | `true` | `groupOrderDays` 30, `groupOrderScale` 1.0 sizes the orders, `groupRewardEmeralds` 640 is the payout. |
+| `groupOrders` | `true` | `groupOrderDays` 30; per regular player (online on `groupRegularDays` 3 days of the month): `groupOrderScale` 1.0 of the size, `groupRewardEmeralds` 80. |
 | `contracts` | `true` | `contractMinutes` 90, `contractMaxEmeralds` 160, `contractsForLegend` 3. |
 | `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |
 

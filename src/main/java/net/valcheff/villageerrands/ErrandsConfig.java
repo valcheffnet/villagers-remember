@@ -27,7 +27,7 @@ public final class ErrandsConfig {
 	/** How many errands one player may have accepted at the same time. */
 	public int maxActiveErrands = 5;
 	/** Settings changed meaning in version 2 (effort-based rewards); older files get the new defaults for those. */
-	public int configVersion = 2;
+	public int configVersion = 3;
 	/**
 	 * Errands are sized in minutes of work (TIERS.md section 4); the pay is minutes x this, in emeralds' worth (split
 	 * into emeralds and experience), by pack T1..T5. T1 pays emeralds or experience. Repeatable errands give no items.
@@ -65,11 +65,15 @@ public final class ErrandsConfig {
 	/** Village orders: one huge order per village for all players, every this many game days (30: a game month). */
 	public boolean groupOrders = true;
 	public int groupOrderDays = 30;
-	/** Size of village orders (1.0: 4096 food, 2048 logs, 6144 stone, 768 iron, 1024 wool, 400 monsters). */
+	/**
+	 * Size of village orders for each regular player (1.0: 512 food, 256 logs, 768 stone, 96 iron, 128 wool,
+	 * 50 monsters). A regular player was online on at least groupRegularDays game days of the last period.
+	 */
 	public double groupOrderScale = 1.0;
-	/** Emeralds a finished village order pays out in all, by share (plus as much again in experience, fame and
-	 * standing); a helper needs at least this share to be paid. */
-	public double groupRewardEmeralds = 640;
+	public int groupRegularDays = 3;
+	/** Emeralds a finished village order pays out for each regular player, shared by contribution (plus as much
+	 * again in experience, fame and standing); a helper needs at least the minimum share to be paid. */
+	public double groupRewardEmeralds = 80;
 	public double groupMinShare = 0.02;
 	/** Experience points granted per emerald of reward budget. */
 	public double xpPerEmerald = 6.0;
@@ -142,8 +146,13 @@ public final class ErrandsConfig {
 		if (configVersion < 2) {
 			// Version 1 sized rewards by the value of goods; these keys now mean something else.
 			contractRewardMultiplier = defaults.contractRewardMultiplier;
-			configVersion = 2;
 		}
+		if (configVersion < 3) {
+			// Version 3: village orders are sized and paid per regular player.
+			groupRewardEmeralds = defaults.groupRewardEmeralds;
+			groupOrderScale = defaults.groupOrderScale;
+		}
+		configVersion = defaults.configVersion;
 		if (tierEmeraldsPerMinute == null || tierEmeraldsPerMinute.length != 5) tierEmeraldsPerMinute = defaults.tierEmeraldsPerMinute;
 		if (treasuryShare == null || treasuryShare.length != 5) treasuryShare = defaults.treasuryShare;
 		if (treasuryVillageMultiplier == null || treasuryVillageMultiplier.length != 5) treasuryVillageMultiplier = defaults.treasuryVillageMultiplier;
@@ -168,6 +177,7 @@ public final class ErrandsConfig {
 		contractsForLegend = Math.clamp(contractsForLegend, 1, 100);
 		patronDiscount = Math.clamp(patronDiscount, 0.0, 0.95);
 		groupOrderDays = Math.clamp(groupOrderDays, 1, 3650);
+		groupRegularDays = Math.clamp(groupRegularDays, 1, 3650);
 		groupOrderScale = Math.clamp(groupOrderScale, 0.01, 100.0);
 		groupRewardEmeralds = Math.clamp(groupRewardEmeralds, 0.0, 100000.0);
 		groupMinShare = Math.clamp(groupMinShare, 0.0, 1.0);

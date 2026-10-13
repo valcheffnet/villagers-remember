@@ -743,11 +743,25 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			var view = net.valcheff.villageerrands.GroupOrder.current(server, village).orElseThrow();
 			if (!view.order().settled || !view.done()) return "not settled " + view.order().progress + "/" + view.target();
 			int emeralds = player.getEnderChestInventory().countItem(Items.EMERALD);
-			if (emeralds != Math.round(ErrandsConfig.INSTANCE.groupRewardEmeralds)) return "paid " + emeralds;
+			if (view.order().players != 1 || view.target() != view.kind().base) return "sized for " + view.order().players + ": " + view.target();
+			if (emeralds != Math.round(net.valcheff.villageerrands.GroupOrder.pool(1))) return "paid " + emeralds;
 			if (state(server).weeklyDone != 1) return "orders done " + state(server).weeklyDone;
 			return "ok";
 		});
 		check(villageOrder.equals("ok"), "village order: " + villageOrder);
+		// Sized by regular players: two friends who played on three days of the month count, a one-day visitor does not.
+		int regulars = sp.getServer().computeOnServer(server -> {
+			long today = ErrandGenerator.day(server.overworld());
+			for (int i = 0; i < 3; i++) {
+				ErrandsData.PlayerState friend = ErrandsData.get(server).player(new UUID(0xF1EL, i));
+				int days = i < 2 ? 3 : 1;
+				for (int d = 0; d < days; d++) friend.daysSeen.add(today - d);
+			}
+			int n = net.valcheff.villageerrands.GroupOrder.regularPlayers(server);
+			for (int i = 0; i < 3; i++) ErrandsData.get(server).players().remove(new UUID(0xF1EL, i));
+			return n;
+		});
+		check(regulars == 2, "regular players " + regulars);
 
 		// A contract with a Best friend: the third one for the profession brings its legendary item.
 		String contract = sp.getServer().computeOnServer(server -> {

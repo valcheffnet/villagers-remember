@@ -173,7 +173,7 @@ public final class AdminCommands {
 		StringBuilder who = new StringBuilder();
 		v.order().contrib.forEach((id, n) -> who.append(' ').append(id.toString(), 0, 8).append('=').append(n));
 		source.sendSuccess(() -> Component.literal("Village order of #" + village.id + ": " + v.kind().key() + " "
-			+ Math.min(v.order().progress, v.target()) + "/" + v.target() + ", " + v.daysLeft() + " days left" + (v.order().settled ? ", paid" : "")
+			+ Math.min(v.order().progress, v.target()) + "/" + v.target() + " for " + v.order().players + " regular players, " + v.daysLeft() + " days left" + (v.order().settled ? ", paid" : "")
 			+ (who.isEmpty() ? "" : ", helpers:" + who)), helper != null);
 		return v.order().progress;
 	}

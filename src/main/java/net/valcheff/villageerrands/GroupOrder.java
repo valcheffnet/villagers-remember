@@ -21,18 +21,19 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * The village order (TIERS.md section 7): once a game month (30 game days), one huge order for every player, e.g.
- * "Winter stores: 4096 food". Anyone brings what they have, as often as they like (any part counts); the village
+ * The village order (TIERS.md section 7): once a game month (30 game days), one big order for every player, sized
+ * by the regular players of the last month, e.g. "Winter stores: 512 food" for each of them. Anyone brings what they have, as often as they like (any part counts); the village
  * keeps the total and each player's share. When it is done every helper with at least the minimum share is paid by
  * share in emeralds (to the ender chest), experience, fame and village standing. No items. An order left unfinished
  * when the month ends pays half, for what was done.
  */
 public final class GroupOrder {
 	public enum Kind {
-		FOOD(Items.BREAD, 4096), WOOD(Items.OAK_LOG, 2048), STONE(Items.COBBLESTONE, 6144), IRON(Items.IRON_INGOT, 768),
-		WOOL(Items.STRING, 1024), DEFEND(Items.IRON_SWORD, 400);
+		FOOD(Items.BREAD, 512), WOOD(Items.OAK_LOG, 256), STONE(Items.COBBLESTONE, 768), IRON(Items.IRON_INGOT, 96),
+		WOOL(Items.STRING, 128), DEFEND(Items.IRON_SWORD, 50);
 
 		public final Item icon;
+		/** Size for each regular player. */
 		public final int base;
 
 		Kind(Item icon, int base) {
@@ -94,8 +95,42 @@ public final class GroupOrder {
 		return k != null ? k : kind(villageKey, order.period);
 	}
 
-	public static int target(Kind kind) {
-		return Math.max(1, (int) Math.round(kind.base * ErrandsConfig.INSTANCE.groupOrderScale));
+	/** Size of an order for this many regular players. */
+	public static int target(Kind kind, int players) {
+		return Math.max(1, (int) Math.round(kind.base * Math.max(1, players) * ErrandsConfig.INSTANCE.groupOrderScale));
+	}
+
+	/** Emeralds an order shares out, for this many regular players. */
+	public static double pool(int players) {
+		return ErrandsConfig.INSTANCE.groupRewardEmeralds * Math.max(1, players);
+	}
+
+	/**
+	 * Players who play regularly: online on at least {@code groupRegularDays} different game days of the last period.
+	 * Two friends get an order for two; a server with a hundred regulars gets one for a hundred. At least one.
+	 */
+	public static int regularPlayers(MinecraftServer server) {
+		long today = ErrandGenerator.day(server.overworld());
+		long from = today - ErrandsConfig.INSTANCE.groupOrderDays;
+		int n = 0;
+		for (ErrandsData.PlayerState state : ErrandsData.get(server).players().values()) {
+			if (state.daysSeen.subSet(from, true, today, true).size() >= ErrandsConfig.INSTANCE.groupRegularDays) n++;
+		}
+		return Math.max(1, Math.max(n, server.getPlayerList().getPlayerCount() > 0 ? 1 : 0));
+	}
+
+	/** Marks today for every player online (called now and then). */
+	private static void markSeen(MinecraftServer server) {
+		long today = ErrandGenerator.day(server.overworld());
+		ErrandsData data = ErrandsData.get(server);
+		long keep = today - 2L * ErrandsConfig.INSTANCE.groupOrderDays;
+		for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+			ErrandsData.PlayerState state = data.player(player.getUUID());
+			if (state.daysSeen.add(today)) {
+				state.daysSeen.headSet(keep).clear();
+				data.setDirty();
+			}
+		}
 	}
 
 	public static boolean accepts(Kind kind, ItemStack stack) {
@@ -126,6 +161,7 @@ public final class GroupOrder {
 			order = new ErrandsData.VillageOrder();
 			order.period = period;
 			order.kind = kind(key, period).key();
+			order.players = regularPlayers(server);
 			data.orders.put(key, order);
 			data.setDirty();
 		} else if (order.carried) {
@@ -134,9 +170,13 @@ public final class GroupOrder {
 			order.period = period;
 			data.setDirty();
 		}
+		if (order.players <= 0) {
+			order.players = regularPlayers(server);
+			data.setDirty();
+		}
 		Kind kind = kindOf(key, order);
 		long days = ErrandsConfig.INSTANCE.groupOrderDays;
-		return Optional.of(new View(kind, target(kind), order, (period + 1) * days - day));
+		return Optional.of(new View(kind, target(kind, order.players), order, (period + 1) * days - day));
 	}
 
 	/** How many of the order's items the player has with them (as much as is still needed). */
@@ -209,7 +249,8 @@ public final class GroupOrder {
 		ErrandsData data = ErrandsData.get(server);
 		data.setDirty();
 		Kind kind = kindOf(key, order);
-		int target = target(kind);
+		int target = target(kind, order.players);
+		double pool = pool(order.players);
 		if (order.progress <= 0) return;
 		ErrandsConfig cfg = ErrandsConfig.INSTANCE;
 		boolean done = order.progress >= target;
@@ -222,8 +263,8 @@ public final class GroupOrder {
 			ErrandsData.PlayerState state = data.player(e.getKey());
 			// By share, but never less than the premium over what villagers would have paid for the goods.
 			double goods = order.contribValue.getOrDefault(e.getKey(), 0.0);
-			int emeralds = Math.max(1, (int) Math.round(Math.max(cfg.groupRewardEmeralds * share * pay, goods * cfg.marketPremium)));
-			int xp = Math.max(1, (int) Math.round(cfg.groupRewardEmeralds * share * pay * cfg.xpPerEmerald));
+			int emeralds = Math.max(1, (int) Math.round(Math.max(pool * share * pay, goods * cfg.marketPremium)));
+			int xp = Math.max(1, (int) Math.round(pool * share * pay * cfg.xpPerEmerald));
 			int fame = Math.max(1, (int) Math.round(FAME_POOL * share * pay));
 			state.mail += emeralds;
 			state.mailXp += xp;
@@ -277,6 +318,7 @@ public final class GroupOrder {
 	/** Settles orders of months that have ended, and brings online players what they are owed. */
 	public static void tick(MinecraftServer server) {
 		if (server.getTickCount() % CHECK_INTERVAL != 0) return;
+		markSeen(server);
 		ErrandsData data = ErrandsData.get(server);
 		long period = period(ErrandGenerator.day(server.overworld()));
 		for (Map.Entry<String, ErrandsData.VillageOrder> e : new ArrayList<>(data.orders.entrySet())) {
