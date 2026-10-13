@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /** {@code config/villageerrands.json}. Missing keys keep their defaults; the file is rewritten with all keys. */
 public final class ErrandsConfig {
@@ -75,6 +76,11 @@ public final class ErrandsConfig {
 	 * again in experience, fame and standing); a helper needs at least the minimum share to be paid. */
 	public double groupRewardEmeralds = 80;
 	public double groupMinShare = 0.02;
+	/**
+	 * Look of the folded charts given for places to visit: "globe" (the globe banner pattern, any client), "dnt"
+	 * (Dungeons and Taverns' rolled chart, for clients with that mod) or "auto" (dnt when that mod is installed).
+	 */
+	public String chartLook = "auto";
 	/** Experience points granted per emerald of reward budget. */
 	public double xpPerEmerald = 6.0;
 	public int maxEmeraldsPerErrand = 64;
@@ -139,6 +145,7 @@ public final class ErrandsConfig {
 
 	private ErrandsConfig sanitized() {
 		if (language == null || language.isBlank()) language = "auto";
+		if (chartLook == null || !List.of("auto", "globe", "dnt").contains(chartLook.toLowerCase(java.util.Locale.ROOT))) chartLook = "auto";
 		if (errandsPerLevel == null || errandsPerLevel.length != 5) errandsPerLevel = new ErrandsConfig().errandsPerLevel;
 		for (int i = 0; i < 5; i++) errandsPerLevel[i] = Math.clamp(errandsPerLevel[i], 0, 6);
 		maxActiveErrands = Math.clamp(maxActiveErrands, 1, 27);

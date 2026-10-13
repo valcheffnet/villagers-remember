@@ -55,10 +55,27 @@ public final class Maps {
 		lore.add(Lang.tr(player, "chart.use").withStyle(s -> s.withItalic(false).withColor(ChatFormatting.GRAY)));
 		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.DARK_GRAY)));
 		chart.set(DataComponents.LORE, new ItemLore(lore));
-		// Looks like a rolled-up chart (the globe banner pattern) until it is unfolded into the map.
-		chart.set(DataComponents.ITEM_MODEL, net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(net.minecraft.world.item.Items.GLOBE_BANNER_PATTERN));
+		if (dntLook()) {
+			// Dungeons and Taverns' rolled chart (its resource pack draws "dnt:chart"), ribbon tinted by the place.
+			// Its own unfolding only reacts to an item being used over time, which ours never is.
+			chart.set(DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(
+				List.of(), List.of(), List.of("dnt:chart"), List.of()));
+			chart.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
+			chart.set(DataComponents.TOOLTIP_DISPLAY, net.minecraft.world.item.component.TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
+		} else {
+			// Looks like a rolled-up chart (the globe banner pattern) until it is unfolded into the map.
+			chart.set(DataComponents.ITEM_MODEL, net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(net.minecraft.world.item.Items.GLOBE_BANNER_PATTERN));
+		}
 		chart.set(DataComponents.MAX_STACK_SIZE, 1);
 		return Optional.of(chart);
+	}
+
+	/** Dungeons and Taverns' chart look: chosen in the config, or "auto" when that mod is installed. */
+	private static boolean dntLook() {
+		String look = ErrandsConfig.INSTANCE.chartLook;
+		if ("dnt".equalsIgnoreCase(look)) return true;
+		if ("globe".equalsIgnoreCase(look)) return false;
+		return net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("mr_dungeons_andtaverns");
 	}
 
 	/** The objective a chart leads to, if the stack is one of our charts. */
