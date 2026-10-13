@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:bell"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.root.title",
+      "fallback": "Village Errands"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.root.description",
+      "fallback": "Lend a villager a hand"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:gui/advancements/backgrounds/adventure"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

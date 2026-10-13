@@ -1,0 +1,541 @@
+{
+  "profession": "minecraft:shepherd",
+  "tasks": [
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.1,
+      "weight": 10,
+      "objectives": [
+        {
+          "shear": "minecraft:sheep",
+          "factor": 0.5
+        },
+        {
+          "deliver": "#minecraft:wool"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.172,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:white_dye"
+        },
+        {
+          "deliver": "minecraft:white_dye"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.06,
+      "weight": 10,
+      "objectives": [
+        {
+          "harvest": "minecraft:wheat"
+        },
+        {
+          "deliver": "minecraft:wheat"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        1,
+        2
+      ],
+      "value": 0.69,
+      "weight": 6,
+      "objectives": [
+        {
+          "craft": "minecraft:shears"
+        },
+        {
+          "deliver": "minecraft:shears"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "breed": "minecraft:sheep"
+        }
+      ],
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.5,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.057,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "#minecraft:wool_carpets"
+        },
+        {
+          "deliver": "#minecraft:wool_carpets"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 1.15,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "#minecraft:beds"
+        },
+        {
+          "deliver": "#minecraft:beds"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "title": "order.color_set",
+      "objectives": [
+        {
+          "deliver": "minecraft:red_wool",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:yellow_wool",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:blue_wool",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:green_wool",
+          "count": [
+            8,
+            8
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.58,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.46,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:lead"
+        },
+        {
+          "deliver": "minecraft:lead"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:spider",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.92,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "#minecraft:banners"
+        },
+        {
+          "deliver": "#minecraft:banners"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.575,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:painting"
+        },
+        {
+          "deliver": "minecraft:painting"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.new_home",
+      "objectives": [
+        {
+          "craft": "#minecraft:beds",
+          "count": [
+            4,
+            4
+          ]
+        },
+        {
+          "deliver": "#minecraft:beds",
+          "count": [
+            4,
+            4
+          ]
+        },
+        {
+          "craft": "#minecraft:wool_carpets",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "#minecraft:wool_carpets",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "craft": "minecraft:painting",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:painting",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 9.62,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:zombie",
+      "count": [
+        10,
+        16
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "tame": "minecraft:wolf"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.5,
+      "weight": 5,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.172,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:pink_wool"
+        },
+        {
+          "deliver": "minecraft:pink_wool"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.172,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:purple_wool"
+        },
+        {
+          "deliver": "minecraft:purple_wool"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.172,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:light_blue_wool"
+        },
+        {
+          "deliver": "minecraft:light_blue_wool"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.3,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:flower_banner_pattern"
+        },
+        {
+          "deliver": "minecraft:flower_banner_pattern"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:phantom",
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.8,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        1,
+        1
+      ],
+      "value": 9.2,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:skull_banner_pattern"
+        },
+        {
+          "deliver": "minecraft:skull_banner_pattern"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        1,
+        1
+      ],
+      "value": 6.9,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:creeper_banner_pattern"
+        },
+        {
+          "deliver": "minecraft:creeper_banner_pattern"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "breed": "minecraft:sheep"
+        }
+      ],
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.5,
+      "weight": 6,
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:shears",
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.0,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "item": "minecraft:painting",
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.4,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_shepherd",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:shears",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.2,
+      "min_tier": 4,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

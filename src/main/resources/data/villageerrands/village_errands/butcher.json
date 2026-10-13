@@ -1,0 +1,614 @@
+{
+  "profession": "minecraft:butcher",
+  "tasks": [
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.18,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:chicken",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:chicken"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.25,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:pig",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:porkchop"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.22,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:cow",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:beef"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.25,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:sheep",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:mutton"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "breed": "minecraft:cow"
+        }
+      ],
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.5,
+      "weight": 6,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "breed": "minecraft:pig"
+        }
+      ],
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.5,
+      "weight": 6,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.18,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_chicken"
+        },
+        {
+          "deliver": "minecraft:cooked_chicken"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.24,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_beef"
+        },
+        {
+          "deliver": "minecraft:cooked_beef"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.24,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_porkchop"
+        },
+        {
+          "deliver": "minecraft:cooked_porkchop"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.24,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_mutton"
+        },
+        {
+          "deliver": "minecraft:cooked_mutton"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:spider",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        3,
+        6
+      ],
+      "value": 0.92,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:rabbit_stew"
+        },
+        {
+          "deliver": "minecraft:rabbit_stew"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        6,
+        12
+      ],
+      "value": 0.345,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:mushroom_stew"
+        },
+        {
+          "deliver": "minecraft:mushroom_stew"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        6,
+        12
+      ],
+      "value": 0.345,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:beetroot_soup"
+        },
+        {
+          "deliver": "minecraft:beetroot_soup"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.smiths_lunch",
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_beef",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "minecraft:cooked_beef",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "smelt": "minecraft:baked_potato",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "minecraft:baked_potato",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "craft": "minecraft:bread",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "minecraft:bread",
+          "count": [
+            16,
+            16
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 10.4,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:zombie",
+      "count": [
+        10,
+        16
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.feast",
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_porkchop",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "deliver": "minecraft:cooked_porkchop",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "craft": "minecraft:pumpkin_pie",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:pumpkin_pie",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "craft": "minecraft:cake",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:cake",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 17.68,
+      "weight": 6,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 1.15,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:golden_carrot"
+        },
+        {
+          "deliver": "minecraft:golden_carrot"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.575,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:suspicious_stew"
+        },
+        {
+          "deliver": "minecraft:suspicious_stew"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:hoglin",
+      "count": [
+        4,
+        8
+      ],
+      "value": 1.2,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "title": "order.wedding",
+      "objectives": [
+        {
+          "craft": "minecraft:cake",
+          "count": [
+            4,
+            4
+          ]
+        },
+        {
+          "deliver": "minecraft:cake",
+          "count": [
+            4,
+            4
+          ]
+        },
+        {
+          "craft": "minecraft:rabbit_stew",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:rabbit_stew",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "craft": "minecraft:golden_carrot",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "deliver": "minecraft:golden_carrot",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "craft": "minecraft:glistering_melon_slice",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:glistering_melon_slice",
+          "count": [
+            8,
+            8
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 70.72,
+      "weight": 6,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:hoglin",
+      "count": [
+        10,
+        16
+      ],
+      "value": 1.2,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        32,
+        48
+      ],
+      "value": 1.15,
+      "weight": 6,
+      "objectives": [
+        {
+          "craft": "minecraft:golden_carrot"
+        },
+        {
+          "deliver": "minecraft:golden_carrot"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:cooked_beef",
+      "count": [
+        6,
+        12
+      ],
+      "value": 0.2,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "item": "minecraft:rabbit_stew",
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.6,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_butcher",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "item": "minecraft:golden_carrot",
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.6,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "item": "minecraft:golden_apple",
+      "count": [
+        1,
+        2
+      ],
+      "value": 3.0,
+      "min_tier": 5,
+      "max_tier": 5
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

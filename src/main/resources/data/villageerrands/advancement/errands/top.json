@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:nether_star"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.errands.top.title",
+      "fallback": "Masterwork"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.errands.top.description",
+      "fallback": "Earn a master's top reward"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

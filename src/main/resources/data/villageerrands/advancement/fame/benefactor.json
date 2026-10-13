@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:fame/helper",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:golden_apple"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.fame.benefactor.title",
+      "fallback": "Benefactor"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.fame.benefactor.description",
+      "fallback": "Earn the title Benefactor"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

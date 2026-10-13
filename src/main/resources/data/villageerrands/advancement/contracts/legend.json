@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:contracts/first",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_ingot"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.contracts.legend.title",
+      "fallback": "Legendary"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.contracts.legend.description",
+      "fallback": "Earn a legendary item"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

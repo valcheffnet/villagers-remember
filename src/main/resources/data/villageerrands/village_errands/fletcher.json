@@ -1,0 +1,575 @@
+{
+  "profession": "minecraft:fletcher",
+  "tasks": [
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.034,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:stick"
+        },
+        {
+          "deliver": "minecraft:stick"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "deliver": "minecraft:flint",
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.05,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.11,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:chicken",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:feather"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:arrow"
+        },
+        {
+          "deliver": "minecraft:arrow"
+        }
+      ],
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.05,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:bow",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:bow",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.8,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:bow",
+        "levels": [
+          8,
+          12
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        24,
+        48
+      ],
+      "value": 0.235,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:spider",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:string"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.172,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:tripwire_hook"
+        },
+        {
+          "deliver": "minecraft:tripwire_hook"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.057,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:arrow"
+        },
+        {
+          "deliver": "minecraft:arrow"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:skeleton",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.45,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.69,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:bow"
+        },
+        {
+          "deliver": "minecraft:bow"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        1,
+        2
+      ],
+      "value": 1.38,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:crossbow"
+        },
+        {
+          "deliver": "minecraft:crossbow"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "deliver": "minecraft:bamboo",
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.04,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:bogged",
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.5,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:stray",
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.5,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.hunters_pack",
+      "objectives": [
+        {
+          "craft": "minecraft:bow",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:bow",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "craft": "minecraft:crossbow",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:crossbow",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "craft": "minecraft:arrow",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "deliver": "minecraft:arrow",
+          "count": [
+            32,
+            32
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.84,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:crossbow",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:crossbow",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.4,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:crossbow",
+        "levels": [
+          8,
+          12
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.345,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:spectral_arrow"
+        },
+        {
+          "deliver": "minecraft:spectral_arrow"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:pillager",
+      "count": [
+        6,
+        10
+      ],
+      "value": 1.0,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:crossbow",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:crossbow",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.6,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:crossbow",
+        "levels": [
+          15,
+          18
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.575,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:wind_charge"
+        },
+        {
+          "deliver": "minecraft:wind_charge"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:breeze",
+      "count": [
+        6,
+        10
+      ],
+      "value": 2.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:bow",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:bow",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.8,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:bow",
+        "levels": [
+          18,
+          21
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:arrow",
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.06,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_fletcher",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:bow",
+      "levels": [
+        10,
+        18
+      ],
+      "value_per_level": 0.3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "item": "minecraft:spectral_arrow",
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.3,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "enchant": "minecraft:crossbow",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.3,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:bow",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.35,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "enchant": "minecraft:crossbow",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.35,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

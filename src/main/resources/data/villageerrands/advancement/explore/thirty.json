@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:explore/fifteen",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:recovery_compass"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.explore.thirty.title",
+      "fallback": "Road Warrior"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.explore.thirty.description",
+      "fallback": "Discover 30 villages"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

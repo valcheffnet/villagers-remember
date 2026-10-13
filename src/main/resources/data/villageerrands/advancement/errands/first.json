@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:root",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:writable_book"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.errands.first.title",
+      "fallback": "Odd Jobs"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.errands.first.description",
+      "fallback": "Complete an errand for a villager"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:trust/trial",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:cake"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.trust.best_friend.title",
+      "fallback": "Best Friends"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.trust.best_friend.description",
+      "fallback": "Become a villager's Best friend"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

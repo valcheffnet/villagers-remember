@@ -1,0 +1,528 @@
+{
+  "profession": "minecraft:fisherman",
+  "tasks": [
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.1,
+      "weight": 10,
+      "objectives": [
+        {
+          "catch": "minecraft:cod"
+        },
+        {
+          "deliver": "minecraft:cod"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.125,
+      "weight": 10,
+      "objectives": [
+        {
+          "catch": "minecraft:salmon"
+        },
+        {
+          "deliver": "minecraft:salmon"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "deliver": "minecraft:kelp",
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.04,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.235,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:spider",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:string"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.144,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_cod"
+        },
+        {
+          "deliver": "minecraft:cooked_cod"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.18,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:cooked_salmon"
+        },
+        {
+          "deliver": "minecraft:cooked_salmon"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        6,
+        12
+      ],
+      "value": 0.25,
+      "weight": 10,
+      "objectives": [
+        {
+          "catch": "minecraft:tropical_fish"
+        },
+        {
+          "deliver": "minecraft:tropical_fish"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "deliver": "minecraft:lily_pad",
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:drowned",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.45,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "title": "order.fish_market",
+      "objectives": [
+        {
+          "catch": "minecraft:cod",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "minecraft:cod",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "catch": "minecraft:salmon",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "deliver": "minecraft:salmon",
+          "count": [
+            8,
+            8
+          ]
+        },
+        {
+          "catch": "minecraft:tropical_fish",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:tropical_fish",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.98,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "fill_bucket": "minecraft:tropical_fish_bucket"
+        },
+        {
+          "deliver": "minecraft:tropical_fish_bucket"
+        }
+      ],
+      "count": [
+        1,
+        2
+      ],
+      "value": 1.2,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        6,
+        12
+      ],
+      "value": 0.375,
+      "weight": 10,
+      "objectives": [
+        {
+          "catch": "minecraft:pufferfish"
+        },
+        {
+          "deliver": "minecraft:pufferfish"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "deliver": "minecraft:sea_pickle",
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.15,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 1.0,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:guardian",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:prismarine_shard"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.28,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:squid",
+          "factor": 0.4
+        },
+        {
+          "deliver": "minecraft:ink_sac"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:guardian",
+      "count": [
+        4,
+        8
+      ],
+      "value": 1.5,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "#minecraft:shipwreck"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "weight": 5,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "deliver": "minecraft:nautilus_shell",
+      "count": [
+        2,
+        4
+      ],
+      "value": 3.0,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "deliver": "minecraft:wet_sponge",
+      "count": [
+        2,
+        4
+      ],
+      "value": 3.0,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 1.05,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:guardian",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:prismarine_crystals"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:guardian",
+      "count": [
+        10,
+        16
+      ],
+      "value": 1.5,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "fill_bucket": "minecraft:axolotl_bucket"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "weight": 5,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "deliver": "minecraft:heart_of_the_sea",
+      "count": [
+        1,
+        1
+      ],
+      "value": 12.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "deliver": "minecraft:trident",
+      "count": [
+        1,
+        1
+      ],
+      "value": 15.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:elder_guardian",
+      "count": [
+        1,
+        1
+      ],
+      "value": 20.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:cooked_salmon",
+      "count": [
+        6,
+        12
+      ],
+      "value": 0.15,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_fisher",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:fishing_rod",
+      "levels": [
+        10,
+        18
+      ],
+      "value_per_level": 0.3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:fishing_rod",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.3,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:fishing_rod",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.35,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "item": "minecraft:heart_of_the_sea",
+      "count": [
+        1,
+        1
+      ],
+      "value": 12.0,
+      "min_tier": 5,
+      "max_tier": 5
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

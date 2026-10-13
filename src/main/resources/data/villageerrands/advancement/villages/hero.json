@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:villages/respected",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:white_banner"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.villages.hero.title",
+      "fallback": "Beloved"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.villages.hero.description",
+      "fallback": "Become the hero of a village through errands"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

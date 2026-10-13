@@ -1,0 +1,922 @@
+[
+ {
+  "bg": "Лисичево",
+  "en": "Foxhollow"
+ },
+ {
+  "bg": "Бодилово",
+  "en": "Thistleton"
+ },
+ {
+  "bg": "Мечка",
+  "en": "Bearholm"
+ },
+ {
+  "bg": "Вълчи дол",
+  "en": "Wolfdale"
+ },
+ {
+  "bg": "Змейово",
+  "en": "Dragonridge"
+ },
+ {
+  "bg": "Еленово",
+  "en": "Hartfield"
+ },
+ {
+  "bg": "Сърнево",
+  "en": "Roebury"
+ },
+ {
+  "bg": "Гарван",
+  "en": "Ravenholm"
+ },
+ {
+  "bg": "Сокол",
+  "en": "Falconcrest"
+ },
+ {
+  "bg": "Славейно",
+  "en": "Nightsong"
+ },
+ {
+  "bg": "Врабево",
+  "en": "Sparrowby"
+ },
+ {
+  "bg": "Жабокрът",
+  "en": "Frogmarsh"
+ },
+ {
+  "bg": "Пчелин",
+  "en": "Beehaven"
+ },
+ {
+  "bg": "Медово",
+  "en": "Honeyfield"
+ },
+ {
+  "bg": "Ябълково",
+  "en": "Applecross"
+ },
+ {
+  "bg": "Крушево",
+  "en": "Pearwood"
+ },
+ {
+  "bg": "Орешак",
+  "en": "Walnut Grove"
+ },
+ {
+  "bg": "Лешниково",
+  "en": "Hazelwood"
+ },
+ {
+  "bg": "Дюлево",
+  "en": "Quincey"
+ },
+ {
+  "bg": "Ягода",
+  "en": "Strawbury"
+ },
+ {
+  "bg": "Къпиново",
+  "en": "Brambleby"
+ },
+ {
+  "bg": "Черница",
+  "en": "Mulberry"
+ },
+ {
+  "bg": "Брезово",
+  "en": "Birchwood"
+ },
+ {
+  "bg": "Буково",
+  "en": "Beechwood"
+ },
+ {
+  "bg": "Дъбово",
+  "en": "Oakham"
+ },
+ {
+  "bg": "Ясеново",
+  "en": "Ashby"
+ },
+ {
+  "bg": "Кленовик",
+  "en": "Mapleton"
+ },
+ {
+  "bg": "Еловица",
+  "en": "Firwood"
+ },
+ {
+  "bg": "Липница",
+  "en": "Lindenbrook"
+ },
+ {
+  "bg": "Върбица",
+  "en": "Willowbrook"
+ },
+ {
+  "bg": "Копривщица",
+  "en": "Nettlestead"
+ },
+ {
+  "bg": "Трън",
+  "en": "Thornbury"
+ },
+ {
+  "bg": "Шипка",
+  "en": "Briarrose"
+ },
+ {
+  "bg": "Розово",
+  "en": "Rosebury"
+ },
+ {
+  "bg": "Цветино",
+  "en": "Blossomvale"
+ },
+ {
+  "bg": "Лозен",
+  "en": "Vinehill"
+ },
+ {
+  "bg": "Житница",
+  "en": "Wheatbarn"
+ },
+ {
+  "bg": "Луково",
+  "en": "Onionfield"
+ },
+ {
+  "bg": "Гъбене",
+  "en": "Toadstool"
+ },
+ {
+  "bg": "Овчарово",
+  "en": "Shepherdsfield"
+ },
+ {
+  "bg": "Козарево",
+  "en": "Goatfold"
+ },
+ {
+  "bg": "Ковачево",
+  "en": "Smithton"
+ },
+ {
+  "bg": "Златарица",
+  "en": "Goldwick"
+ },
+ {
+  "bg": "Сребърна",
+  "en": "Silverbrook"
+ },
+ {
+  "bg": "Солник",
+  "en": "Saltmarsh"
+ },
+ {
+  "bg": "Котел",
+  "en": "Cauldron"
+ },
+ {
+  "bg": "Бъркач",
+  "en": "Stirwell"
+ },
+ {
+  "bg": "Пещера",
+  "en": "Cavebury"
+ },
+ {
+  "bg": "Студена",
+  "en": "Coldbrook"
+ },
+ {
+  "bg": "Сладък кладенец",
+  "en": "Sweetwell"
+ },
+ {
+  "bg": "Лисец",
+  "en": "Foxden"
+ },
+ {
+  "bg": "Дъбрава",
+  "en": "Oakgrove"
+ },
+ {
+  "bg": "Бреза",
+  "en": "Birchmere"
+ },
+ {
+  "bg": "Извор",
+  "en": "Springwell"
+ },
+ {
+  "bg": "Ливада",
+  "en": "Meadowby"
+ },
+ {
+  "bg": "Кладенци",
+  "en": "Wellsby"
+ },
+ {
+  "bg": "Брестник",
+  "en": "Elmstead"
+ },
+ {
+  "bg": "Каменица",
+  "en": "Stonebrook"
+ },
+ {
+  "bg": "Тополово",
+  "en": "Poplarton"
+ },
+ {
+  "bg": "Росица",
+  "en": "Dewbrook"
+ },
+ {
+  "bg": "Ведрово",
+  "en": "Fairweather"
+ },
+ {
+  "bg": "Слънчево",
+  "en": "Sunmeadow"
+ },
+ {
+  "bg": "Поляна",
+  "en": "Glade"
+ },
+ {
+  "bg": "Средогрив",
+  "en": "Midridge"
+ },
+ {
+  "bg": "Бистрица",
+  "en": "Clearbrook"
+ },
+ {
+  "bg": "Черешово",
+  "en": "Cherryton"
+ },
+ {
+  "bg": "Тихомир",
+  "en": "Quietmere"
+ },
+ {
+  "bg": "Зелениково",
+  "en": "Greenhill"
+ },
+ {
+  "bg": "Белица",
+  "en": "Whitby"
+ },
+ {
+  "bg": "Дреново",
+  "en": "Dogwood"
+ },
+ {
+  "bg": "Кривина",
+  "en": "Crookbend"
+ },
+ {
+  "bg": "Мокреш",
+  "en": "Marshgate"
+ },
+ {
+  "bg": "Водица",
+  "en": "Brookwater"
+ },
+ {
+  "bg": "Златовръх",
+  "en": "Goldpeak"
+ },
+ {
+  "bg": "Студенец",
+  "en": "Coldwell"
+ },
+ {
+  "bg": "Хвойна",
+  "en": "Juniper"
+ },
+ {
+  "bg": "Дъбене",
+  "en": "Oakridge"
+ },
+ {
+  "bg": "Воденичане",
+  "en": "Millbrook"
+ },
+ {
+  "bg": "Ясен",
+  "en": "Ashford"
+ },
+ {
+  "bg": "Върбово",
+  "en": "Willowmere"
+ },
+ {
+  "bg": "Каменово",
+  "en": "Stonebridge"
+ },
+ {
+  "bg": "Хубавене",
+  "en": "Fairhollow"
+ },
+ {
+  "bg": "Шипково",
+  "en": "Briarwood"
+ },
+ {
+  "bg": "Глогово",
+  "en": "Hawthorne"
+ },
+ {
+  "bg": "Чучулига",
+  "en": "Larkfield"
+ },
+ {
+  "bg": "Червена вода",
+  "en": "Redwater"
+ },
+ {
+  "bg": "Бръшлян",
+  "en": "Ivydale"
+ },
+ {
+  "bg": "Северняк",
+  "en": "Northwick"
+ },
+ {
+  "bg": "Тръстеник",
+  "en": "Rushford"
+ },
+ {
+  "bg": "Подгоре",
+  "en": "Underhill"
+ },
+ {
+  "bg": "Сливо поле",
+  "en": "Plumfield"
+ },
+ {
+  "bg": "Блатино",
+  "en": "Marshby"
+ },
+ {
+  "bg": "Кожинци",
+  "en": "Tannersby"
+ },
+ {
+  "bg": "Пържиграх",
+  "en": "Peasfry"
+ },
+ {
+  "bg": "Тъпчилещово",
+  "en": "Lentilstomp"
+ },
+ {
+  "bg": "Чуйпетлово",
+  "en": "Roosterhark"
+ },
+ {
+  "bg": "Дивдядово",
+  "en": "Wildgramps"
+ },
+ {
+  "bg": "Кривонос",
+  "en": "Crooknose"
+ },
+ {
+  "bg": "Вонеща вода",
+  "en": "Stinkwater"
+ },
+ {
+  "bg": "Бърборци",
+  "en": "Babbleby"
+ },
+ {
+  "bg": "Кошница",
+  "en": "Basketby"
+ },
+ {
+  "bg": "Чучур",
+  "en": "Spoutwell"
+ },
+ {
+  "bg": "Певците",
+  "en": "Songbury"
+ },
+ {
+  "bg": "Мързян",
+  "en": "Idleby"
+ },
+ {
+  "bg": "Охлювец",
+  "en": "Snailby"
+ },
+ {
+  "bg": "Диня",
+  "en": "Melonfield"
+ },
+ {
+  "bg": "Хлябово",
+  "en": "Breadby"
+ },
+ {
+  "bg": "Врани кон",
+  "en": "Ravenhorse"
+ },
+ {
+  "bg": "Тръбач",
+  "en": "Hornblow"
+ },
+ {
+  "bg": "Сланотрън",
+  "en": "Saltthorn"
+ },
+ {
+  "bg": "Сухострел",
+  "en": "Dryarrow"
+ },
+ {
+  "bg": "Клепало",
+  "en": "Clapperton"
+ },
+ {
+  "bg": "Безден",
+  "en": "Deepdrop"
+ },
+ {
+  "bg": "Жълт бряг",
+  "en": "Yellowbank"
+ },
+ {
+  "bg": "Безводно",
+  "en": "Drywell"
+ },
+ {
+  "bg": "Криво поле",
+  "en": "Crookfield"
+ },
+ {
+  "bg": "Козя река",
+  "en": "Goatbrook"
+ },
+ {
+  "bg": "Камилски дол",
+  "en": "Camelvale"
+ },
+ {
+  "bg": "Бъзовец",
+  "en": "Elderby"
+ },
+ {
+  "bg": "Черепово",
+  "en": "Skullby"
+ },
+ {
+  "bg": "Вълкосел",
+  "en": "Wolfstead"
+ },
+ {
+  "bg": "Плешивец",
+  "en": "Baldhill"
+ },
+ {
+  "bg": "Къртожабене",
+  "en": "Molefrog"
+ },
+ {
+  "bg": "Торбалъжи",
+  "en": "Fibbersack"
+ },
+ {
+  "bg": "Страдалово",
+  "en": "Sufferton"
+ },
+ {
+  "bg": "Дълги припек",
+  "en": "Longsun"
+ },
+ {
+  "bg": "Престой",
+  "en": "Restby"
+ },
+ {
+  "bg": "Любово",
+  "en": "Lovewell"
+ },
+ {
+  "bg": "Конска",
+  "en": "Horsefield"
+ },
+ {
+  "bg": "Старопатица",
+  "en": "Duckpond"
+ },
+ {
+  "bg": "Лъжница",
+  "en": "Fibwick"
+ },
+ {
+  "bg": "Вещица",
+  "en": "Witchwood"
+ },
+ {
+  "bg": "Гърло",
+  "en": "Gullet"
+ },
+ {
+  "bg": "Сливата",
+  "en": "Plumtree"
+ },
+ {
+  "bg": "Глутници",
+  "en": "Wolfpack"
+ },
+ {
+  "bg": "Държава",
+  "en": "Kingdom"
+ },
+ {
+  "bg": "Мъртвината",
+  "en": "Deadwood"
+ },
+ {
+  "bg": "Гащевци",
+  "en": "Breechby"
+ },
+ {
+  "bg": "Ялово",
+  "en": "Barrenfield"
+ },
+ {
+  "bg": "Дърлевци",
+  "en": "Bickerby"
+ },
+ {
+  "bg": "Куцина",
+  "en": "Limpton"
+ },
+ {
+  "bg": "Кантари",
+  "en": "Weighbridge"
+ },
+ {
+  "bg": "Топузи",
+  "en": "Macebury"
+ },
+ {
+  "bg": "Вързулица",
+  "en": "Knotwell"
+ },
+ {
+  "bg": "Къртипъня",
+  "en": "Stumpcrack"
+ },
+ {
+  "bg": "Мишеморков хан",
+  "en": "Mousebane"
+ },
+ {
+  "bg": "Киселица",
+  "en": "Sourwell"
+ },
+ {
+  "bg": "Бабица",
+  "en": "Grannyby"
+ },
+ {
+  "bg": "Чешлянци",
+  "en": "Combton"
+ },
+ {
+  "bg": "Сушица",
+  "en": "Dryhollow"
+ },
+ {
+  "bg": "Жабляно",
+  "en": "Frogwater"
+ },
+ {
+  "bg": "Храбърско",
+  "en": "Bravewick"
+ },
+ {
+  "bg": "Калище",
+  "en": "Mudholm"
+ },
+ {
+  "bg": "Златуша",
+  "en": "Goldenmere"
+ },
+ {
+  "bg": "Пиперков чифлик",
+  "en": "Pepperfarm"
+ },
+ {
+  "bg": "Гега",
+  "en": "Crookstaff"
+ },
+ {
+  "bg": "Разбоище",
+  "en": "Brawlfield"
+ },
+ {
+  "bg": "Мало Малово",
+  "en": "Little Littleton"
+ },
+ {
+  "bg": "Завидовци",
+  "en": "Envyby"
+ },
+ {
+  "bg": "Цвекова бара",
+  "en": "Beetbrook"
+ },
+ {
+  "bg": "Челюстница",
+  "en": "Jawbone"
+ },
+ {
+  "bg": "Сливовик",
+  "en": "Plumwood"
+ },
+ {
+  "bg": "Костичовци",
+  "en": "Boneby"
+ },
+ {
+  "bg": "Гъмзово",
+  "en": "Grapewick"
+ },
+ {
+  "bg": "Реброво",
+  "en": "Ribton"
+ },
+ {
+  "bg": "Губислав",
+  "en": "Loseglory"
+ },
+ {
+  "bg": "Очиндол",
+  "en": "Eyedale"
+ },
+ {
+  "bg": "Оплетня",
+  "en": "Tanglewood"
+ },
+ {
+  "bg": "Пудрия",
+  "en": "Powderby"
+ },
+ {
+  "bg": "Бърдарски геран",
+  "en": "Coopers' Well"
+ },
+ {
+  "bg": "Остров",
+  "en": "Isleby"
+ },
+ {
+  "bg": "Глава",
+  "en": "Headland"
+ },
+ {
+  "bg": "Хвърчил",
+  "en": "Kiteby"
+ },
+ {
+  "bg": "Виноградец",
+  "en": "Vinegarth"
+ },
+ {
+  "bg": "Злокучане",
+  "en": "Badhound"
+ },
+ {
+  "bg": "Късак",
+  "en": "Shortby"
+ },
+ {
+  "bg": "Заевите",
+  "en": "Haresby"
+ },
+ {
+  "bg": "Проглед",
+  "en": "Clearview"
+ },
+ {
+  "bg": "Писаница",
+  "en": "Scrawlstone"
+ },
+ {
+  "bg": "Коритата",
+  "en": "Troughton"
+ },
+ {
+  "bg": "Беден",
+  "en": "Pennyless"
+ },
+ {
+  "bg": "Паничери",
+  "en": "Bowlwick"
+ },
+ {
+  "bg": "Биволаре",
+  "en": "Buffalo Ford"
+ },
+ {
+  "bg": "Подем",
+  "en": "Upridge"
+ },
+ {
+  "bg": "Вълчитрън",
+  "en": "Wolfthorn"
+ },
+ {
+  "bg": "Горско сливово",
+  "en": "Wildplum"
+ },
+ {
+  "bg": "Музга",
+  "en": "Puddleby"
+ },
+ {
+  "bg": "Столът",
+  "en": "Chairholm"
+ },
+ {
+  "bg": "Шумата",
+  "en": "Leafton"
+ },
+ {
+  "bg": "Войнишка",
+  "en": "Soldiersby"
+ },
+ {
+  "bg": "Дебел дял",
+  "en": "Broadridge"
+ },
+ {
+  "bg": "Сърнегор",
+  "en": "Roewood"
+ },
+ {
+  "bg": "Тъжа",
+  "en": "Sorrowby"
+ },
+ {
+  "bg": "Пъдарско",
+  "en": "Wardenfield"
+ },
+ {
+  "bg": "Врата",
+  "en": "Gateholm"
+ },
+ {
+  "bg": "Оглед",
+  "en": "Lookout"
+ },
+ {
+  "bg": "Козарка",
+  "en": "Goatherd"
+ },
+ {
+  "bg": "Градът",
+  "en": "Townsend"
+ },
+ {
+  "bg": "Касапско",
+  "en": "Butchersby"
+ },
+ {
+  "bg": "Дядовци",
+  "en": "Grandsires"
+ },
+ {
+  "bg": "Правдолюб",
+  "en": "Truelove"
+ },
+ {
+  "bg": "Избеглии",
+  "en": "Runaways"
+ },
+ {
+  "bg": "Жълт камък",
+  "en": "Yellowstone"
+ },
+ {
+  "bg": "Зетьово",
+  "en": "Inlawby"
+ },
+ {
+  "bg": "Колец",
+  "en": "Pegton"
+ },
+ {
+  "bg": "Воловарци",
+  "en": "Oxford"
+ },
+ {
+  "bg": "Завоя",
+  "en": "Bendby"
+ },
+ {
+  "bg": "Стрижба",
+  "en": "Shearwell"
+ },
+ {
+  "bg": "Чичево",
+  "en": "Uncleby"
+ },
+ {
+  "bg": "Кран",
+  "en": "Craneholm"
+ },
+ {
+  "bg": "Плевун",
+  "en": "Weedwick"
+ },
+ {
+  "bg": "Падало",
+  "en": "Fallwater"
+ },
+ {
+  "bg": "Едрево",
+  "en": "Bigby"
+ },
+ {
+  "bg": "Съдийско поле",
+  "en": "Judgefield"
+ },
+ {
+  "bg": "Научене",
+  "en": "Learnwell"
+ },
+ {
+  "bg": "Оризари",
+  "en": "Ricefield"
+ },
+ {
+  "bg": "Точилари",
+  "en": "Whetstone"
+ },
+ {
+  "bg": "Ушинци",
+  "en": "Earsby"
+ },
+ {
+  "bg": "Коноп",
+  "en": "Hempfield"
+ },
+ {
+  "bg": "Плъстина",
+  "en": "Feltham"
+ },
+ {
+  "bg": "Кьосевци",
+  "en": "Beardless"
+ },
+ {
+  "bg": "Чукарка",
+  "en": "Knollby"
+ },
+ {
+  "bg": "Дропла",
+  "en": "Bustardby"
+ },
+ {
+  "bg": "Чернолик",
+  "en": "Blackface"
+ },
+ {
+  "bg": "Вълчедръм",
+  "en": "Wolfthicket"
+ },
+ {
+  "bg": "Прогорелец",
+  "en": "Burnside"
+ },
+ {
+  "bg": "Помеждин",
+  "en": "Midway"
+ },
+ {
+  "bg": "Меляне",
+  "en": "Grindwell"
+ },
+ {
+  "bg": "Попинци",
+  "en": "Priestby"
+ },
+ {
+  "bg": "Кален",
+  "en": "Clayton"
+ }
+]

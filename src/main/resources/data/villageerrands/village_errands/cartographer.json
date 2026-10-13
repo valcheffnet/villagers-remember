@@ -1,0 +1,671 @@
+{
+  "profession": "minecraft:cartographer",
+  "tasks": [
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.057,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:paper"
+        },
+        {
+          "deliver": "minecraft:paper"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:glass"
+        },
+        {
+          "deliver": "minecraft:glass"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "deliver": "minecraft:sugar_cane",
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.05,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "#minecraft:ruined_portal"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.5,
+      "weight": 6,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "#minecraft:abandoned_camp"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.5,
+      "weight": 6,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_biome": "minecraft:cherry_grove"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.5,
+      "weight": 5,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 1.15,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:compass"
+        },
+        {
+          "deliver": "minecraft:compass"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.575,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:map"
+        },
+        {
+          "deliver": "minecraft:map"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.115,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:glass_pane"
+        },
+        {
+          "deliver": "minecraft:glass_pane"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:phantom",
+      "count": [
+        4,
+        6
+      ],
+      "value": 0.8,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:pillager_outpost"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:igloo"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:desert_pyramid"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_biome": "minecraft:ice_spikes"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_biome": "minecraft:badlands"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "tame": "minecraft:parrot"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "weight": 4,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "tame": "minecraft:horse"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "weight": 4,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        1,
+        2
+      ],
+      "value": 2.3,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:spyglass"
+        },
+        {
+          "deliver": "minecraft:spyglass"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.36,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:amethyst_cluster",
+          "factor": 0.25
+        },
+        {
+          "deliver": "minecraft:amethyst_shard"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.expedition_kit",
+      "objectives": [
+        {
+          "craft": "minecraft:map",
+          "count": [
+            4,
+            4
+          ]
+        },
+        {
+          "deliver": "minecraft:map",
+          "count": [
+            4,
+            4
+          ]
+        },
+        {
+          "craft": "minecraft:compass",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:compass",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "craft": "minecraft:spyglass",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:spyglass",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 8.32,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:pillager",
+      "count": [
+        6,
+        10
+      ],
+      "value": 1.0,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:trail_ruins"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 1.725,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:clock"
+        },
+        {
+          "deliver": "minecraft:clock"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 1.035,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:copper_block"
+        },
+        {
+          "deliver": "minecraft:copper_block"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:witch",
+      "count": [
+        2,
+        4
+      ],
+      "value": 1.5,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:monument"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 8.0,
+      "weight": 6,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:trial_chambers"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 7.0,
+      "weight": 6,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_biome": "minecraft:mushroom_fields"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 8.0,
+      "weight": 5,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        1,
+        1
+      ],
+      "value": 13.8,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:recovery_compass"
+        },
+        {
+          "deliver": "minecraft:recovery_compass"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:evoker",
+      "count": [
+        1,
+        1
+      ],
+      "value": 8.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "visit_structure": "minecraft:mansion"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 12.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:map",
+      "count": [
+        1,
+        3
+      ],
+      "value": 0.6,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "item": "minecraft:compass",
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.0,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "item": "minecraft:spyglass",
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.0,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "loot_table": "villageerrands:top/map_buried_treasure",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "loot_table": "villageerrands:top/map_buried_treasure",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "loot_table": "villageerrands:top/map_monument",
+      "value": 5,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "loot_table": "villageerrands:top/map_trial_chambers",
+      "value": 5,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "loot_table": "villageerrands:top/map_mansion",
+      "value": 6,
+      "min_tier": 5,
+      "max_tier": 5
+    },
+    {
+      "item": "minecraft:ender_eye",
+      "count": [
+        2,
+        4
+      ],
+      "value": 2.0,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "item": "minecraft:recovery_compass",
+      "count": [
+        1,
+        1
+      ],
+      "value": 8.0,
+      "min_tier": 5,
+      "max_tier": 5
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+base {
+	archivesName = 'village-errands'
+}
+
+loom {
+	mods {
+		"villageerrands" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "villageerrands-test"
+		enableGameTests = false
+		enableClientGameTests = true
+		eula = true
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+def templateProps = [
+	version          : project.version,
+	minecraft_version: project.minecraft_version,
+	java_version     : project.java_version,
+]
+
+processResources {
+	inputs.properties templateProps
+	filesMatching(["fabric.mod.json", "*.mixins.json"]) {
+		expand templateProps
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = project.java_version as int
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(project.java_version)
+	targetCompatibility = JavaVersion.toVersion(project.java_version)
+}
+
+jar {
+	from("LICENSE.md") {
+		rename { "LICENSE_village-errands.md" }
+	}
+}

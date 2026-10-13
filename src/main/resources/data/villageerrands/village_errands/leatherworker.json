@@ -1,0 +1,491 @@
+{
+  "profession": "minecraft:leatherworker",
+  "tasks": [
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.3,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:cow",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:leather"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "deliver": "minecraft:flint",
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.04,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.235,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:spider",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:string"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "breed": "minecraft:cow"
+        }
+      ],
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.5,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.37,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:rabbit",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:rabbit_hide"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 0.92,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:leather_chestplate"
+        },
+        {
+          "deliver": "minecraft:leather_chestplate"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:spider",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "tame": "minecraft:horse"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "tame": "minecraft:donkey"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.5,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "tame": "minecraft:llama"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.5,
+      "weight": 5,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        3,
+        6
+      ],
+      "value": 1.1,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:rabbit",
+          "factor": 2.0
+        },
+        {
+          "deliver": "minecraft:rabbit_foot"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "deliver": "minecraft:turtle_scute",
+      "count": [
+        4,
+        8
+      ],
+      "value": 0.3,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        1,
+        2
+      ],
+      "value": 2.3,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:saddle"
+        },
+        {
+          "deliver": "minecraft:saddle"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:husk",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.4,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.riders_set",
+      "objectives": [
+        {
+          "craft": "minecraft:saddle",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:saddle",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "craft": "minecraft:leather_horse_armor",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:leather_horse_armor",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "craft": "minecraft:lead",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:lead",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 5.59,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        6,
+        12
+      ],
+      "value": 1.4,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:phantom",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:phantom_membrane"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "deliver": "minecraft:armadillo_scute",
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.4,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:phantom",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.8,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "title": "order.armored_stable",
+      "objectives": [
+        {
+          "deliver": "minecraft:armadillo_scute",
+          "count": [
+            24,
+            24
+          ]
+        },
+        {
+          "deliver": "minecraft:leather",
+          "count": [
+            64,
+            64
+          ]
+        },
+        {
+          "craft": "minecraft:saddle",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:saddle",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 34.32,
+      "weight": 6,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        1,
+        2
+      ],
+      "value": 3.45,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:wolf_armor"
+        },
+        {
+          "deliver": "minecraft:wolf_armor"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        16,
+        24
+      ],
+      "value": 1.4,
+      "weight": 6,
+      "objectives": [
+        {
+          "kill": "minecraft:phantom",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:phantom_membrane"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:bundle",
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.0,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "item": "minecraft:saddle",
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_tannery",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "item": "minecraft:diamond_horse_armor",
+      "count": [
+        1,
+        1
+      ],
+      "value": 5.0,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "item": "minecraft:wolf_armor",
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

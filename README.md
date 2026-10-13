@@ -1,0 +1,85 @@
+# Village Errands
+
+Villagers in vanilla Minecraft trade and that's it. With this mod they ask you for help. The farmer needs 20 bread baked, the cleric wants zombies cleared off the road, the cartographer sends you to find a shipwreck. Do the job, bring what was asked, and get paid. Keep helping and the villagers start to know you, trust you, and give you better work.
+
+The whole mod runs on the server. Players join with a normal vanilla client and install nothing: the screens are vanilla dialogs, the markers are vanilla text displays, and the names come in each player's own language.
+
+## Talking to villagers
+
+Right-click a villager and they greet you the way your standing deserves. "Yes? Do I know you?" from a stranger, "My friend! Come, sit." from someone you have helped for weeks. From there you pick Errands or Trade. Sneak + right-click still trades straight away, so trading halls stay one click.
+
+Every villager with a job offers a few errands a day, more as their trade level grows. Each errand is one or more of 21 kinds of tasks: craft, smelt, mine, harvest, fish, breed, tame, kill, brew, enchant, visit a structure or a biome, and so on. Taking an item to a villager is counted apart from making it, so you can't just buy what was asked.
+
+Right-click the village bell for the board: all of the village's errands, its residents, your standing, the treasury and the weekly order. Sneak + right-click rings the bell as usual.
+
+## Standing and trust
+
+You earn standing with every villager and with the village as a whole. Villager tiers go Stranger, Acquaintance, Friend, Good friend, Best friend. A villager won't move you up a tier on points alone: when you have the points, they give you a trial of trust, a harder errand that pays double. Pass it and they hand you the next pack of errands.
+
+Village tiers (Known, Friend, Respected, Hero of the Village) need points and enough residents who trust you that much. Each tier makes rewards 5% bigger and enchanted rewards stronger.
+
+Packs have a material ladder for the smiths: stone at the start, then copper, iron, diamond and netherite. A master weaponsmith won't pay you with an iron sword.
+
+## Rewards
+
+Emeralds, experience and items, worth what the job asked. Some smiths reforge a piece you make into an enchanted one of the same material. At the top pack every profession has a top reward you choose yourself: Fortune or Silk Touch on the netherite pickaxe, Sharpness or Smite on the sword, a treasure map to a mansion or a monument. Gear comes with Unbreaking III and Mending, and the enchantments stay a surprise until you hand the errand in.
+
+## Prices
+
+Your standing sets your prices. A Best friend in a Hero village trades 40% cheaper, while a player who hurt the village pays up to 50% more. Vanilla's own discounts (curing a zombie villager, Hero of the Village after a raid) still apply on top.
+
+## Treasury
+
+Villagers who trust you put a share of their work aside for you every day. The treasury lists every village you have found with what it pays a day; one button sends the emeralds to your ender chest. Each village keeps three days of income at most, and helping five villages at Friend or better raises all of it by 25%.
+
+## End game
+
+- Fame from everything you do, with titles in chat and TAB: Helper, Benefactor, Legend. A Legend finds rare goods with the wandering trader.
+- Contracts: a Best friend gives you one hard job a day. The third contract for a profession brings its legendary item, named after the villager who gave it ("Lena's Hoe") and enchanted to the limit.
+- Weekly orders: every village posts one big order for everyone on the server, like 1024 food before winter or 100 monsters cleared out of the village. Bring any amount, any time. When it's done everyone is paid by their share.
+- Patron: the Hero of a village who has passed every trial with five of its villagers can become its patron. A village has one patron, the one with the most standing; anyone who does more takes the place, and the whole server hears about it. The patron's head is shown at the bell, they trade there at 45% off and they can give the village a name.
+- A collection for every profession: do each of its errands once.
+- Its own advancement tab, 45 of them.
+
+## Everything else
+
+- 230 village names (Bulgarian villages, many of them real) and villager names, in English and Bulgarian. More languages can be added as lang files.
+- Villager names above their heads and in Jade, for each player in their language.
+- A sidebar tracker for the errands you follow, "!" over villagers with work for you and "?" when you can hand something in.
+- A chronicle book with your errands, villages, fame and collection (`/errands book`).
+- A villager who turns into a zombie villager and is cured keeps your standing, errands and name.
+- Errands are datapack JSON (`data/<namespace>/village_errands/*.json`), so packs can add their own.
+
+## Install
+
+Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into the server's `mods` folder. In single player it works the same when installed on the client.
+
+## Configuration
+
+`config/villageerrands.json` is created on first start with every setting and a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villageerrands/ErrandsConfig.java)). Some of them:
+
+| Setting | Default | |
+|---|---|---|
+| `language` | `auto` | Each player's client language, or force one (`en_us`, `bg_bg`). |
+| `talkMenu` | `true` | Right-click greets; `false` keeps vanilla right-click trading and puts errands on sneak + right-click. |
+| `maxActiveErrands` | `5` | Errands one player can carry at once. |
+| `tradeDiscounts` | `true` | Prices by standing. `maxDiscount` 0.40, `maxSurcharge` 0.50, `patronDiscount` 0.45. |
+| `treasuryDailyCap` | `64` | Most emeralds one village pays a day. |
+| `fameTitles` | `true` | Titles in chat and TAB. Turn off if another plugin or mod manages teams. |
+| `weeklyOrders` | `true` | `weeklyOrderScale` 1.0 sizes the orders, `weeklyRewardEmeralds` 192 is the payout. |
+| `contracts` | `true` | `contractsForLegend` 3 contracts per legendary item. |
+| `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |
+
+Run `/errands reload` after editing.
+
+## Commands
+
+Players have `/errands` (journal), `/errands book` and `/errands village`. Operators get standing, testing and end game commands, all listed in [COMMANDS.md](COMMANDS.md).
+
+## Credits
+
+Villager head textures come from [minecraft-heads.com](https://minecraft-heads.com). Item and block names shown in the screens are Minecraft's own translations and belong to Mojang.
+
+## License
+
+All rights reserved, with permission to use the mod on any server and in modpacks. See [LICENSE.md](LICENSE.md).

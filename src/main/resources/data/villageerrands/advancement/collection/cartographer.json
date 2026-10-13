@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:cartography_table"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.collection.cartographer.title",
+      "fallback": "Cartographer's Book"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.collection.cartographer.description",
+      "fallback": "Complete every errand a cartographer gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

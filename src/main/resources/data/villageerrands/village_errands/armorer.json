@@ -1,0 +1,725 @@
+{
+  "profession": "minecraft:armorer",
+  "tasks": [
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.096,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:coal_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:coal"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:copper_ingot"
+        },
+        {
+          "deliver": "minecraft:copper_ingot"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.3,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:cow",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:leather"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.36,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:iron_ingot"
+        },
+        {
+          "deliver": "minecraft:iron_ingot"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 1.1,
+      "weight": 10,
+      "objectives": [
+        {
+          "fill_bucket": "minecraft:lava_bucket"
+        },
+        {
+          "deliver": "minecraft:lava_bucket"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:skeleton",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.45,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:copper_helmet",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:copper_helmet",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.2,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:copper_helmet",
+        "levels": [
+          8,
+          11
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:copper_boots",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:copper_boots",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.96,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:copper_boots",
+        "levels": [
+          8,
+          11
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:gold_ingot"
+        },
+        {
+          "deliver": "minecraft:gold_ingot"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 3.105,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:iron_block"
+        },
+        {
+          "deliver": "minecraft:iron_block"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.96,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:obsidian",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:obsidian"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.guard_gear",
+      "objectives": [
+        {
+          "craft": "minecraft:shield",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:shield",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "craft": "minecraft:iron_helmet",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_helmet",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "craft": "minecraft:iron_boots",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_boots",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 7.41,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:pillager",
+      "count": [
+        6,
+        10
+      ],
+      "value": 1.0,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "summon": "minecraft:iron_golem"
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 6.0,
+      "weight": 5,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:iron_helmet",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_helmet",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.5,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:iron_helmet",
+        "levels": [
+          10,
+          13
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:iron_chestplate",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_chestplate",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:iron_chestplate",
+        "levels": [
+          10,
+          13
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 3.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:diamond_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:diamond"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:vindicator",
+      "count": [
+        3,
+        6
+      ],
+      "value": 2.0,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:diamond_helmet",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:diamond_helmet",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 10.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:diamond_helmet",
+        "levels": [
+          15,
+          18
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:diamond_chestplate",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:diamond_chestplate",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 16.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:diamond_chestplate",
+        "levels": [
+          15,
+          18
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "title": "order.smith_order",
+      "objectives": [
+        {
+          "deliver": "minecraft:diamond",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "smelt": "minecraft:netherite_scrap",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:netherite_scrap",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 83.2,
+      "weight": 6,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:ravager",
+      "count": [
+        2,
+        2
+      ],
+      "value": 8.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "station": "minecraft:netherite_helmet",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:netherite_helmet",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 30.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:netherite_helmet",
+        "levels": [
+          18,
+          21
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "station": "minecraft:netherite_chestplate",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:netherite_chestplate",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 36.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:netherite_chestplate",
+        "levels": [
+          18,
+          21
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:shield",
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.5,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "item": "minecraft:copper_chestplate",
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.0,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_armorer",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:iron_chestplate",
+      "levels": [
+        10,
+        18
+      ],
+      "value_per_level": 0.35,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:diamond_helmet",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.45,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:diamond_boots",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.45,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:netherite_chestplate",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.6,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "enchant": "minecraft:netherite_leggings",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.6,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

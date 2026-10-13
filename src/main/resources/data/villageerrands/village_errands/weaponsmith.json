@@ -1,0 +1,662 @@
+{
+  "profession": "minecraft:weaponsmith",
+  "tasks": [
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.096,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:coal_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:coal"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "deliver": "minecraft:flint",
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.05,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.034,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:stick"
+        },
+        {
+          "deliver": "minecraft:stick"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:stone_sword",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:stone_sword",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.3,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:stone_sword",
+        "levels": [
+          5,
+          8
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.36,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:iron_ingot"
+        },
+        {
+          "deliver": "minecraft:iron_ingot"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.305,
+      "weight": 10,
+      "objectives": [
+        {
+          "kill": "minecraft:skeleton",
+          "factor": 0.5
+        },
+        {
+          "deliver": "minecraft:bone"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:skeleton",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.45,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:zombie",
+      "count": [
+        10,
+        16
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:copper_sword",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:copper_sword",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.72,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:copper_sword",
+        "levels": [
+          8,
+          11
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 3.105,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:iron_block"
+        },
+        {
+          "deliver": "minecraft:iron_block"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:gold_ingot"
+        },
+        {
+          "deliver": "minecraft:gold_ingot"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:creeper",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.6,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:witch",
+      "count": [
+        2,
+        4
+      ],
+      "value": 1.5,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "title": "order.armory",
+      "objectives": [
+        {
+          "craft": "minecraft:iron_sword",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_sword",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "craft": "minecraft:bow",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "deliver": "minecraft:bow",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "craft": "minecraft:arrow",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "deliver": "minecraft:arrow",
+          "count": [
+            32,
+            32
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 5.36,
+      "weight": 6,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:iron_sword",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_sword",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.5,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:iron_sword",
+        "levels": [
+          10,
+          13
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:iron_axe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_axe",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.5,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:iron_axe",
+        "levels": [
+          10,
+          13
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "enchant": "",
+          "min_level": 15
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 3.0,
+      "weight": 5,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        4,
+        8
+      ],
+      "value": 3.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:diamond_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:diamond"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:vindicator",
+      "count": [
+        4,
+        8
+      ],
+      "value": 2.0,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "kill": "minecraft:enderman",
+      "count": [
+        4,
+        8
+      ],
+      "value": 1.2,
+      "weight": 10,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:diamond_sword",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:diamond_sword",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 4.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:diamond_sword",
+        "levels": [
+          15,
+          18
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        2,
+        4
+      ],
+      "value": 9.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:netherite_scrap"
+        },
+        {
+          "deliver": "minecraft:netherite_scrap"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:evoker",
+      "count": [
+        2,
+        2
+      ],
+      "value": 8.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "kill": "minecraft:wither_skeleton",
+      "count": [
+        6,
+        10
+      ],
+      "value": 2.5,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "station": "minecraft:netherite_sword",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:netherite_sword",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 24.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:netherite_sword",
+        "levels": [
+          18,
+          21
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:copper_sword",
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.5,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "item": "minecraft:copper_axe",
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.6,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_weaponsmith",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:iron_sword",
+      "levels": [
+        10,
+        18
+      ],
+      "value_per_level": 0.3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:diamond_sword",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.45,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:diamond_axe",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.45,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:netherite_sword",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.6,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "enchant": "minecraft:netherite_axe",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.6,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:stonecutter"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.collection.mason.title",
+      "fallback": "Mason's Book"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.collection.mason.description",
+      "fallback": "Complete every errand a mason gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

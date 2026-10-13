@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:root",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:ender_chest"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.treasury.first.title",
+      "fallback": "First Wages"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.treasury.first.description",
+      "fallback": "Send treasury emeralds to your Ender Chest"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:green_wool"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.collection.nitwit.title",
+      "fallback": "Nitwit's Book"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.collection.nitwit.description",
+      "fallback": "Complete every errand a nitwit gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

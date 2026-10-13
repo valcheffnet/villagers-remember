@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/first",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:emerald"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.errands.ten.title",
+      "fallback": "Helping Hand"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.errands.ten.description",
+      "fallback": "Complete 10 errands"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

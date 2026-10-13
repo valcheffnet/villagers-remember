@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:root",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:name_tag"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.fame.helper.title",
+      "fallback": "Helper"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.fame.helper.description",
+      "fallback": "Earn the title Helper"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

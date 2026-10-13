@@ -1,0 +1,486 @@
+{
+  "profession": "minecraft:mason",
+  "tasks": [
+    {
+      "count": [
+        64,
+        128
+      ],
+      "value": 0.036,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:stone"
+        },
+        {
+          "deliver": "minecraft:stone"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:clay",
+          "factor": 0.25
+        },
+        {
+          "deliver": "minecraft:clay_ball"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        64,
+        128
+      ],
+      "value": 0.036,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:deepslate"
+        },
+        {
+          "deliver": "minecraft:deepslate"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.096,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:brick"
+        },
+        {
+          "deliver": "minecraft:brick"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.069,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:polished_granite"
+        },
+        {
+          "deliver": "minecraft:polished_granite"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.069,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:polished_andesite"
+        },
+        {
+          "deliver": "minecraft:polished_andesite"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.069,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:polished_diorite"
+        },
+        {
+          "deliver": "minecraft:polished_diorite"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:silverfish",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.3,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "title": "order.town_hall",
+      "objectives": [
+        {
+          "station": "minecraft:stone_bricks",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "deliver": "minecraft:stone_bricks",
+          "count": [
+            32,
+            32
+          ]
+        },
+        {
+          "craft": "minecraft:bricks",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "minecraft:bricks",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "station": "minecraft:polished_andesite",
+          "count": [
+            16,
+            16
+          ]
+        },
+        {
+          "deliver": "minecraft:polished_andesite",
+          "count": [
+            16,
+            16
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 9.98,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "station": "minecraft:stone_bricks"
+        },
+        {
+          "deliver": "minecraft:stone_bricks"
+        }
+      ],
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.08,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:calcite",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:calcite"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.092,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:tuff_bricks"
+        },
+        {
+          "deliver": "minecraft:tuff_bricks"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.46,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:quartz_block"
+        },
+        {
+          "deliver": "minecraft:quartz_block"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:creeper",
+      "count": [
+        6,
+        10
+      ],
+      "value": 0.6,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.36,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:white_glazed_terracotta"
+        },
+        {
+          "deliver": "minecraft:white_glazed_terracotta"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:dripstone_block",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:dripstone_block"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.345,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:prismarine_bricks"
+        },
+        {
+          "deliver": "minecraft:prismarine_bricks"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.345,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:purpur_block"
+        },
+        {
+          "deliver": "minecraft:purpur_block"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        32,
+        32
+      ],
+      "value": 0.96,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:obsidian",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:obsidian"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.345,
+      "weight": 6,
+      "objectives": [
+        {
+          "craft": "minecraft:prismarine_bricks"
+        },
+        {
+          "deliver": "minecraft:prismarine_bricks"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:bricks",
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.08,
+      "min_tier": 2,
+      "max_tier": 3
+    },
+    {
+      "item": "minecraft:quartz_block",
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_mason",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 4
+    },
+    {
+      "item": "minecraft:sea_lantern",
+      "count": [
+        4,
+        8
+      ],
+      "value": 1.0,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "item": "minecraft:amethyst_block",
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.4,
+      "min_tier": 4,
+      "max_tier": 5
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

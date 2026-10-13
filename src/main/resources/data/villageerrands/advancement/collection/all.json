@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/two_hundred",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:knowledge_book"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.collection.all.title",
+      "fallback": "Master of All Trades"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.collection.all.description",
+      "fallback": "Complete every errand of every profession"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

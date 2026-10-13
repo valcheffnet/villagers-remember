@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:errands/ten",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:cauldron"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.collection.leatherworker.title",
+      "fallback": "Leatherworker's Book"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.collection.leatherworker.description",
+      "fallback": "Complete every errand a leatherworker gives"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

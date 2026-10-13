@@ -1,0 +1,706 @@
+{
+  "profession": "minecraft:toolsmith",
+  "tasks": [
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.096,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:coal_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:coal"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "deliver": "minecraft:flint",
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.04,
+      "weight": 10,
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        32,
+        64
+      ],
+      "value": 0.12,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:copper_ingot"
+        },
+        {
+          "deliver": "minecraft:copper_ingot"
+        }
+      ],
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:stone_pickaxe",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:stone_pickaxe",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.45,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:stone_pickaxe",
+        "levels": [
+          5,
+          8
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        1,
+        1
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.36,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:iron_ingot"
+        },
+        {
+          "deliver": "minecraft:iron_ingot"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.096,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:redstone_ores",
+          "factor": 0.25
+        },
+        {
+          "deliver": "minecraft:redstone"
+        }
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "kill": "minecraft:spider",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.35,
+      "weight": 10,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "mine": "#minecraft:iron_ores"
+        },
+        {
+          "deliver": "minecraft:raw_iron"
+        }
+      ],
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.4,
+      "weight": 6,
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:copper_pickaxe",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:copper_pickaxe",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.08,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:copper_pickaxe",
+        "levels": [
+          8,
+          11
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:copper_shovel",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:copper_shovel",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.36,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:copper_shovel",
+        "levels": [
+          8,
+          11
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 0.805,
+      "weight": 10,
+      "objectives": [
+        {
+          "craft": "minecraft:coal_block"
+        },
+        {
+          "deliver": "minecraft:coal_block"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        12,
+        24
+      ],
+      "value": 0.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "smelt": "minecraft:gold_ingot"
+        },
+        {
+          "deliver": "minecraft:gold_ingot"
+        }
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:cave_spider",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.45,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:silverfish",
+      "count": [
+        8,
+        12
+      ],
+      "value": 0.3,
+      "weight": 10,
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:iron_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 1.5,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:iron_pickaxe",
+        "levels": [
+          10,
+          13
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:iron_shovel",
+          "count": [
+            3,
+            3
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_shovel",
+          "count": [
+            3,
+            3
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.75,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:iron_shovel",
+        "levels": [
+          10,
+          13
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "count": [
+        3,
+        6
+      ],
+      "value": 3.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:diamond_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:diamond"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "count": [
+        16,
+        32
+      ],
+      "value": 0.36,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "minecraft:amethyst_cluster",
+          "factor": 0.25
+        },
+        {
+          "deliver": "minecraft:amethyst_shard"
+        }
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "title": "order.tool_set",
+      "objectives": [
+        {
+          "craft": "minecraft:iron_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "craft": "minecraft:iron_shovel",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_shovel",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "craft": "minecraft:iron_axe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:iron_axe",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 6.24,
+      "weight": 6,
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:diamond_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:diamond_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 6.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:diamond_pickaxe",
+        "levels": [
+          15,
+          18
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "craft": "minecraft:diamond_shovel",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:diamond_shovel",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 2.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:diamond_shovel",
+        "levels": [
+          15,
+          18
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "deliver": "minecraft:echo_shard",
+      "count": [
+        4,
+        8
+      ],
+      "value": 3.0,
+      "weight": 10,
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "count": [
+        8,
+        16
+      ],
+      "value": 3.6,
+      "weight": 10,
+      "objectives": [
+        {
+          "mine": "#minecraft:diamond_ores",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:diamond"
+        }
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "station": "minecraft:netherite_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        },
+        {
+          "deliver": "minecraft:netherite_pickaxe",
+          "count": [
+            2,
+            2
+          ]
+        }
+      ],
+      "count": [
+        1,
+        1
+      ],
+      "value": 26.0,
+      "weight": 8,
+      "reward": {
+        "enchant": "minecraft:netherite_pickaxe",
+        "levels": [
+          18,
+          21
+        ],
+        "max_levels": true
+      },
+      "tiers": [
+        5,
+        5
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "item": "minecraft:copper_pickaxe",
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.6,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "item": "minecraft:copper_shovel",
+      "count": [
+        1,
+        1
+      ],
+      "value": 0.3,
+      "min_tier": 2,
+      "max_tier": 2
+    },
+    {
+      "loot_table": "minecraft:chests/village/village_toolsmith",
+      "value": 3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:iron_pickaxe",
+      "levels": [
+        10,
+        18
+      ],
+      "value_per_level": 0.3,
+      "min_tier": 3,
+      "max_tier": 3
+    },
+    {
+      "enchant": "minecraft:diamond_pickaxe",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.45,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:diamond_shovel",
+      "levels": [
+        20,
+        30
+      ],
+      "value_per_level": 0.4,
+      "min_tier": 4,
+      "max_tier": 4
+    },
+    {
+      "enchant": "minecraft:netherite_pickaxe",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.6,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "enchant": "minecraft:netherite_shovel",
+      "levels": [
+        25,
+        30
+      ],
+      "value_per_level": 0.6,
+      "min_tier": 5,
+      "max_tier": 5,
+      "max_levels": true
+    },
+    {
+      "top": true,
+      "value": 15.0,
+      "min_tier": 5,
+      "max_tier": 5
+    }
+  ]
+}

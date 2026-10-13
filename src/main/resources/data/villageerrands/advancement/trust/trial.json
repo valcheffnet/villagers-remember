@@ -1,0 +1,30 @@
+{
+  "parent": "villageerrands:trust/acquaintance",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:golden_carrot"
+    },
+    "title": {
+      "translate": "advancement.villageerrands.trust.trial.title",
+      "fallback": "Trust Earned"
+    },
+    "description": {
+      "translate": "advancement.villageerrands.trust.trial.description",
+      "fallback": "Pass a trial of trust"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ]
+}

@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "villageerrands-test",
+	"version": "1.0.0",
+	"name": "Village Errands (tests)",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"net.valcheff.villageerrands.test.ErrandsClientGameTest"
+		],
+		"client": [
+			"net.valcheff.villageerrands.test.TestWindow"
+		]
+	}
+}

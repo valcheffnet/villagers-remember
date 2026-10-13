@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "villageerrands",
+	"version": "${version}",
+	"name": "Village Errands",
+	"description": "Villagers ask you for help: craft, hunt, fish, explore. Earn their trust, better prices, a share of their work and the title of patron. Server-side, works with vanilla clients.",
+	"authors": [
+		"SasnycoN"
+	],
+	"contact": {
+		"homepage": "https://github.com/valcheffnet/village-errands",
+		"sources": "https://github.com/valcheffnet/village-errands",
+		"issues": "https://github.com/valcheffnet/village-errands/issues"
+	},
+	"license": "LicenseRef-All-Rights-Reserved",
+	"icon": "assets/villageerrands/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.valcheff.villageerrands.VillageErrands"
+		]
+	},
+	"mixins": [
+		"villageerrands.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.0",
+		"fabric-api": "*",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=${java_version}"
+	}
+}
