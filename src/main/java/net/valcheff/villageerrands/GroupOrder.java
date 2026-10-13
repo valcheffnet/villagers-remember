@@ -57,6 +57,18 @@ public final class GroupOrder {
 	private static final Set<Item> STONE = Set.of(Items.COBBLESTONE, Items.COBBLED_DEEPSLATE, Items.STONE, Items.STONE_BRICKS,
 		Items.DEEPSLATE_BRICKS, Items.ANDESITE, Items.DIORITE, Items.GRANITE, Items.TUFF);
 	private static final int CHECK_INTERVAL = 200;
+	/** What villagers pay for the goods (vanilla buy trades, emeralds per item), so a helper never loses on a payout. */
+	private static final Map<Item, Double> PRICE = Map.ofEntries(
+		Map.entry(Items.WHEAT, 1 / 20.0), Map.entry(Items.CARROT, 1 / 22.0), Map.entry(Items.POTATO, 1 / 26.0),
+		Map.entry(Items.BEETROOT, 1 / 15.0), Map.entry(Items.BREAD, 3 / 20.0), Map.entry(Items.BAKED_POTATO, 1 / 26.0),
+		Map.entry(Items.PUMPKIN, 1 / 6.0), Map.entry(Items.PUMPKIN_PIE, 1 / 6.0 + 0.05), Map.entry(Items.MELON_SLICE, 1 / 36.0),
+		Map.entry(Items.SWEET_BERRIES, 0.1), Map.entry(Items.COOKED_BEEF, 0.1), Map.entry(Items.COOKED_PORKCHOP, 1 / 7.0),
+		Map.entry(Items.COOKED_CHICKEN, 1 / 14.0), Map.entry(Items.COOKED_MUTTON, 1 / 7.0), Map.entry(Items.COOKED_RABBIT, 0.25),
+		Map.entry(Items.COOKED_COD, 1 / 15.0), Map.entry(Items.COOKED_SALMON, 1 / 13.0), Map.entry(Items.STONE, 1 / 20.0),
+		Map.entry(Items.GRANITE, 1 / 16.0), Map.entry(Items.ANDESITE, 1 / 16.0), Map.entry(Items.DIORITE, 1 / 16.0),
+		Map.entry(Items.STONE_BRICKS, 1 / 20.0), Map.entry(Items.IRON_INGOT, 0.25));
+	/** Wool sells at 18 a emerald, whatever its colour. */
+	private static final double WOOL_PRICE = 1 / 18.0;
 	/** Fame, experience (in emeralds' worth) and village standing a finished order shares out. */
 	public static final int FAME_POOL = 80;
 	private static final int STANDING_POOL = 80;
@@ -142,15 +154,25 @@ public final class GroupOrder {
 		View view = found.get();
 		int want = available(player, view);
 		int taken = 0;
+		double value = 0;
 		for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
 			if (taken >= want) break;
 			if (!accepts(view.kind(), stack)) continue;
 			int n = Math.min(stack.getCount(), want - taken);
+			value += n * price(stack);
 			stack.shrink(n);
 			taken += n;
 		}
-		if (taken > 0) add(server, village, view, player.getUUID(), taken);
+		if (taken > 0) {
+			add(server, village, view, player.getUUID(), taken);
+			view.order().contribValue.merge(player.getUUID(), value, Double::sum);
+		}
 		return taken;
+	}
+
+	private static double price(ItemStack stack) {
+		if (stack.is(ItemTags.WOOL)) return WOOL_PRICE;
+		return PRICE.getOrDefault(stack.getItem(), 0.0);
 	}
 
 	/** A monster killed inside a village with a "Defend the village" order counts for it. */
@@ -198,7 +220,9 @@ public final class GroupOrder {
 			double share = (double) e.getValue() / Math.max(target, order.progress);
 			if (share < cfg.groupMinShare) continue;
 			ErrandsData.PlayerState state = data.player(e.getKey());
-			int emeralds = Math.max(1, (int) Math.round(cfg.groupRewardEmeralds * share * pay));
+			// By share, but never less than the premium over what villagers would have paid for the goods.
+			double goods = order.contribValue.getOrDefault(e.getKey(), 0.0);
+			int emeralds = Math.max(1, (int) Math.round(Math.max(cfg.groupRewardEmeralds * share * pay, goods * cfg.marketPremium)));
 			int xp = Math.max(1, (int) Math.round(cfg.groupRewardEmeralds * share * pay * cfg.xpPerEmerald));
 			int fame = Math.max(1, (int) Math.round(FAME_POOL * share * pay));
 			state.mail += emeralds;

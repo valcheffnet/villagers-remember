@@ -125,6 +125,8 @@ public final class ErrandsData extends SavedData {
 		public String kind;
 		public int progress;
 		public final Map<UUID, Integer> contrib = new HashMap<>();
+		/** What villagers would pay for each player's goods, in emeralds: the payout never falls below it. */
+		public final Map<UUID, Double> contribValue = new HashMap<>();
 		public boolean settled;
 		/** A weekly order saved by 1.0, carried into the current month once. */
 		public boolean carried;
@@ -225,6 +227,13 @@ public final class ErrandsData extends SavedData {
 		for (String k : c.keySet()) {
 			try {
 				order.contrib.put(UUID.fromString(k), c.getIntOr(k, 0));
+			} catch (IllegalArgumentException ignored) {
+			}
+		}
+		CompoundTag cv = w.getCompoundOrEmpty("contrib_value");
+		for (String k : cv.keySet()) {
+			try {
+				order.contribValue.put(UUID.fromString(k), cv.getDoubleOr(k, 0));
 			} catch (IllegalArgumentException ignored) {
 			}
 		}
@@ -425,6 +434,9 @@ public final class ErrandsData extends SavedData {
 			CompoundTag c = new CompoundTag();
 			order.contrib.forEach((k, v) -> c.putInt(k.toString(), v));
 			w.put("contrib", c);
+			CompoundTag cv = new CompoundTag();
+			order.contribValue.forEach((k, v) -> cv.putDouble(k.toString(), v));
+			w.put("contrib_value", cv);
 			ordersTag.put(key, w);
 		});
 		root.put("group_orders", ordersTag);

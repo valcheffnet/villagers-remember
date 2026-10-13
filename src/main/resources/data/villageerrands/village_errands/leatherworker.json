@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.1,
+      "value": 0.5952,
       "objectives": [
         {
           "kill": "minecraft:cow",
@@ -13,9 +13,10 @@
           "deliver": "minecraft:leather"
         }
       ],
+      "market": 0.1667,
       "count": [
-        40,
-        80
+        7,
+        13
       ],
       "tiers": [
         1,
@@ -25,10 +26,11 @@
     {
       "deliver": "minecraft:flint",
       "weight": 10,
-      "value": 0.05,
+      "value": 0.1488,
+      "market": 0.0417,
       "count": [
-        80,
-        160
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -37,7 +39,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.2551,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -47,9 +49,10 @@
           "deliver": "minecraft:string"
         }
       ],
+      "market": 0.0714,
       "count": [
-        134,
-        256
+        16,
+        31
       ],
       "tiers": [
         1,
@@ -85,6 +88,7 @@
           "deliver": "minecraft:rabbit_hide"
         }
       ],
+      "market": 0.1111,
       "count": [
         20,
         30
@@ -96,7 +100,7 @@
     },
     {
       "weight": 10,
-      "value": 0.8,
+      "value": 3.5714,
       "objectives": [
         {
           "craft": "minecraft:leather_chestplate"
@@ -105,9 +109,10 @@
           "deliver": "minecraft:leather_chestplate"
         }
       ],
+      "market": 1.3333,
       "count": [
-        10,
-        15
+        3,
+        3
       ],
       "tiers": [
         2,
@@ -180,7 +185,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 1.0714,
       "objectives": [
         {
           "kill": "minecraft:rabbit",
@@ -190,9 +195,10 @@
           "deliver": "minecraft:rabbit_foot"
         }
       ],
+      "market": 0.5,
       "count": [
         12,
-        18
+        16
       ],
       "tiers": [
         3,
@@ -203,6 +209,7 @@
       "deliver": "minecraft:turtle_scute",
       "weight": 10,
       "value": 2.0,
+      "market": 0.25,
       "count": [
         6,
         9
@@ -279,15 +286,15 @@
         {
           "craft": "minecraft:lead",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:lead",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         }
       ],
@@ -295,7 +302,8 @@
         1,
         1
       ],
-      "value": 15.6,
+      "value": 18.84,
+      "market": 3.19,
       "weight": 6,
       "tiers": [
         3,
@@ -359,15 +367,15 @@
         {
           "deliver": "minecraft:armadillo_scute",
           "count": [
-            24,
-            24
+            19,
+            19
           ]
         },
         {
           "deliver": "minecraft:leather",
           "count": [
-            63,
-            63
+            50,
+            50
           ]
         },
         {
@@ -389,7 +397,8 @@
         1,
         1
       ],
-      "value": 30.3,
+      "value": 32.66,
+      "market": 8.333,
       "weight": 6,
       "tiers": [
         5,

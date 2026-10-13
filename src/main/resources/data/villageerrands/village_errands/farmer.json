@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.025,
+      "value": 0.1786,
       "objectives": [
         {
           "harvest": "minecraft:wheat"
@@ -12,9 +12,10 @@
           "deliver": "minecraft:wheat"
         }
       ],
+      "market": 0.05,
       "count": [
-        160,
-        256
+        23,
+        44
       ],
       "tiers": [
         1,
@@ -23,7 +24,7 @@
     },
     {
       "weight": 10,
-      "value": 0.025,
+      "value": 0.1374,
       "objectives": [
         {
           "harvest": "minecraft:potatoes"
@@ -32,9 +33,10 @@
           "deliver": "minecraft:potato"
         }
       ],
+      "market": 0.0385,
       "count": [
-        160,
-        256
+        30,
+        58
       ],
       "tiers": [
         1,
@@ -43,7 +45,7 @@
     },
     {
       "weight": 10,
-      "value": 0.025,
+      "value": 0.1623,
       "objectives": [
         {
           "harvest": "minecraft:carrots"
@@ -52,9 +54,10 @@
           "deliver": "minecraft:carrot"
         }
       ],
+      "market": 0.0455,
       "count": [
-        160,
-        256
+        25,
+        49
       ],
       "tiers": [
         1,
@@ -63,7 +66,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.2381,
       "objectives": [
         {
           "harvest": "minecraft:beetroots"
@@ -72,9 +75,10 @@
           "deliver": "minecraft:beetroot"
         }
       ],
+      "market": 0.0667,
       "count": [
-        134,
-        256
+        17,
+        33
       ],
       "tiers": [
         1,
@@ -143,7 +147,7 @@
     },
     {
       "weight": 10,
-      "value": 0.08,
+      "value": 0.4018,
       "objectives": [
         {
           "craft": "minecraft:bread"
@@ -152,9 +156,10 @@
           "deliver": "minecraft:bread"
         }
       ],
+      "market": 0.15,
       "count": [
-        100,
-        150
+        20,
+        29
       ],
       "tiers": [
         2,
@@ -164,10 +169,11 @@
     {
       "deliver": "minecraft:pumpkin",
       "weight": 10,
-      "value": 0.12,
+      "value": 0.4464,
+      "market": 0.1667,
       "count": [
-        67,
-        100
+        18,
+        26
       ],
       "tiers": [
         2,
@@ -177,10 +183,11 @@
     {
       "deliver": "minecraft:melon",
       "weight": 10,
-      "value": 0.15,
+      "value": 0.6696,
+      "market": 0.25,
       "count": [
-        54,
-        80
+        12,
+        17
       ],
       "tiers": [
         2,
@@ -191,6 +198,7 @@
       "deliver": "minecraft:egg",
       "weight": 10,
       "value": 0.2,
+      "market": 0.02,
       "count": [
         40,
         60
@@ -202,7 +210,7 @@
     },
     {
       "weight": 10,
-      "value": 0.25,
+      "value": 1.2054,
       "objectives": [
         {
           "craft": "minecraft:hay_block"
@@ -211,9 +219,10 @@
           "deliver": "minecraft:hay_block"
         }
       ],
+      "market": 0.45,
       "count": [
-        32,
-        48
+        7,
+        9
       ],
       "tiers": [
         2,
@@ -256,43 +265,43 @@
         {
           "craft": "minecraft:bread",
           "count": [
-            81,
-            81
+            24,
+            24
           ]
         },
         {
           "deliver": "minecraft:bread",
           "count": [
-            81,
-            81
+            24,
+            24
           ]
         },
         {
           "smelt": "minecraft:baked_potato",
           "count": [
-            81,
-            81
+            24,
+            24
           ]
         },
         {
           "deliver": "minecraft:baked_potato",
           "count": [
-            81,
-            81
+            24,
+            24
           ]
         },
         {
           "craft": "minecraft:pumpkin_pie",
           "count": [
-            41,
-            41
+            12,
+            12
           ]
         },
         {
           "deliver": "minecraft:pumpkin_pie",
           "count": [
-            41,
-            41
+            12,
+            12
           ]
         }
       ],
@@ -300,7 +309,8 @@
         1,
         1
       ],
-      "value": 15.06,
+      "value": 15.26,
+      "market": 7.123,
       "weight": 6,
       "tiers": [
         3,
@@ -318,6 +328,7 @@
           "deliver": "minecraft:cake"
         }
       ],
+      "market": 0.25,
       "count": [
         14,
         16
@@ -329,7 +340,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.4643,
       "objectives": [
         {
           "craft": "minecraft:pumpkin_pie"
@@ -338,9 +349,10 @@
           "deliver": "minecraft:pumpkin_pie"
         }
       ],
+      "market": 0.2167,
       "count": [
-        80,
-        120
+        26,
+        38
       ],
       "tiers": [
         3,
@@ -349,7 +361,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1,
+      "value": 0.7323,
       "objectives": [
         {
           "craft": "minecraft:golden_carrot"
@@ -358,9 +370,10 @@
           "deliver": "minecraft:golden_carrot"
         }
       ],
+      "market": 0.3418,
       "count": [
-        120,
-        180
+        17,
+        24
       ],
       "tiers": [
         3,
@@ -369,7 +382,7 @@
     },
     {
       "weight": 10,
-      "value": 0.4,
+      "value": 5.7143,
       "objectives": [
         {
           "craft": "minecraft:golden_apple"
@@ -378,9 +391,10 @@
           "deliver": "minecraft:golden_apple"
         }
       ],
+      "market": 2.6667,
       "count": [
-        30,
-        45
+        3,
+        3
       ],
       "tiers": [
         3,
@@ -402,7 +416,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.5342,
       "objectives": [
         {
           "craft": "minecraft:glistering_melon_slice"
@@ -411,9 +425,10 @@
           "deliver": "minecraft:glistering_melon_slice"
         }
       ],
+      "market": 0.3241,
       "count": [
-        120,
-        166
+        34,
+        46
       ],
       "tiers": [
         4,
@@ -457,6 +472,7 @@
         1
       ],
       "value": 21.6,
+      "market": 0.429,
       "weight": 6,
       "tiers": [
         4,
@@ -533,6 +549,7 @@
         1
       ],
       "value": 30.0,
+      "market": 0.0,
       "weight": 6,
       "tiers": [
         5,

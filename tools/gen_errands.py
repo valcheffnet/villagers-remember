@@ -24,6 +24,73 @@ WINDOW = {1: (4, 8), 2: (8, 12), 3: (12, 18), 4: (18, 25), 5: (25, 35)}
 NITWIT_WINDOW = (1, 4)
 # Emeralds' worth per minute by pack (ErrandsConfig.tierEmeraldsPerMinute), only for the report.
 RATE = {1: 0.6, 2: 0.8, 3: 1.0, 4: 1.3, 5: 1.6}
+# ---- market: what villagers pay for the goods (vanilla buy trades, emeralds per item) ----
+# An errand must pay clearly more than selling its goods to a villager: its emeralds are at least
+# MARKET_PREMIUM x their market value (the mod enforces it too, ErrandsConfig.marketPremium), and the sizing leaves
+# room for experience on top (EMERALD_SHARE).
+MARKET_PREMIUM = 1.5
+EMERALD_SHARE = 0.7
+BUY = {  # villager buy trades: item -> items per emerald
+    "wheat": 20, "potato": 26, "carrot": 22, "beetroot": 15, "pumpkin": 6, "melon": 4, "string": 14, "coal": 10,
+    "cod": 15, "salmon": 13, "tropical_fish": 6, "pufferfish": 4, "white_wool": 18, "chicken": 14, "porkchop": 7,
+    "rabbit": 4, "mutton": 7, "beef": 10, "dried_kelp_block": 10, "sweet_berries": 10, "paper": 24, "book": 4,
+    "ink_sac": 5, "writable_book": 2, "glass_pane": 11, "compass": 1, "rotten_flesh": 32, "gold_ingot": 3,
+    "rabbit_foot": 2, "turtle_scute": 4, "glass_bottle": 9, "nether_wart": 22, "iron_ingot": 4, "lava_bucket": 1,
+    "diamond": 1, "flint": 24, "leather": 6, "rabbit_hide": 9, "clay_ball": 10, "stone": 20, "granite": 16,
+    "andesite": 16, "diorite": 16, "quartz": 12, "stick": 32, "feather": 24, "tripwire_hook": 8,
+    "white_dye": 12, "red_dye": 12, "yellow_dye": 12, "blue_dye": 12, "green_dye": 12,
+}
+PRICE = {k: 1.0 / v for k, v in BUY.items()}
+# Made from priced goods: the market value of what goes into them.
+DERIVED = {
+    "bread": 3 * PRICE["wheat"], "hay_block": 9 * PRICE["wheat"], "cake": 3 * PRICE["wheat"] + 0.1,
+    "pumpkin_pie": PRICE["pumpkin"] + 0.05, "golden_carrot": 8 / 9 * PRICE["gold_ingot"] + PRICE["carrot"],
+    "golden_apple": 8 * PRICE["gold_ingot"], "glistering_melon_slice": 8 / 9 * PRICE["gold_ingot"] + PRICE["melon"] / 9,
+    "baked_potato": PRICE["potato"], "cooked_beef": PRICE["beef"], "cooked_porkchop": PRICE["porkchop"],
+    "cooked_chicken": PRICE["chicken"], "cooked_mutton": PRICE["mutton"], "cooked_cod": PRICE["cod"],
+    "cooked_salmon": PRICE["salmon"], "rabbit_stew": PRICE["rabbit"] + PRICE["carrot"] + PRICE["potato"],
+    "beetroot_soup": 6 * PRICE["beetroot"], "melon_slice": PRICE["melon"] / 9, "egg": 0.02,
+    "iron_block": 9 * PRICE["iron_ingot"], "coal_block": 9 * PRICE["coal"], "gold_block": 9 * PRICE["gold_ingot"],
+    "iron_pickaxe": 3 * PRICE["iron_ingot"], "iron_axe": 3 * PRICE["iron_ingot"], "iron_shovel": PRICE["iron_ingot"],
+    "iron_sword": 2 * PRICE["iron_ingot"], "iron_helmet": 5 * PRICE["iron_ingot"], "iron_boots": 4 * PRICE["iron_ingot"],
+    "shield": PRICE["iron_ingot"], "bow": 3 * PRICE["string"], "crossbow": 2 * PRICE["string"] + PRICE["iron_ingot"]
+    + PRICE["tripwire_hook"], "arrow": (PRICE["flint"] + PRICE["stick"] + PRICE["feather"]) / 4,
+    "#minecraft:wool": PRICE["white_wool"], "#minecraft:beds": 3 * PRICE["white_wool"],
+    "#minecraft:wool_carpets": 2 * PRICE["white_wool"] / 3, "#minecraft:banners": 6 * PRICE["white_wool"],
+    "painting": PRICE["white_wool"] + 0.03, "lead": 4 * PRICE["string"], "bookshelf": 3 * PRICE["book"],
+    "lectern": 3 * PRICE["book"], "clock": 4 * PRICE["gold_ingot"], "map": 8 * PRICE["paper"] + PRICE["compass"],
+    "leather_chestplate": 8 * PRICE["leather"], "leather_horse_armor": 7 * PRICE["leather"], "saddle": 0,
+    "brick": PRICE["clay_ball"], "bricks": 4 * PRICE["clay_ball"], "polished_granite": PRICE["granite"],
+    "polished_andesite": PRICE["andesite"], "polished_diorite": PRICE["diorite"], "stone_bricks": PRICE["stone"],
+    "quartz_block": 4 * PRICE["quartz"], "candle": PRICE["string"], "red_wool": PRICE["white_wool"] + PRICE["red_dye"],
+}
+PRICE.update(DERIVED)
+for c in ("orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue",
+          "brown", "green", "black", "red"):
+    PRICE.setdefault(c + "_wool", PRICE["white_wool"] + 1.0 / 12)
+
+
+def price_of(target):
+    """Market value of one item (0 when no villager buys it or what it is made of)."""
+    t = target if target.startswith("#") else target.split(":")[-1]
+    return PRICE.get(t, 0.0)
+
+
+def market_of(task):
+    """Market value of what one rolled unit of a task asks to bring."""
+    total = 0.0
+    for o in task.get("objectives", []):
+        if "deliver" in o:
+            total += price_of(o["deliver"]) * o.get("factor", 1.0)
+    return total
+
+
+def priced_minutes(minutes, market, tier):
+    """Minutes per unit, raised so that the pay leaves the goods' market value well behind."""
+    rate = RATE.get(tier, RATE[1]) if tier else RATE[1]
+    return max(minutes, market * MARKET_PREMIUM / EMERALD_SHARE / rate)
+
+
 # What one objective may ask for at most (the mod caps the same way): four stacks of an item, 64 of anything else.
 # Unstackable items: at most 16 (they take a slot each).
 STACK1 = {"cake", "rabbit_stew", "mushroom_stew", "beetroot_soup", "suspicious_stew", "lava_bucket", "saddle",
@@ -432,14 +499,20 @@ def item_cap(target):
 
 def order_task(name, tier):
     lo, hi = WINDOW[tier] if tier else NITWIT_WINDOW
-    total = sum(count * m for _, _, count, m in ORDERS[name])
+    def eff(it, m, action):
+        p = price_of(mc(it)) if action != "brew" else 0.0
+        return priced_minutes(m, p, tier)
+    total = sum(count * eff(it, m, action) for action, it, count, m in ORDERS[name])
     k = ((lo + hi) / 2) / total
     objectives = []
     minutes = 0.0
+    market = 0.0
     slots = 0
     for action, it, count, m in ORDERS[name]:
         target = mc(it)
         n = 1 if it in ORDER_SINGLE else max(1, min(item_cap(target), round(count * k)))
+        market += n * (price_of(target) if action != "brew" else 0.0)
+        m = eff(it, m, action)
         objectives.append({action: target, "count": [n, n]})
         if action not in ("deliver", "brew"):
             objectives.append({"deliver": target, "count": [n, n]})
@@ -447,7 +520,8 @@ def order_task(name, tier):
         slots += math.ceil(n / stack_of(target)) if action != "brew" else 0
     if slots > ORDER_SLOTS:
         raise SystemExit(f"order {name} needs {slots} slots (at most {ORDER_SLOTS})")
-    return {"title": "order." + name, "objectives": objectives, "count": [1, 1], "value": round(minutes, 2), "weight": 6}
+    return {"title": "order." + name, "objectives": objectives, "count": [1, 1], "value": round(minutes, 2),
+            "market": round(market, 3), "weight": 6}
 
 
 # ---- reforge (one-time per player): the minutes of the pieces; the reward is one of them, enchanted ----
@@ -499,8 +573,15 @@ def build(entry, tiers, report):
     elif isinstance(entry, tuple) and entry[0] == "reforge":
         task = reforge_task(*entry[1:])
     else:
-        minutes = entry["minutes"]
-        task = to_actions({k: v for k, v in entry.items() if k not in ("minutes", "fixed")} | {"value": minutes})
+        task = to_actions({k: v for k, v in entry.items() if k not in ("minutes", "fixed")} | {"value": entry["minutes"]})
+        if "deliver" in task:
+            task_objs = [{"deliver": task["deliver"]}]
+        else:
+            task_objs = task.get("objectives", [])
+        market = market_of({"objectives": task_objs})
+        minutes = priced_minutes(entry["minutes"], market, tier)
+        if market > 0:
+            task["market"] = round(market, 4)
         lo, hi = WINDOW[tier] if tier else NITWIT_WINDOW
         if entry.get("fixed"):
             a, b = entry["fixed"]
@@ -509,7 +590,7 @@ def build(entry, tiers, report):
             b = max(a, math.floor(hi / minutes))
             b = min(b, cap_of(task))
         task["count"] = [a, b]
-        task["value"] = minutes
+        task["value"] = round(minutes, 4)
     task["tiers"] = list(tiers)
     report.append(task)
     return task
@@ -581,6 +662,7 @@ def main():
     items, entities = known_ids()
     problems = []
     lines = []
+    biggest = []
     for prof in list(PACKS) + ["nitwit"]:
         report = []
         if prof == "nitwit":
@@ -613,7 +695,21 @@ def main():
             rate = RATE.get(tier, 0.6) if prof != "nitwit" else 0.6
             parts.append(f"T{tier} {len(mins)}x {lo:.0f}-{hi:.0f}m ~{lo * rate:.0f}-{hi * rate:.0f}e")
         lines.append(f"{prof:14} " + " | ".join(parts))
+        for t in tasks:
+            if t.get("reward") or not t.get("market"):
+                continue
+            tier = t["tiers"][0] if t["tiers"][0] == t["tiers"][1] else 1
+            n = t["count"][1]
+            sell = n * t["market"]
+            pay = n * t["value"] * (RATE.get(tier, 0.6) if prof != "nitwit" else 0.6)
+            biggest.append((sell, prof, tier, name_of(t), n, pay))
+            if pay < sell * MARKET_PREMIUM / EMERALD_SHARE * 0.99:
+                problems.append(f"{prof} T{tier} {name_of(t)}: pays {pay:.1f}, goods sell for {sell:.1f}")
     print("\n".join(lines))
+    biggest.sort(reverse=True)
+    print("\nBiggest goods (most a villager would pay for them / what the errand pays in emeralds' worth):")
+    for sell, prof, tier, name, n, pay in biggest[:8]:
+        print(f"  {prof} T{tier} {name} x{n}: sell {sell:.1f} / errand {pay:.1f}")
     if problems:
         print("\nTasks outside their window:")
         print("\n".join(problems))

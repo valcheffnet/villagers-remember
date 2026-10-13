@@ -33,6 +33,8 @@ public final class ErrandsConfig {
 	 * into emeralds and experience), by pack T1..T5. T1 pays emeralds or experience. Repeatable errands give no items.
 	 */
 	public double[] tierEmeraldsPerMinute = {0.6, 0.8, 1.0, 1.3, 1.6};
+	/** An errand's emeralds are at least this many times what villagers would pay for the goods it asks for. */
+	public double marketPremium = 1.5;
 	/** Treasury: emeralds a day one working resident sets aside, by the player's tier with them (Stranger..Best friend). */
 	public double[] treasuryShare = {0.0, 0.25, 0.5, 0.8, 1.2};
 	/** Treasury: multiplier by the player's village tier (Stranger..Hero). */
@@ -154,6 +156,7 @@ public final class ErrandsConfig {
 		}
 		xpPerEmerald = Math.clamp(xpPerEmerald, 0.0, 1000.0);
 		maxEmeraldsPerErrand = Math.clamp(maxEmeraldsPerErrand, 0, 64 * 9);
+		marketPremium = Math.clamp(marketPremium, 0.0, 100.0);
 		discountPerVillagerTier = Math.clamp(discountPerVillagerTier, 0.0, 1.0);
 		discountPerVillageTier = Math.clamp(discountPerVillageTier, 0.0, 1.0);
 		maxDiscount = Math.clamp(maxDiscount, 0.0, 0.95);

@@ -452,6 +452,12 @@ public final class ErrandGenerator {
 			xp = (int) Math.max(1, Math.round(rest * (1 - share) * cfg.xpPerEmerald));
 		}
 		emeralds = Math.min(emeralds, cfg.maxEmeraldsPerErrand);
+		// Never less than selling the goods to a villager: the emeralds beat their market value by the premium.
+		int market = (int) Math.ceil(count * task.market() * countFactor * cfg.marketPremium * rewardFactor);
+		if (emeralds < market) {
+			xp = (int) Math.max(tier == 1 ? 0 : 1, Math.round((budget - market) * cfg.xpPerEmerald));
+			emeralds = market;
+		}
 		return new Errand(id, villager, profession, type, level, tier, village, task.title(), List.copyOf(objectives),
 			value, emeralds, xp, item, reputation);
 	}

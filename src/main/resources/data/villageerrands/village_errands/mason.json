@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.02,
+      "value": 0.1786,
       "objectives": [
         {
           "smelt": "minecraft:stone"
@@ -12,9 +12,10 @@
           "deliver": "minecraft:stone"
         }
       ],
+      "market": 0.05,
       "count": [
-        200,
-        256
+        23,
+        44
       ],
       "tiers": [
         1,
@@ -23,7 +24,7 @@
     },
     {
       "weight": 10,
-      "value": 0.05,
+      "value": 0.3571,
       "objectives": [
         {
           "mine": "minecraft:clay",
@@ -33,9 +34,10 @@
           "deliver": "minecraft:clay_ball"
         }
       ],
+      "market": 0.1,
       "count": [
-        80,
-        160
+        12,
+        22
       ],
       "tiers": [
         1,
@@ -64,7 +66,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.2679,
       "objectives": [
         {
           "smelt": "minecraft:brick"
@@ -73,9 +75,10 @@
           "deliver": "minecraft:brick"
         }
       ],
+      "market": 0.1,
       "count": [
-        200,
-        256
+        30,
+        44
       ],
       "tiers": [
         2,
@@ -84,7 +87,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.1674,
       "objectives": [
         {
           "craft": "minecraft:polished_granite"
@@ -93,9 +96,10 @@
           "deliver": "minecraft:polished_granite"
         }
       ],
+      "market": 0.0625,
       "count": [
-        200,
-        256
+        48,
+        71
       ],
       "tiers": [
         2,
@@ -104,7 +108,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.1674,
       "objectives": [
         {
           "craft": "minecraft:polished_andesite"
@@ -113,9 +117,10 @@
           "deliver": "minecraft:polished_andesite"
         }
       ],
+      "market": 0.0625,
       "count": [
-        200,
-        256
+        48,
+        71
       ],
       "tiers": [
         2,
@@ -124,7 +129,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.1674,
       "objectives": [
         {
           "craft": "minecraft:polished_diorite"
@@ -133,9 +138,10 @@
           "deliver": "minecraft:polished_diorite"
         }
       ],
+      "market": 0.0625,
       "count": [
-        200,
-        256
+        48,
+        71
       ],
       "tiers": [
         2,
@@ -161,43 +167,43 @@
         {
           "station": "minecraft:stone_bricks",
           "count": [
-            74,
-            74
+            13,
+            13
           ]
         },
         {
           "deliver": "minecraft:stone_bricks",
           "count": [
-            74,
-            74
+            13,
+            13
           ]
         },
         {
           "craft": "minecraft:bricks",
           "count": [
-            37,
-            37
+            7,
+            7
           ]
         },
         {
           "deliver": "minecraft:bricks",
           "count": [
-            37,
-            37
+            7,
+            7
           ]
         },
         {
           "station": "minecraft:polished_andesite",
           "count": [
-            37,
-            37
+            7,
+            7
           ]
         },
         {
           "deliver": "minecraft:polished_andesite",
           "count": [
-            37,
-            37
+            7,
+            7
           ]
         }
       ],
@@ -205,7 +211,8 @@
         1,
         1
       ],
-      "value": 9.99,
+      "value": 10.41,
+      "market": 3.888,
       "weight": 6,
       "tiers": [
         2,
@@ -222,10 +229,11 @@
         }
       ],
       "weight": 6,
-      "value": 0.04,
+      "value": 0.1339,
+      "market": 0.05,
       "count": [
-        200,
-        256
+        60,
+        89
       ],
       "tiers": [
         2,
@@ -275,7 +283,7 @@
     },
     {
       "weight": 10,
-      "value": 0.25,
+      "value": 0.7143,
       "objectives": [
         {
           "craft": "minecraft:quartz_block"
@@ -284,9 +292,10 @@
           "deliver": "minecraft:quartz_block"
         }
       ],
+      "market": 0.3333,
       "count": [
-        48,
-        72
+        17,
+        25
       ],
       "tiers": [
         3,

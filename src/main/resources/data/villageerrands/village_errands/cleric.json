@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.02,
+      "value": 0.1116,
       "objectives": [
         {
           "kill": "minecraft:zombie",
@@ -13,9 +13,10 @@
           "deliver": "minecraft:rotten_flesh"
         }
       ],
+      "market": 0.0312,
       "count": [
-        200,
-        256
+        36,
+        71
       ],
       "tiers": [
         1,
@@ -121,7 +122,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.8929,
       "objectives": [
         {
           "smelt": "minecraft:gold_ingot"
@@ -130,9 +131,10 @@
           "deliver": "minecraft:gold_ingot"
         }
       ],
+      "market": 0.3333,
       "count": [
-        200,
-        256
+        9,
+        13
       ],
       "tiers": [
         2,
@@ -209,7 +211,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 1.0714,
       "objectives": [
         {
           "kill": "minecraft:rabbit",
@@ -219,9 +221,10 @@
           "deliver": "minecraft:rabbit_foot"
         }
       ],
+      "market": 0.5,
       "count": [
         12,
-        18
+        16
       ],
       "tiers": [
         3,
@@ -294,36 +297,36 @@
         {
           "brew": "minecraft:healing",
           "count": [
-            13,
-            13
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:glass_bottle",
           "count": [
-            39,
-            39
+            10,
+            10
           ]
         },
         {
           "deliver": "minecraft:glass_bottle",
           "count": [
-            39,
-            39
+            10,
+            10
           ]
         },
         {
           "craft": "minecraft:golden_apple",
           "count": [
-            7,
-            7
+            2,
+            2
           ]
         },
         {
           "deliver": "minecraft:golden_apple",
           "count": [
-            7,
-            7
+            2,
+            2
           ]
         }
       ],
@@ -331,7 +334,8 @@
         1,
         1
       ],
-      "value": 15.15,
+      "value": 16.21,
+      "market": 6.444,
       "weight": 6,
       "tiers": [
         3,
@@ -344,36 +348,36 @@
         {
           "craft": "minecraft:blaze_powder",
           "count": [
-            33,
-            33
+            19,
+            19
           ]
         },
         {
           "deliver": "minecraft:blaze_powder",
           "count": [
-            33,
-            33
+            19,
+            19
           ]
         },
         {
           "deliver": "minecraft:nether_wart",
           "count": [
-            132,
-            132
+            75,
+            75
           ]
         },
         {
           "craft": "minecraft:glass_bottle",
           "count": [
-            99,
-            99
+            56,
+            56
           ]
         },
         {
           "deliver": "minecraft:glass_bottle",
           "count": [
-            99,
-            99
+            56,
+            56
           ]
         }
       ],
@@ -381,7 +385,8 @@
         1,
         1
       ],
-      "value": 21.45,
+      "value": 21.58,
+      "market": 9.631,
       "weight": 6,
       "tiers": [
         4,

@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.02,
+      "value": 0.1116,
       "objectives": [
         {
           "craft": "minecraft:stick"
@@ -12,9 +12,10 @@
           "deliver": "minecraft:stick"
         }
       ],
+      "market": 0.0312,
       "count": [
-        200,
-        256
+        36,
+        71
       ],
       "tiers": [
         1,
@@ -24,10 +25,11 @@
     {
       "deliver": "minecraft:flint",
       "weight": 10,
-      "value": 0.05,
+      "value": 0.1488,
+      "market": 0.0417,
       "count": [
-        80,
-        160
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -36,7 +38,7 @@
     },
     {
       "weight": 10,
-      "value": 0.05,
+      "value": 0.1488,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -46,9 +48,10 @@
           "deliver": "minecraft:feather"
         }
       ],
+      "market": 0.0417,
       "count": [
-        80,
-        160
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -65,10 +68,11 @@
         }
       ],
       "weight": 10,
-      "value": 0.03,
+      "value": 0.1023,
+      "market": 0.0286,
       "count": [
-        134,
-        256
+        40,
+        78
       ],
       "tiers": [
         1,
@@ -113,7 +117,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.1913,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -123,9 +127,10 @@
           "deliver": "minecraft:string"
         }
       ],
+      "market": 0.0714,
       "count": [
-        200,
-        256
+        42,
+        62
       ],
       "tiers": [
         2,
@@ -134,7 +139,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1,
+      "value": 0.3348,
       "objectives": [
         {
           "craft": "minecraft:tripwire_hook"
@@ -143,9 +148,10 @@
           "deliver": "minecraft:tripwire_hook"
         }
       ],
+      "market": 0.125,
       "count": [
-        80,
-        120
+        24,
+        35
       ],
       "tiers": [
         2,
@@ -163,6 +169,7 @@
           "deliver": "minecraft:bow"
         }
       ],
+      "market": 0.2143,
       "count": [
         14,
         16
@@ -187,7 +194,7 @@
     },
     {
       "weight": 10,
-      "value": 0.9,
+      "value": 1.1097,
       "objectives": [
         {
           "craft": "minecraft:crossbow"
@@ -196,8 +203,9 @@
           "deliver": "minecraft:crossbow"
         }
       ],
+      "market": 0.5179,
       "count": [
-        14,
+        11,
         16
       ],
       "tiers": [
@@ -237,43 +245,43 @@
         {
           "craft": "minecraft:bow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:bow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:crossbow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:crossbow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:arrow",
           "count": [
-            139,
-            139
+            108,
+            108
           ]
         },
         {
           "deliver": "minecraft:arrow",
           "count": [
-            139,
-            139
+            108,
+            108
           ]
         }
       ],
@@ -281,7 +289,8 @@
         1,
         1
       ],
-      "value": 14.17,
+      "value": 14.13,
+      "market": 5.29,
       "weight": 6,
       "tiers": [
         3,

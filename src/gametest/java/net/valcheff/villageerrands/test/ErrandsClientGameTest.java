@@ -1195,6 +1195,15 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 						if (e.item().isPresent() && !reforge) return p + " T" + tier + " daily with an item: " + e.item().get();
 						if (reforge) continue;
 						if (e.value() < window[tier] * 0.8 || e.value() > window[tier + 1] * 1.25) return p + " T" + tier + " " + e.id() + " takes " + e.value() + " min";
+						// Never less than selling the goods to a villager (x1.5).
+						java.util.Map<String, Double> perEmerald = java.util.Map.of("minecraft:carrot", 22.0, "minecraft:wheat", 20.0,
+							"minecraft:gold_ingot", 3.0, "minecraft:iron_ingot", 4.0, "minecraft:diamond", 1.0, "minecraft:rotten_flesh", 32.0);
+						for (Objective o : e.objectives()) {
+							Double per = o.isDelivery() ? perEmerald.get(o.target()) : null;
+							if (per != null && e.emeralds() < Math.ceil(o.count() / per * 1.5) - 1e-9) {
+								return p + " T" + tier + " " + o.count() + " " + o.target() + " pays " + e.emeralds() + " emeralds";
+							}
+						}
 					}
 				}
 			}

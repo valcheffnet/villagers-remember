@@ -38,7 +38,7 @@ public final class ErrandPools {
 	 */
 	public record Task(String key, List<ObjectiveTemplate> objectives, java.util.Optional<String> title,
 	                   int min, int max, double value, int minTier, int maxTier, int weight,
-	                   java.util.Optional<Reward> reward) {
+	                   java.util.Optional<Reward> reward, double market) {
 	}
 
 	/** For ITEM: value per item. For LOOT: value of one roll. For ENCHANT: value per enchanting level. */
@@ -133,7 +133,10 @@ public final class ErrandPools {
 		}
 		StringBuilder key = new StringBuilder();
 		for (ObjectiveTemplate t : objectives) key.append(t.type()).append(t.target()).append(';');
-		return new Task(key.toString(), List.copyOf(objectives), title, count[0], count[1], value, levels[0], levels[1], weight, reward);
+		// What villagers would pay for the goods of one unit; the errand's emeralds stay well above it.
+		double market = o.has("market") ? o.get("market").getAsDouble() : 0.0;
+		return new Task(key.toString(), List.copyOf(objectives), title, count[0], count[1], value, levels[0], levels[1], weight,
+			reward, market);
 	}
 
 	private static ObjectiveTemplate parseObjective(JsonObject o, Identifier file) {

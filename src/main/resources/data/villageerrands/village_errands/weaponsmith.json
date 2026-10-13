@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.3571,
       "objectives": [
         {
           "mine": "#minecraft:coal_ores",
@@ -13,9 +13,10 @@
           "deliver": "minecraft:coal"
         }
       ],
+      "market": 0.1,
       "count": [
-        134,
-        256
+        12,
+        22
       ],
       "tiers": [
         1,
@@ -25,10 +26,11 @@
     {
       "deliver": "minecraft:flint",
       "weight": 10,
-      "value": 0.05,
+      "value": 0.1488,
+      "market": 0.0417,
       "count": [
-        80,
-        160
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -37,7 +39,7 @@
     },
     {
       "weight": 10,
-      "value": 0.02,
+      "value": 0.1116,
       "objectives": [
         {
           "craft": "minecraft:stick"
@@ -46,9 +48,10 @@
           "deliver": "minecraft:stick"
         }
       ],
+      "market": 0.0312,
       "count": [
-        200,
-        256
+        36,
+        71
       ],
       "tiers": [
         1,
@@ -114,7 +117,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.6696,
       "objectives": [
         {
           "smelt": "minecraft:iron_ingot"
@@ -123,9 +126,10 @@
           "deliver": "minecraft:iron_ingot"
         }
       ],
+      "market": 0.25,
       "count": [
-        200,
-        256
+        12,
+        17
       ],
       "tiers": [
         2,
@@ -196,7 +200,7 @@
     },
     {
       "weight": 10,
-      "value": 0.4,
+      "value": 4.8214,
       "objectives": [
         {
           "craft": "minecraft:iron_block"
@@ -205,9 +209,10 @@
           "deliver": "minecraft:iron_block"
         }
       ],
+      "market": 2.25,
       "count": [
-        30,
-        45
+        3,
+        3
       ],
       "tiers": [
         3,
@@ -246,43 +251,43 @@
         {
           "craft": "minecraft:iron_sword",
           "count": [
-            8,
-            8
+            6,
+            6
           ]
         },
         {
           "deliver": "minecraft:iron_sword",
           "count": [
-            8,
-            8
+            6,
+            6
           ]
         },
         {
           "craft": "minecraft:bow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:bow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:arrow",
           "count": [
-            121,
-            121
+            94,
+            94
           ]
         },
         {
           "deliver": "minecraft:arrow",
           "count": [
-            121,
-            121
+            94,
+            94
           ]
         }
       ],
@@ -290,7 +295,8 @@
         1,
         1
       ],
-      "value": 15.63,
+      "value": 15.2,
+      "market": 6.336,
       "weight": 6,
       "tiers": [
         3,
@@ -389,7 +395,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 1.6484,
       "objectives": [
         {
           "mine": "#minecraft:diamond_ores",
@@ -399,9 +405,10 @@
           "deliver": "minecraft:diamond"
         }
       ],
+      "market": 1.0,
       "count": [
-        18,
-        25
+        11,
+        15
       ],
       "tiers": [
         4,

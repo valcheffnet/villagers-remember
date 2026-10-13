@@ -12,6 +12,7 @@
           "deliver": "minecraft:cod"
         }
       ],
+      "market": 0.0667,
       "count": [
         14,
         26
@@ -32,6 +33,7 @@
           "deliver": "minecraft:salmon"
         }
       ],
+      "market": 0.0769,
       "count": [
         12,
         22
@@ -56,7 +58,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.2551,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -66,9 +68,10 @@
           "deliver": "minecraft:string"
         }
       ],
+      "market": 0.0714,
       "count": [
-        134,
-        256
+        16,
+        31
       ],
       "tiers": [
         1,
@@ -86,6 +89,7 @@
           "deliver": "minecraft:cooked_cod"
         }
       ],
+      "market": 0.0667,
       "count": [
         23,
         34
@@ -106,6 +110,7 @@
           "deliver": "minecraft:cooked_salmon"
         }
       ],
+      "market": 0.0769,
       "count": [
         20,
         30
@@ -126,6 +131,7 @@
           "deliver": "minecraft:tropical_fish"
         }
       ],
+      "market": 0.1667,
       "count": [
         14,
         20
@@ -212,6 +218,7 @@
         1
       ],
       "value": 9.75,
+      "market": 2.226,
       "weight": 6,
       "tiers": [
         2,
@@ -249,6 +256,7 @@
           "deliver": "minecraft:pufferfish"
         }
       ],
+      "market": 0.25,
       "count": [
         15,
         22
@@ -294,7 +302,7 @@
     },
     {
       "weight": 10,
-      "value": 0.2,
+      "value": 0.4286,
       "objectives": [
         {
           "kill": "minecraft:squid",
@@ -304,9 +312,10 @@
           "deliver": "minecraft:ink_sac"
         }
       ],
+      "market": 0.2,
       "count": [
-        60,
-        90
+        28,
+        41
       ],
       "tiers": [
         3,

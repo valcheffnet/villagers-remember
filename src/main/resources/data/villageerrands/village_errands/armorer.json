@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.3571,
       "objectives": [
         {
           "mine": "#minecraft:coal_ores",
@@ -13,9 +13,10 @@
           "deliver": "minecraft:coal"
         }
       ],
+      "market": 0.1,
       "count": [
-        134,
-        256
+        12,
+        22
       ],
       "tiers": [
         1,
@@ -44,7 +45,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1,
+      "value": 0.5952,
       "objectives": [
         {
           "kill": "minecraft:cow",
@@ -54,9 +55,10 @@
           "deliver": "minecraft:leather"
         }
       ],
+      "market": 0.1667,
       "count": [
-        40,
-        80
+        7,
+        13
       ],
       "tiers": [
         1,
@@ -65,7 +67,7 @@
     },
     {
       "weight": 10,
-      "value": 0.04,
+      "value": 0.6696,
       "objectives": [
         {
           "smelt": "minecraft:iron_ingot"
@@ -74,9 +76,10 @@
           "deliver": "minecraft:iron_ingot"
         }
       ],
+      "market": 0.25,
       "count": [
-        200,
-        256
+        12,
+        17
       ],
       "tiers": [
         2,
@@ -85,7 +88,7 @@
     },
     {
       "weight": 10,
-      "value": 0.5,
+      "value": 2.6786,
       "objectives": [
         {
           "fill_bucket": "minecraft:lava_bucket"
@@ -94,9 +97,10 @@
           "deliver": "minecraft:lava_bucket"
         }
       ],
+      "market": 1.0,
       "count": [
-        16,
-        16
+        3,
+        4
       ],
       "tiers": [
         2,
@@ -190,7 +194,7 @@
     },
     {
       "weight": 10,
-      "value": 0.4,
+      "value": 4.8214,
       "objectives": [
         {
           "craft": "minecraft:iron_block"
@@ -199,9 +203,10 @@
           "deliver": "minecraft:iron_block"
         }
       ],
+      "market": 2.25,
       "count": [
-        30,
-        45
+        3,
+        3
       ],
       "tiers": [
         3,
@@ -235,43 +240,43 @@
         {
           "craft": "minecraft:shield",
           "count": [
-            8,
-            8
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:shield",
           "count": [
-            8,
-            8
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:iron_helmet",
           "count": [
-            4,
-            4
+            2,
+            2
           ]
         },
         {
           "deliver": "minecraft:iron_helmet",
           "count": [
-            4,
-            4
+            2,
+            2
           ]
         },
         {
           "craft": "minecraft:iron_boots",
           "count": [
-            4,
-            4
+            2,
+            2
           ]
         },
         {
           "deliver": "minecraft:iron_boots",
           "count": [
-            4,
-            4
+            2,
+            2
           ]
         }
       ],
@@ -279,7 +284,8 @@
         1,
         1
       ],
-      "value": 16.0,
+      "value": 13.64,
+      "market": 5.5,
       "weight": 6,
       "tiers": [
         3,
@@ -390,7 +396,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 1.6484,
       "objectives": [
         {
           "mine": "#minecraft:diamond_ores",
@@ -400,9 +406,10 @@
           "deliver": "minecraft:diamond"
         }
       ],
+      "market": 1.0,
       "count": [
-        18,
-        25
+        11,
+        15
       ],
       "tiers": [
         4,
@@ -530,8 +537,8 @@
         {
           "deliver": "minecraft:diamond",
           "count": [
-            17,
-            17
+            14,
+            14
           ]
         },
         {
@@ -553,7 +560,8 @@
         1,
         1
       ],
-      "value": 29.0,
+      "value": 30.75,
+      "market": 14.0,
       "weight": 6,
       "tiers": [
         5,
