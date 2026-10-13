@@ -151,10 +151,10 @@
     {
       "kill": "minecraft:silverfish",
       "weight": 10,
-      "value": 0.3,
+      "value": 0.5,
       "count": [
-        27,
-        40
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -242,7 +242,7 @@
     },
     {
       "weight": 10,
-      "value": 0.06,
+      "value": 0.1,
       "objectives": [
         {
           "mine": "minecraft:calcite",
@@ -253,8 +253,8 @@
         }
       ],
       "count": [
-        200,
-        256
+        120,
+        180
       ],
       "tiers": [
         3,
@@ -263,7 +263,7 @@
     },
     {
       "weight": 10,
-      "value": 0.06,
+      "value": 0.07,
       "objectives": [
         {
           "craft": "minecraft:tuff_bricks"
@@ -273,7 +273,7 @@
         }
       ],
       "count": [
-        200,
+        172,
         256
       ],
       "tiers": [
@@ -305,10 +305,10 @@
     {
       "kill": "minecraft:creeper",
       "weight": 10,
-      "value": 0.35,
+      "value": 0.6,
       "count": [
-        35,
-        51
+        20,
+        30
       ],
       "tiers": [
         3,
@@ -317,13 +317,34 @@
     },
     {
       "weight": 10,
-      "value": 0.1,
+      "value": 0.15,
       "objectives": [
         {
           "smelt": "minecraft:white_glazed_terracotta"
         },
         {
           "deliver": "minecraft:white_glazed_terracotta"
+        }
+      ],
+      "count": [
+        120,
+        166
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "weight": 10,
+      "value": 0.1,
+      "objectives": [
+        {
+          "mine": "minecraft:dripstone_block",
+          "factor": 1.0
+        },
+        {
+          "deliver": "minecraft:dripstone_block"
         }
       ],
       "count": [
@@ -337,19 +358,18 @@
     },
     {
       "weight": 10,
-      "value": 0.08,
+      "value": 4.5,
       "objectives": [
         {
-          "mine": "minecraft:dripstone_block",
-          "factor": 1.0
+          "craft": "minecraft:prismarine_bricks"
         },
         {
-          "deliver": "minecraft:dripstone_block"
+          "deliver": "minecraft:prismarine_bricks"
         }
       ],
       "count": [
-        225,
-        256
+        4,
+        5
       ],
       "tiers": [
         4,
@@ -361,26 +381,6 @@
       "value": 0.3,
       "objectives": [
         {
-          "craft": "minecraft:prismarine_bricks"
-        },
-        {
-          "deliver": "minecraft:prismarine_bricks"
-        }
-      ],
-      "count": [
-        60,
-        83
-      ],
-      "tiers": [
-        4,
-        4
-      ]
-    },
-    {
-      "weight": 10,
-      "value": 0.15,
-      "objectives": [
-        {
           "craft": "minecraft:purpur_block"
         },
         {
@@ -388,8 +388,8 @@
         }
       ],
       "count": [
-        167,
-        233
+        84,
+        116
       ],
       "tiers": [
         5,
@@ -418,7 +418,7 @@
     },
     {
       "weight": 6,
-      "value": 0.3,
+      "value": 4.5,
       "objectives": [
         {
           "craft": "minecraft:prismarine_bricks"
@@ -428,8 +428,8 @@
         }
       ],
       "count": [
-        84,
-        116
+        6,
+        7
       ],
       "tiers": [
         5,

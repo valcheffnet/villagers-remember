@@ -38,7 +38,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.15,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -117,7 +117,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1913,
+      "value": 0.3,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -129,8 +129,8 @@
       ],
       "market": 0.0714,
       "count": [
-        42,
-        62
+        27,
+        40
       ],
       "tiers": [
         2,
@@ -160,7 +160,7 @@
     },
     {
       "weight": 10,
-      "value": 0.6,
+      "value": 1.0,
       "objectives": [
         {
           "craft": "minecraft:bow"
@@ -171,8 +171,8 @@
       ],
       "market": 0.2143,
       "count": [
-        14,
-        16
+        8,
+        12
       ],
       "tiers": [
         2,
@@ -182,10 +182,10 @@
     {
       "kill": "minecraft:skeleton",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -194,7 +194,7 @@
     },
     {
       "weight": 10,
-      "value": 1.1097,
+      "value": 1.2,
       "objectives": [
         {
           "craft": "minecraft:crossbow"
@@ -205,8 +205,8 @@
       ],
       "market": 0.5179,
       "count": [
-        11,
-        16
+        10,
+        15
       ],
       "tiers": [
         3,
@@ -216,10 +216,10 @@
     {
       "kill": "minecraft:bogged",
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "count": [
-        24,
-        36
+        12,
+        18
       ],
       "tiers": [
         3,
@@ -229,10 +229,10 @@
     {
       "kill": "minecraft:stray",
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "count": [
-        24,
-        36
+        12,
+        18
       ],
       "tiers": [
         3,
@@ -245,43 +245,43 @@
         {
           "craft": "minecraft:bow",
           "count": [
-            3,
-            3
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:bow",
           "count": [
-            3,
-            3
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:crossbow",
           "count": [
-            3,
-            3
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:crossbow",
           "count": [
-            3,
-            3
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:arrow",
           "count": [
-            108,
-            108
+            115,
+            115
           ]
         },
         {
           "deliver": "minecraft:arrow",
           "count": [
-            108,
-            108
+            115,
+            115
           ]
         }
       ],
@@ -289,8 +289,8 @@
         1,
         1
       ],
-      "value": 14.13,
-      "market": 5.29,
+      "value": 15.86,
+      "market": 6.223,
       "weight": 6,
       "tiers": [
         3,
@@ -335,7 +335,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1,
+      "value": 0.2,
       "objectives": [
         {
           "craft": "minecraft:spectral_arrow"
@@ -345,8 +345,8 @@
         }
       ],
       "count": [
-        180,
-        250
+        90,
+        125
       ],
       "tiers": [
         4,
@@ -356,10 +356,10 @@
     {
       "kill": "minecraft:pillager",
       "weight": 10,
-      "value": 0.6,
+      "value": 1.0,
       "count": [
-        30,
-        41
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -369,10 +369,10 @@
     {
       "kill": "minecraft:ghast",
       "weight": 10,
-      "value": 1.5,
+      "value": 2.5,
       "count": [
-        12,
-        16
+        8,
+        10
       ],
       "tiers": [
         4,
@@ -382,10 +382,10 @@
     {
       "kill": "minecraft:phantom",
       "weight": 10,
-      "value": 0.8,
+      "value": 1.5,
       "count": [
-        23,
-        31
+        12,
+        16
       ],
       "tiers": [
         4,
@@ -430,7 +430,7 @@
     },
     {
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "objectives": [
         {
           "craft": "minecraft:wind_charge"
@@ -440,8 +440,8 @@
         }
       ],
       "count": [
-        50,
-        64
+        25,
+        35
       ],
       "tiers": [
         5,
@@ -451,10 +451,10 @@
     {
       "kill": "minecraft:breeze",
       "weight": 10,
-      "value": 2.5,
+      "value": 3.0,
       "count": [
-        10,
-        14
+        9,
+        11
       ],
       "tiers": [
         5,

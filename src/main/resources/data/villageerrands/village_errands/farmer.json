@@ -88,9 +88,9 @@
     {
       "deliver": "minecraft:sugar_cane",
       "weight": 10,
-      "value": 0.025,
+      "value": 0.02,
       "count": [
-        160,
+        200,
         256
       ],
       "tiers": [
@@ -101,10 +101,10 @@
     {
       "kill": "minecraft:rabbit",
       "weight": 6,
-      "value": 0.5,
+      "value": 0.7,
       "count": [
-        8,
-        16
+        6,
+        11
       ],
       "tiers": [
         1,
@@ -135,9 +135,9 @@
         }
       ],
       "weight": 6,
-      "value": 0.02,
+      "value": 0.03,
       "count": [
-        200,
+        134,
         256
       ],
       "tiers": [
@@ -197,11 +197,11 @@
     {
       "deliver": "minecraft:egg",
       "weight": 10,
-      "value": 0.2,
+      "value": 0.3,
       "market": 0.02,
       "count": [
-        40,
-        60
+        27,
+        40
       ],
       "tiers": [
         2,
@@ -230,12 +230,33 @@
       ]
     },
     {
+      "weight": 10,
+      "value": 0.6696,
+      "objectives": [
+        {
+          "craft": "minecraft:cake"
+        },
+        {
+          "deliver": "minecraft:cake"
+        }
+      ],
+      "market": 0.25,
+      "count": [
+        12,
+        16
+      ],
+      "tiers": [
+        2,
+        2
+      ]
+    },
+    {
       "kill": "minecraft:zombie",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -319,27 +340,6 @@
     },
     {
       "weight": 10,
-      "value": 0.9,
-      "objectives": [
-        {
-          "craft": "minecraft:cake"
-        },
-        {
-          "deliver": "minecraft:cake"
-        }
-      ],
-      "market": 0.25,
-      "count": [
-        14,
-        16
-      ],
-      "tiers": [
-        3,
-        3
-      ]
-    },
-    {
-      "weight": 10,
       "value": 0.4643,
       "objectives": [
         {
@@ -361,7 +361,7 @@
     },
     {
       "weight": 10,
-      "value": 0.7323,
+      "value": 1.0,
       "objectives": [
         {
           "craft": "minecraft:golden_carrot"
@@ -372,8 +372,34 @@
       ],
       "market": 0.3418,
       "count": [
-        17,
-        24
+        12,
+        18
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:spider",
+      "weight": 10,
+      "value": 0.5,
+      "count": [
+        24,
+        36
+      ],
+      "tiers": [
+        3,
+        3
+      ]
+    },
+    {
+      "kill": "minecraft:husk",
+      "weight": 10,
+      "value": 0.6,
+      "count": [
+        20,
+        30
       ],
       "tiers": [
         3,
@@ -382,7 +408,28 @@
     },
     {
       "weight": 10,
-      "value": 5.7143,
+      "value": 1.2,
+      "objectives": [
+        {
+          "craft": "minecraft:glistering_melon_slice"
+        },
+        {
+          "deliver": "minecraft:glistering_melon_slice"
+        }
+      ],
+      "market": 0.3241,
+      "count": [
+        15,
+        20
+      ],
+      "tiers": [
+        4,
+        4
+      ]
+    },
+    {
+      "weight": 8,
+      "value": 8.0,
       "objectives": [
         {
           "craft": "minecraft:golden_apple"
@@ -397,40 +444,6 @@
         3
       ],
       "tiers": [
-        3,
-        3
-      ]
-    },
-    {
-      "kill": "minecraft:spider",
-      "weight": 10,
-      "value": 0.25,
-      "count": [
-        48,
-        72
-      ],
-      "tiers": [
-        3,
-        3
-      ]
-    },
-    {
-      "weight": 10,
-      "value": 0.5342,
-      "objectives": [
-        {
-          "craft": "minecraft:glistering_melon_slice"
-        },
-        {
-          "deliver": "minecraft:glistering_melon_slice"
-        }
-      ],
-      "market": 0.3241,
-      "count": [
-        34,
-        46
-      ],
-      "tiers": [
         4,
         4
       ]
@@ -441,29 +454,29 @@
         {
           "deliver": "minecraft:honey_bottle",
           "count": [
-            11,
-            11
+            5,
+            5
           ]
         },
         {
           "deliver": "minecraft:honeycomb",
           "count": [
-            11,
-            11
+            5,
+            5
           ]
         },
         {
           "craft": "minecraft:candle",
           "count": [
-            6,
-            6
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:candle",
           "count": [
-            6,
-            6
+            3,
+            3
           ]
         }
       ],
@@ -471,8 +484,8 @@
         1,
         1
       ],
-      "value": 21.6,
-      "market": 0.429,
+      "value": 22.0,
+      "market": 0.214,
       "weight": 6,
       "tiers": [
         4,
@@ -482,10 +495,10 @@
     {
       "kill": "minecraft:pillager",
       "weight": 10,
-      "value": 0.6,
+      "value": 1.0,
       "count": [
-        30,
-        41
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -499,10 +512,10 @@
         }
       ],
       "weight": 6,
-      "value": 10.0,
+      "value": 20.0,
       "count": [
-        2,
-        2
+        1,
+        1
       ],
       "tiers": [
         4,
@@ -516,10 +529,10 @@
         }
       ],
       "weight": 6,
-      "value": 1.0,
+      "value": 2.0,
       "count": [
-        18,
-        25
+        9,
+        12
       ],
       "tiers": [
         4,
@@ -527,30 +540,13 @@
       ]
     },
     {
-      "title": "order.ancient_seeds",
-      "objectives": [
-        {
-          "deliver": "minecraft:sniffer_egg",
-          "count": [
-            1,
-            1
-          ]
-        },
-        {
-          "deliver": "minecraft:torchflower_seeds",
-          "count": [
-            4,
-            4
-          ]
-        }
-      ],
+      "kill": "minecraft:ravager",
+      "weight": 10,
+      "value": 13.0,
       "count": [
-        1,
-        1
+        2,
+        2
       ],
-      "value": 30.0,
-      "market": 0.0,
-      "weight": 6,
       "tiers": [
         5,
         5
@@ -559,7 +555,7 @@
     {
       "objectives": [
         {
-          "breed": "minecraft:sniffer"
+          "cure": ""
         }
       ],
       "weight": 10,
@@ -574,12 +570,12 @@
       ]
     },
     {
-      "kill": "minecraft:ravager",
-      "weight": 10,
-      "value": 8.0,
+      "deliver": "minecraft:sniffer_egg",
+      "weight": 8,
+      "value": 28.0,
       "count": [
-        4,
-        4
+        1,
+        1
       ],
       "tiers": [
         5,
@@ -587,16 +583,20 @@
       ]
     },
     {
+      "weight": 8,
+      "value": 8.0,
       "objectives": [
         {
-          "cure": ""
+          "craft": "minecraft:golden_apple"
+        },
+        {
+          "deliver": "minecraft:golden_apple"
         }
       ],
-      "weight": 8,
-      "value": 10.0,
+      "market": 2.6667,
       "count": [
-        3,
-        3
+        4,
+        4
       ],
       "tiers": [
         5,

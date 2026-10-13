@@ -25,7 +25,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.05,
       "objectives": [
         {
           "smelt": "minecraft:copper_ingot"
@@ -35,8 +35,8 @@
         }
       ],
       "count": [
-        134,
-        256
+        80,
+        160
       ],
       "tiers": [
         1,
@@ -110,10 +110,10 @@
     {
       "kill": "minecraft:skeleton",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -215,7 +215,7 @@
     },
     {
       "weight": 10,
-      "value": 0.4,
+      "value": 0.5,
       "objectives": [
         {
           "mine": "minecraft:obsidian",
@@ -226,8 +226,8 @@
         }
       ],
       "count": [
-        30,
-        45
+        24,
+        36
       ],
       "tiers": [
         3,
@@ -240,43 +240,43 @@
         {
           "craft": "minecraft:shield",
           "count": [
-            4,
-            4
+            5,
+            5
           ]
         },
         {
           "deliver": "minecraft:shield",
           "count": [
-            4,
-            4
+            5,
+            5
           ]
         },
         {
           "craft": "minecraft:iron_helmet",
           "count": [
-            2,
-            2
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:iron_helmet",
           "count": [
-            2,
-            2
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:iron_boots",
           "count": [
-            2,
-            2
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:iron_boots",
           "count": [
-            2,
-            2
+            3,
+            3
           ]
         }
       ],
@@ -284,8 +284,8 @@
         1,
         1
       ],
-      "value": 13.64,
-      "market": 5.5,
+      "value": 17.14,
+      "market": 8.0,
       "weight": 6,
       "tiers": [
         3,
@@ -295,10 +295,10 @@
     {
       "kill": "minecraft:pillager",
       "weight": 10,
-      "value": 0.6,
+      "value": 1.0,
       "count": [
-        20,
-        30
+        12,
+        18
       ],
       "tiers": [
         3,
@@ -312,10 +312,10 @@
         }
       ],
       "weight": 5,
-      "value": 2.5,
+      "value": 13.0,
       "count": [
-        5,
-        7
+        1,
+        1
       ],
       "tiers": [
         3,
@@ -396,7 +396,7 @@
     },
     {
       "weight": 10,
-      "value": 1.6484,
+      "value": 3.0,
       "objectives": [
         {
           "mine": "#minecraft:diamond_ores",
@@ -408,8 +408,8 @@
       ],
       "market": 1.0,
       "count": [
-        11,
-        15
+        6,
+        8
       ],
       "tiers": [
         4,
@@ -419,10 +419,10 @@
     {
       "kill": "minecraft:vindicator",
       "weight": 10,
-      "value": 2.0,
+      "value": 3.0,
       "count": [
-        9,
-        12
+        6,
+        8
       ],
       "tiers": [
         4,
@@ -432,10 +432,10 @@
     {
       "kill": "minecraft:blaze",
       "weight": 10,
-      "value": 0.6,
+      "value": 1.0,
       "count": [
-        30,
-        41
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -537,22 +537,22 @@
         {
           "deliver": "minecraft:diamond",
           "count": [
-            14,
-            14
+            8,
+            8
           ]
         },
         {
           "smelt": "minecraft:netherite_scrap",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         },
         {
           "deliver": "minecraft:netherite_scrap",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         }
       ],
@@ -560,8 +560,8 @@
         1,
         1
       ],
-      "value": 30.75,
-      "market": 14.0,
+      "value": 32.0,
+      "market": 8.0,
       "weight": 6,
       "tiers": [
         5,
@@ -571,10 +571,10 @@
     {
       "kill": "minecraft:ravager",
       "weight": 10,
-      "value": 8.0,
+      "value": 13.0,
       "count": [
-        4,
-        4
+        2,
+        2
       ],
       "tiers": [
         5,
@@ -583,7 +583,7 @@
     },
     {
       "weight": 10,
-      "value": 6.0,
+      "value": 8.0,
       "objectives": [
         {
           "smelt": "minecraft:netherite_scrap"
@@ -593,8 +593,8 @@
         }
       ],
       "count": [
-        5,
-        5
+        4,
+        4
       ],
       "tiers": [
         5,

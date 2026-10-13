@@ -60,7 +60,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.3,
       "objectives": [
         {
           "kill": "minecraft:skeleton",
@@ -71,8 +71,8 @@
         }
       ],
       "count": [
-        134,
-        256
+        14,
+        26
       ],
       "tiers": [
         1,
@@ -139,10 +139,10 @@
     {
       "kill": "minecraft:skeleton",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -152,10 +152,10 @@
     {
       "kill": "minecraft:zombie",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -222,10 +222,10 @@
     {
       "kill": "minecraft:creeper",
       "weight": 10,
-      "value": 0.35,
+      "value": 0.6,
       "count": [
-        35,
-        51
+        20,
+        30
       ],
       "tiers": [
         3,
@@ -235,10 +235,10 @@
     {
       "kill": "minecraft:witch",
       "weight": 10,
-      "value": 1.5,
+      "value": 3.0,
       "count": [
-        8,
-        12
+        4,
+        6
       ],
       "tiers": [
         3,
@@ -383,10 +383,10 @@
         }
       ],
       "weight": 5,
-      "value": 3.0,
+      "value": 4.0,
       "count": [
-        4,
-        6
+        3,
+        4
       ],
       "tiers": [
         3,
@@ -395,7 +395,7 @@
     },
     {
       "weight": 10,
-      "value": 1.6484,
+      "value": 3.0,
       "objectives": [
         {
           "mine": "#minecraft:diamond_ores",
@@ -407,8 +407,8 @@
       ],
       "market": 1.0,
       "count": [
-        11,
-        15
+        6,
+        8
       ],
       "tiers": [
         4,
@@ -418,10 +418,10 @@
     {
       "kill": "minecraft:vindicator",
       "weight": 10,
-      "value": 2.0,
+      "value": 3.0,
       "count": [
-        9,
-        12
+        6,
+        8
       ],
       "tiers": [
         4,
@@ -431,10 +431,10 @@
     {
       "kill": "minecraft:enderman",
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "count": [
-        36,
-        50
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -479,7 +479,7 @@
     },
     {
       "weight": 10,
-      "value": 6.0,
+      "value": 8.0,
       "objectives": [
         {
           "smelt": "minecraft:netherite_scrap"
@@ -489,8 +489,8 @@
         }
       ],
       "count": [
-        5,
-        5
+        4,
+        4
       ],
       "tiers": [
         5,
@@ -500,10 +500,10 @@
     {
       "kill": "minecraft:evoker",
       "weight": 10,
-      "value": 10.0,
+      "value": 15.0,
       "count": [
-        3,
-        3
+        2,
+        2
       ],
       "tiers": [
         5,
@@ -513,10 +513,10 @@
     {
       "kill": "minecraft:wither_skeleton",
       "weight": 10,
-      "value": 1.5,
+      "value": 2.5,
       "count": [
-        17,
-        23
+        10,
+        14
       ],
       "tiers": [
         5,
@@ -526,10 +526,10 @@
     {
       "kill": "minecraft:breeze",
       "weight": 10,
-      "value": 2.5,
+      "value": 3.0,
       "count": [
-        10,
-        14
+        9,
+        11
       ],
       "tiers": [
         5,

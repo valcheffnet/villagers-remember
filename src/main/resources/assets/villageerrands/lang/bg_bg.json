@@ -376,7 +376,7 @@
 	"villageerrands.fame.prefix.2": "Благодетел",
 	"villageerrands.fame.prefix.3": "Легенда",
 	"contract.button": "Договор",
-	"contract.days_left": "Договор за тази седмица: остават %s дни",
+	"contract.days_left": "Нов договор идва всяка седмица (следващият след %s дни).",
 	"lore.weaponsmith.reforge": "Изкови ми няколко. Най-хубавия ще ти го омагьосам.",
 	"lore.armorer.reforge": "Направи ми два. Единият отива за стражата, другия ще омагьосам за теб.",
 	"lore.toolsmith.reforge": "Донеси ми няколко. Един ще омагьосам за теб, другите отиват при миньорите.",

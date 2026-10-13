@@ -376,7 +376,7 @@
 	"villageerrands.fame.prefix.2": "Benefactor",
 	"villageerrands.fame.prefix.3": "Legend",
 	"contract.button": "Contract",
-	"contract.days_left": "Contract for this week: %s days left",
+	"contract.days_left": "New contracts come every week (next in %s days).",
 	"lore.weaponsmith.reforge": "Forge me a few. The best one I'll enchant for you.",
 	"lore.armorer.reforge": "Make me a pair. One goes to the guards, the other I enchant for you.",
 	"lore.toolsmith.reforge": "Bring me a few. One of them I'll enchant for you, the rest go to the miners.",

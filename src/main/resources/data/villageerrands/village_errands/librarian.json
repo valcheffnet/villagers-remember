@@ -24,7 +24,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.15,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -69,9 +69,9 @@
     {
       "deliver": "minecraft:sugar_cane",
       "weight": 10,
-      "value": 0.025,
+      "value": 0.02,
       "count": [
-        160,
+        200,
         256
       ],
       "tiers": [
@@ -102,7 +102,7 @@
     },
     {
       "weight": 10,
-      "value": 0.2,
+      "value": 1.5,
       "objectives": [
         {
           "craft": "minecraft:candle"
@@ -113,8 +113,8 @@
       ],
       "market": 0.0714,
       "count": [
-        40,
-        60
+        6,
+        8
       ],
       "tiers": [
         2,
@@ -149,10 +149,10 @@
         }
       ],
       "weight": 6,
-      "value": 2.0,
+      "value": 3.0,
       "count": [
-        4,
-        6
+        3,
+        4
       ],
       "tiers": [
         2,
@@ -251,7 +251,7 @@
         1,
         1
       ],
-      "value": 14.86,
+      "value": 15.25,
       "market": 6.75,
       "weight": 6,
       "tiers": [
@@ -262,10 +262,10 @@
     {
       "kill": "minecraft:witch",
       "weight": 10,
-      "value": 1.5,
+      "value": 3.0,
       "count": [
-        8,
-        12
+        4,
+        6
       ],
       "tiers": [
         3,
@@ -274,7 +274,7 @@
     },
     {
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "objectives": [
         {
           "kill": "minecraft:enderman",
@@ -285,8 +285,8 @@
         }
       ],
       "count": [
-        36,
-        50
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -295,7 +295,7 @@
     },
     {
       "weight": 10,
-      "value": 0.4,
+      "value": 1.0,
       "objectives": [
         {
           "kill": "minecraft:glow_squid",
@@ -306,8 +306,8 @@
         }
       ],
       "count": [
-        45,
-        62
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -316,7 +316,7 @@
     },
     {
       "weight": 10,
-      "value": 2.1978,
+      "value": 4.0,
       "objectives": [
         {
           "craft": "minecraft:clock"
@@ -327,8 +327,8 @@
       ],
       "market": 1.3333,
       "count": [
-        9,
-        11
+        5,
+        6
       ],
       "tiers": [
         4,
@@ -343,10 +343,10 @@
         }
       ],
       "weight": 6,
-      "value": 4.0,
+      "value": 8.0,
       "count": [
-        5,
-        6
+        3,
+        3
       ],
       "tiers": [
         4,
@@ -355,7 +355,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 2.0,
       "objectives": [
         {
           "craft": "minecraft:ender_eye"
@@ -365,8 +365,8 @@
         }
       ],
       "count": [
-        25,
-        35
+        13,
+        17
       ],
       "tiers": [
         5,
@@ -376,10 +376,10 @@
     {
       "kill": "minecraft:evoker",
       "weight": 10,
-      "value": 10.0,
+      "value": 15.0,
       "count": [
-        3,
-        3
+        2,
+        2
       ],
       "tiers": [
         5,

@@ -3,8 +3,8 @@
 Each profession has five packs (tiers T1-T5, TIERS.md section 4). A villager offers errands only from the pack of the
 player's tier with that villager.
 
-Effort model (user, 2026-10-13): a task's "value" is MINUTES OF WORK per unit for a player of that stage who has
-the usual farms. Farmable things are cheap and live in the low packs; the top packs are actions that can't be taken
+Effort model (user, 2026-10-13): a task's "value" is MINUTES OF WORK per unit for a player who has automatic plant
+farms and a trading hall, but no farms for mobs, iron, gold, XP, raids or fish. Farmable things are cheap and live in the low packs; the top packs are actions that can't be taken
 out of a chest (rare hunts, fishing, exploring, curing, brewing) and truly rare items. Counts are sized so that one
 errand takes the minutes of its tier window (WINDOW); a task that can't fit its window fails the build. Daily errands
 pay emeralds, XP and reputation only (the mod turns minutes into pay); items are one-time milestones (trials).
@@ -176,150 +176,152 @@ REWARDS = {
 }
 
 
-# ---- the packs (TIERS.md section 4): minutes per unit, assuming the usual farms ----
-# T1 overworld basics, T2 iron age, T3 diamonds / raids / enchanting, T4 the Nether, monuments, rare mobs,
-# T5 the end game: bosses, ancient cities, mansions, bastions, the End.
+# ---- the packs (TIERS.md section 4): minutes per unit ----
+# Assumed player (user, 2026-10-13 09:38): automatic farms for plants (crops, sugar cane, pumpkins, melons, trees,
+# bamboo, kelp) and a trading hall. NO farms for mobs, iron, gold, XP, raids or fish. So mob drops are killed by
+# hand at night, iron and gold are mined, raids need a Bad Omen each, bees and sniffers breed slowly.
+# T1 overworld basics, T2 iron age, T3 diamonds / enchanting / first raids, T4 the Nether, monuments, rare mobs,
+# T5 the end game: raids for ravagers, bastions, ancient cities, mansions, the End.
+# Counts that a market price would make larger are raised by the market floor (MARKET_PREMIUM), so crops and other
+# cheap goods stay small enough that the errand pays clearly more than selling them.
 
 PACKS = {
     "farmer": {
-        1: [D("wheat", 0.025), D("potato", 0.025), D("carrot", 0.025), D("beetroot", 0.03), D("sugar_cane", 0.025),
-            K("rabbit", 0.5, 6), A([{"plant": "minecraft:wheat_seeds"}], 0.02, 6), A([{"bonemeal": ""}], 0.02, 6)],
-        2: [D("bread", 0.08), D("pumpkin", 0.12), D("melon", 0.15), D("egg", 0.2), D("hay_block", 0.25),
-            K("zombie", 0.25), A([{"breed": "minecraft:chicken"}], 0.3, 6)],
-        3: [O("winter_stock"), D("cake", 0.9), D("pumpkin_pie", 0.15), D("golden_carrot", 0.1), D("golden_apple", 0.4),
-            K("spider", 0.25)],
-        4: [D("glistering_melon_slice", 0.15), O("beekeeper"), K("pillager", 0.6), A([{"cure": ""}], 10.0, 6, (2, 2)),
-            A([{"breed": "minecraft:bee"}], 1.0, 6)],
-        5: [O("ancient_seeds"), A([{"breed": "minecraft:sniffer"}], 15.0, 10, (2, 2)), K("ravager", 8.0, 10, (4, 4)),
-            A([{"cure": ""}], 10.0, 8, (3, 3))],
+        1: [D("wheat", 0.01), D("potato", 0.01), D("carrot", 0.01), D("beetroot", 0.01), D("sugar_cane", 0.02),
+            K("rabbit", 0.7, 6), A([{"plant": "minecraft:wheat_seeds"}], 0.02, 6), A([{"bonemeal": ""}], 0.03, 6)],
+        2: [D("bread", 0.03), D("pumpkin", 0.02), D("melon", 0.03), D("egg", 0.3), D("hay_block", 0.05), D("cake", 0.3),
+            K("zombie", 0.5), A([{"breed": "minecraft:chicken"}], 0.3, 6)],
+        3: [O("winter_stock"), D("pumpkin_pie", 0.15), D("golden_carrot", 1.0), K("spider", 0.5), K("husk", 0.6)],
+        4: [D("glistering_melon_slice", 1.2), D("golden_apple", 8.0, 8), O("beekeeper"), K("pillager", 1.0),
+            A([{"cure": ""}], 20.0, 6, (1, 1)), A([{"breed": "minecraft:bee"}], 2.0, 6)],
+        5: [K("ravager", 13.0, 10, (2, 2)), A([{"cure": ""}], 15.0, 10, (2, 2)), D("sniffer_egg", 28.0, 8, (1, 1)),
+            D("golden_apple", 8.0, 8)],
     },
     "butcher": {
-        1: [D("chicken", 0.05), D("porkchop", 0.06), D("beef", 0.06), D("mutton", 0.06),
+        1: [D("chicken", 0.1), D("porkchop", 0.1), D("beef", 0.1), D("mutton", 0.1),
             A([{"breed": "minecraft:cow"}], 0.3, 6), A([{"breed": "minecraft:pig"}], 0.3, 6)],
-        2: [D("cooked_chicken", 0.08), D("cooked_beef", 0.08), D("cooked_porkchop", 0.08), D("cooked_mutton", 0.08),
-            D("mushroom_stew", 0.6), D("beetroot_soup", 0.6), K("spider", 0.25), A([{"breed": "minecraft:rabbit"}], 0.5, 6)],
-        3: [D("rabbit_stew", 0.8), O("smiths_lunch"), K("zombie", 0.25), K("husk", 0.3)],
-        4: [O("feast"), O("wedding"), K("hoglin", 0.6), A([{"breed": "minecraft:goat"}], 1.2, 6)],
-        5: [K("piglin_brute", 5.0, 10, (6, 6)), K("ravager", 8.0, 10, (4, 4)),
+        2: [D("cooked_chicken", 0.15), D("cooked_beef", 0.15), D("cooked_porkchop", 0.15), D("cooked_mutton", 0.15),
+            D("mushroom_stew", 0.6), D("beetroot_soup", 0.6), K("spider", 0.5), A([{"breed": "minecraft:rabbit"}], 1.0, 6)],
+        3: [D("rabbit_stew", 1.7), O("smiths_lunch"), K("zombie", 0.5), K("husk", 0.6)],
+        4: [O("feast"), O("wedding"), K("hoglin", 1.0), A([{"breed": "minecraft:goat"}], 3.0, 6)],
+        5: [K("piglin_brute", 8.0, 10, (4, 4)), K("ravager", 13.0, 10, (2, 2)),
             A([{"visit_structure": "minecraft:bastion_remnant"}], 30.0, 8, (1, 1))],
     },
     "fisherman": {
-        1: [D("cod", 0.3), D("salmon", 0.35), D("kelp", 0.02), D("string", 0.03)],
-        2: [D("cooked_cod", 0.35), D("cooked_salmon", 0.4), D("tropical_fish", 0.6), D("lily_pad", 0.1), K("drowned", 0.4),
+        1: [D("cod", 0.6), D("salmon", 0.7), D("kelp", 0.02), D("string", 0.3)],
+        2: [D("cooked_cod", 0.7), D("cooked_salmon", 0.8), D("tropical_fish", 1.0), D("lily_pad", 0.3), K("drowned", 0.6),
             O("fish_market"), A([{"fill_bucket": "minecraft:tropical_fish_bucket"}, {"deliver": "minecraft:tropical_fish_bucket"}], 1.0, 6)],
-        3: [D("pufferfish", 0.8), D("sea_pickle", 0.2), D("prismarine_shard", 0.3), D("ink_sac", 0.2), K("guardian", 0.4),
+        3: [D("pufferfish", 2.0), D("sea_pickle", 0.2), D("prismarine_shard", 0.5), D("ink_sac", 0.5), K("guardian", 1.0),
             A([{"visit_structure": "#minecraft:shipwreck"}], 15.0, 6, (1, 1))],
-        4: [D("nautilus_shell", 3.0), D("prismarine_crystals", 0.3), A([{"fill_bucket": "minecraft:axolotl_bucket"}], 4.0, 6),
-            A([{"visit_structure": "minecraft:monument"}], 22.0, 6, (1, 1)), A([{"catch": "minecraft:pufferfish"}], 1.0, 6)],
-        5: [D("heart_of_the_sea", 30.0, 10, (1, 1)), D("trident", 30.0, 8, (1, 1)), K("elder_guardian", 30.0, 10, (1, 1)),
-            D("wet_sponge", 3.0)],
+        4: [D("nautilus_shell", 3.0), D("prismarine_crystals", 0.8), A([{"fill_bucket": "minecraft:axolotl_bucket"}], 4.0, 6),
+            A([{"visit_structure": "minecraft:monument"}], 22.0, 6, (1, 1)), A([{"catch": "minecraft:pufferfish"}], 2.0, 6)],
+        5: [D("heart_of_the_sea", 30.0, 10, (1, 1)), D("trident", 38.0, 6, (1, 1)), K("elder_guardian", 38.0, 8, (1, 1)),
+            D("wet_sponge", 8.0)],
     },
     "shepherd": {
-        1: [D("#minecraft:wool", 0.03), D("white_dye", 0.05), D("wheat", 0.025), A([{"breed": "minecraft:sheep"}], 0.3, 8)],
-        2: [D("#minecraft:wool_carpets", 0.05), D("#minecraft:beds", 0.6), O("color_set"), D("lead", 0.4), K("spider", 0.25)],
-        3: [D("#minecraft:banners", 0.4), D("painting", 0.2), O("new_home"), A([{"tame": "minecraft:wolf"}], 2.5, 6)],
-        4: [K("phantom", 0.8), O("rainbow"), A([{"breed": "minecraft:llama"}], 1.5, 6)],
-        5: [D("skull_banner_pattern", 30.0, 10, (1, 1)), D("creeper_banner_pattern", 28.0, 10, (1, 1)),
-            D("piglin_banner_pattern", 30.0, 8, (1, 1))],
+        1: [D("#minecraft:wool", 0.03), D("white_dye", 0.1), D("wheat", 0.01), A([{"breed": "minecraft:sheep"}], 0.3, 8)],
+        2: [D("#minecraft:wool_carpets", 0.05), D("#minecraft:beds", 0.6), O("color_set"), D("lead", 1.5), K("spider", 0.5)],
+        3: [D("#minecraft:banners", 0.9), D("painting", 0.25), O("new_home"), A([{"tame": "minecraft:wolf"}], 3.0, 6)],
+        4: [K("phantom", 1.5), A([{"breed": "minecraft:llama"}], 2.5, 6), A([{"shear": "minecraft:mooshroom"}], 9.0, 6, (2, 2))],
+        5: [O("rainbow"), D("piglin_banner_pattern", 30.0, 8, (1, 1)), A([{"breed": "minecraft:llama"}], 2.5, 6)],
     },
     "librarian": {
-        1: [D("paper", 0.03), D("feather", 0.05), D("ink_sac", 0.2), D("sugar_cane", 0.025)],
-        2: [D("book", 0.15), D("candle", 0.2), D("lantern", 0.1), A([{"enchant": "", "min_level": 10}], 2.0, 6)],
-        3: [D("bookshelf", 0.6), D("writable_book", 0.9), O("reading_room"), K("witch", 1.5)],
-        4: [D("ender_pearl", 0.5), D("glow_ink_sac", 0.4), D("clock", 0.4), A([{"enchant": "", "min_level": 30}], 4.0, 6)],
-        5: [D("ender_eye", 1.0), K("evoker", 10.0, 10, (3, 3)), A([{"visit_structure": "minecraft:stronghold"}], 30.0, 8, (1, 1)),
+        1: [D("paper", 0.02), D("feather", 0.15), D("ink_sac", 0.5), D("sugar_cane", 0.02)],
+        2: [D("book", 0.4), D("candle", 1.5), D("lantern", 0.1), A([{"enchant": "", "min_level": 10}], 3.0, 6)],
+        3: [D("bookshelf", 1.3), D("writable_book", 1.0), O("reading_room"), K("witch", 3.0)],
+        4: [D("ender_pearl", 1.0), D("glow_ink_sac", 1.0), D("clock", 4.0), A([{"enchant": "", "min_level": 30}], 8.0, 6)],
+        5: [D("ender_eye", 2.0), K("evoker", 15.0, 10, (2, 2)), A([{"visit_structure": "minecraft:stronghold"}], 30.0, 8, (1, 1)),
             A([{"visit_structure": "minecraft:ancient_city"}], 30.0, 6, (1, 1))],
     },
     "cartographer": {
-        1: [D("paper", 0.03), D("glass", 0.03), D("sugar_cane", 0.025),
+        1: [D("paper", 0.02), D("glass", 0.03), D("sugar_cane", 0.02),
             A([{"visit_structure": "#minecraft:ruined_portal"}], 6.0, 6, (1, 1)),
             A([{"visit_structure": "#minecraft:abandoned_camp"}], 6.0, 6, (1, 1)),
             A([{"visit_biome": "minecraft:cherry_grove"}], 6.0, 5, (1, 1))],
-        2: [D("compass", 0.3), D("map", 0.3), D("glass_pane", 0.04), K("phantom", 0.8),
+        2: [D("compass", 1.3), D("map", 1.5), D("glass_pane", 0.02), K("phantom", 1.5),
             A([{"visit_structure": "minecraft:pillager_outpost"}], 10.0, 6, (1, 1)),
             A([{"visit_structure": "minecraft:igloo"}], 12.0, 5, (1, 1)),
             A([{"visit_structure": "minecraft:desert_pyramid"}], 10.0, 5, (1, 1)),
             A([{"visit_biome": "minecraft:ice_spikes"}], 10.0, 5, (1, 1)),
             A([{"visit_biome": "minecraft:badlands"}], 10.0, 5, (1, 1)),
-            A([{"tame": "minecraft:parrot"}], 10.0, 4, (1, 1)), A([{"tame": "minecraft:horse"}], 9.0, 4, (1, 1))],
-        3: [D("spyglass", 0.9), D("amethyst_shard", 0.15), O("expedition_kit"), K("pillager", 0.6),
+            A([{"tame": "minecraft:parrot"}], 10.0, 4, (1, 1)), A([{"tame": "minecraft:horse"}], 4.0, 4, (2, 3))],
+        3: [D("spyglass", 0.9), D("amethyst_shard", 0.3), O("expedition_kit"), K("pillager", 1.0),
             A([{"visit_structure": "minecraft:trail_ruins"}], 15.0, 6, (1, 1))],
-        4: [D("clock", 0.4), K("witch", 1.5), A([{"visit_structure": "minecraft:monument"}], 22.0, 6, (1, 1)),
+        4: [D("clock", 4.0), K("witch", 3.0), A([{"visit_structure": "minecraft:monument"}], 22.0, 6, (1, 1)),
             A([{"visit_structure": "minecraft:trial_chambers"}], 22.0, 6, (1, 1)),
             A([{"visit_biome": "minecraft:mushroom_fields"}], 22.0, 5, (1, 1))],
-        5: [D("recovery_compass", 30.0, 10, (1, 1)), K("evoker", 10.0, 8, (3, 3)),
+        5: [D("recovery_compass", 30.0, 10, (1, 1)), K("evoker", 15.0, 8, (2, 2)),
             A([{"visit_structure": "minecraft:mansion"}], 35.0, 10, (1, 1)),
             A([{"visit_structure": "minecraft:ancient_city"}], 30.0, 8, (1, 1)),
             A([{"visit_structure": "minecraft:end_city"}], 35.0, 6, (1, 1))],
     },
     "cleric": {
-        1: [D("rotten_flesh", 0.02), D("bone", 0.03), D("redstone", 0.03), K("zombie", 0.25)],
-        2: [D("spider_eye", 0.15), D("lapis_lazuli", 0.05), D("gold_ingot", 0.04), D("glowstone_dust", 0.05),
-            K("skeleton", 0.25), K("drowned", 0.4)],
-        3: [D("gunpowder", 0.07), D("rabbit_foot", 1.0), K("witch", 1.5), K("phantom", 0.8),
-            A([{"brew": "minecraft:healing"}], 0.8, 6), A([{"cure": ""}], 15.0, 5, (1, 1)), O("healers_kit")],
-        4: [O("potions"), D("blaze_rod", 0.5), K("blaze", 0.5), K("enderman", 0.5)],
-        5: [D("ghast_tear", 1.5), K("wither_skeleton", 1.5), A([{"cure": ""}], 15.0, 8, (2, 2)),
-            A([{"brew": "minecraft:strong_strength"}], 1.5, 6)],
+        1: [D("rotten_flesh", 0.2), D("bone", 0.3), D("redstone", 0.03), K("zombie", 0.5)],
+        2: [D("spider_eye", 0.8), D("lapis_lazuli", 0.05), D("gold_ingot", 1.0), D("glowstone_dust", 0.1),
+            K("skeleton", 0.5), K("drowned", 0.6)],
+        3: [D("gunpowder", 0.7), D("rabbit_foot", 3.0), K("witch", 3.0), K("phantom", 1.5),
+            A([{"brew": "minecraft:healing"}], 2.0, 6), A([{"cure": ""}], 15.0, 5, (1, 1)), O("healers_kit")],
+        4: [O("potions"), D("blaze_rod", 1.0), K("blaze", 1.0), K("enderman", 1.0)],
+        5: [D("ghast_tear", 3.0), K("wither_skeleton", 2.5), A([{"cure": ""}], 15.0, 8, (2, 2)),
+            A([{"brew": "minecraft:strong_strength"}], 3.0, 6)],
     },
     "armorer": {
-        1: [D("coal", 0.03), D("copper_ingot", 0.03), D("leather", 0.1)],
-        2: [D("iron_ingot", 0.04), D("lava_bucket", 0.5), K("skeleton", 0.25), R("copper_helmet", 2, (8, 11)),
+        1: [D("coal", 0.05), D("copper_ingot", 0.05), D("leather", 0.3)],
+        2: [D("iron_ingot", 0.3), D("lava_bucket", 0.5), K("skeleton", 0.5), R("copper_helmet", 2, (8, 11)),
             R("copper_boots", 2, (8, 11))],
-        3: [D("iron_block", 0.4), D("obsidian", 0.4), O("guard_gear"), K("pillager", 0.6),
-            A([{"summon": "minecraft:iron_golem"}], 2.5, 5), R("iron_helmet", 2, (10, 13)), R("iron_chestplate", 2, (10, 13))],
-        4: [D("diamond", 1.0), K("vindicator", 2.0), K("blaze", 0.6), A([{"visit_structure": "minecraft:fortress"}], 20.0, 6, (1, 1)),
+        3: [D("iron_block", 2.7), D("obsidian", 0.5), O("guard_gear"), K("pillager", 1.0),
+            A([{"summon": "minecraft:iron_golem"}], 13.0, 5, (1, 1)), R("iron_helmet", 2, (10, 13)), R("iron_chestplate", 2, (10, 13))],
+        4: [D("diamond", 3.0), K("vindicator", 3.0), K("blaze", 1.0), A([{"visit_structure": "minecraft:fortress"}], 20.0, 6, (1, 1)),
             R("diamond_helmet", 2, (15, 18)), R("diamond_chestplate", 2, (15, 18))],
-        5: [O("smith_order"), K("ravager", 8.0, 10, (4, 4)), D("netherite_scrap", 6.0), R("netherite_helmet", 2, (18, 21)),
+        5: [O("smith_order"), K("ravager", 13.0, 10, (2, 2)), D("netherite_scrap", 8.0), R("netherite_helmet", 2, (18, 21)),
             R("netherite_chestplate", 2, (18, 21))],
     },
     "weaponsmith": {
-        1: [D("coal", 0.03), D("flint", 0.05), D("stick", 0.02), D("bone", 0.03), R("stone_sword", 3, (5, 8))],
-        2: [D("iron_ingot", 0.04), K("skeleton", 0.25), K("zombie", 0.25), R("copper_sword", 3, (8, 11))],
-        3: [D("iron_block", 0.4), K("creeper", 0.35), K("witch", 1.5), O("armory"), R("iron_sword", 3, (10, 13)),
-            R("iron_axe", 2, (10, 13)), A([{"enchant": "", "min_level": 15}], 3.0, 5)],
-        4: [D("diamond", 1.0), K("vindicator", 2.0), K("enderman", 0.5), R("diamond_sword", 2, (15, 18))],
-        5: [D("netherite_scrap", 6.0), K("evoker", 10.0, 10, (3, 3)), K("wither_skeleton", 1.5), K("breeze", 2.5),
+        1: [D("coal", 0.05), D("flint", 0.1), D("stick", 0.02), D("bone", 0.3), R("stone_sword", 3, (5, 8))],
+        2: [D("iron_ingot", 0.3), K("skeleton", 0.5), K("zombie", 0.5), R("copper_sword", 3, (8, 11))],
+        3: [D("iron_block", 2.7), K("creeper", 0.6), K("witch", 3.0), O("armory"), R("iron_sword", 3, (10, 13)),
+            R("iron_axe", 2, (10, 13)), A([{"enchant": "", "min_level": 15}], 4.0, 5)],
+        4: [D("diamond", 3.0), K("vindicator", 3.0), K("enderman", 1.0), R("diamond_sword", 2, (15, 18))],
+        5: [D("netherite_scrap", 8.0), K("evoker", 15.0, 10, (2, 2)), K("wither_skeleton", 2.5), K("breeze", 3.0),
             R("netherite_sword", 2, (18, 21))],
     },
     "toolsmith": {
-        1: [D("coal", 0.03), D("flint", 0.05), D("copper_ingot", 0.03), D("redstone", 0.03), R("stone_pickaxe", 3, (5, 8))],
-        2: [D("iron_ingot", 0.04), K("spider", 0.25),
-            A([{"mine": "#minecraft:iron_ores"}, {"deliver": "minecraft:raw_iron"}], 0.15, 6),
+        1: [D("coal", 0.05), D("flint", 0.1), D("copper_ingot", 0.05), D("redstone", 0.03), R("stone_pickaxe", 3, (5, 8))],
+        2: [D("iron_ingot", 0.3), K("spider", 0.5),
+            A([{"mine": "#minecraft:iron_ores"}, {"deliver": "minecraft:raw_iron"}], 0.3, 6),
             R("copper_pickaxe", 3, (8, 11)), R("copper_shovel", 3, (8, 11))],
-        3: [D("coal_block", 0.3), K("cave_spider", 0.3), K("silverfish", 0.3), D("amethyst_shard", 0.15), O("tool_set"),
+        3: [D("coal_block", 0.45), K("cave_spider", 0.6), K("silverfish", 0.5), D("amethyst_shard", 0.3), O("tool_set"),
             R("iron_pickaxe", 2, (10, 13)), R("iron_shovel", 3, (10, 13))],
-        4: [D("diamond", 1.0), A([{"mine": "minecraft:ancient_debris"}], 4.0, 6), K("magma_cube", 0.5), D("quartz", 0.08),
-            R("diamond_pickaxe", 2, (15, 18)),
-            R("diamond_shovel", 2, (15, 18))],
-        5: [D("echo_shard", 4.0), D("netherite_scrap", 6.0), A([{"visit_structure": "minecraft:ancient_city"}], 30.0, 8, (1, 1)),
+        4: [D("diamond", 3.0), A([{"mine": "minecraft:ancient_debris"}], 8.0, 6), K("magma_cube", 0.6), D("quartz", 0.1),
+            R("diamond_pickaxe", 2, (15, 18)), R("diamond_shovel", 2, (15, 18))],
+        5: [D("echo_shard", 3.0), D("netherite_scrap", 8.0), A([{"visit_structure": "minecraft:ancient_city"}], 30.0, 8, (1, 1)),
             R("netherite_pickaxe", 2, (18, 21))],
     },
     "leatherworker": {
-        1: [D("leather", 0.1), D("flint", 0.05), D("string", 0.03), A([{"breed": "minecraft:cow"}], 0.3)],
-        2: [D("rabbit_hide", 0.4), D("leather_chestplate", 0.8), K("spider", 0.25),
-            A([{"tame": "minecraft:horse"}], 9.0, 5, (1, 1)), A([{"tame": "minecraft:donkey"}], 9.0, 5, (1, 1)),
-            A([{"tame": "minecraft:llama"}], 9.0, 5, (1, 1))],
-        3: [D("rabbit_foot", 1.0), D("turtle_scute", 2.0), D("saddle", 6.0), K("husk", 0.3), O("riders_set")],
-        4: [D("phantom_membrane", 0.8), D("armadillo_scute", 0.5), A([{"breed": "minecraft:turtle"}], 3.0, 6)],
-        5: [O("armored_stable"), D("wolf_armor", 3.0), K("ravager", 8.0, 8, (4, 4))],
+        1: [D("leather", 0.3), D("flint", 0.1), D("string", 0.3), A([{"breed": "minecraft:cow"}], 0.3)],
+        2: [D("rabbit_hide", 0.8), D("leather_chestplate", 2.4), K("spider", 0.5),
+            A([{"tame": "minecraft:horse"}], 4.0, 5, (2, 3)), A([{"tame": "minecraft:donkey"}], 4.0, 5, (2, 3)),
+            A([{"tame": "minecraft:llama"}], 4.0, 5, (2, 3))],
+        3: [D("rabbit_foot", 3.0), D("turtle_scute", 6.0), D("saddle", 6.0), K("husk", 0.6), O("riders_set")],
+        4: [D("phantom_membrane", 1.5), D("armadillo_scute", 1.5), A([{"breed": "minecraft:turtle"}], 6.0, 6)],
+        5: [O("armored_stable"), D("wolf_armor", 12.0), K("ravager", 13.0, 8, (2, 2))],
     },
     "mason": {
-        1: [D("stone", 0.02), D("clay_ball", 0.05), D("deepslate", 0.02)],
-        2: [D("brick", 0.04), D("polished_granite", 0.04), D("polished_andesite", 0.04), D("polished_diorite", 0.04),
-            K("silverfish", 0.3), O("town_hall"), A([{"station": "minecraft:stone_bricks"}, {"deliver": "minecraft:stone_bricks"}], 0.04, 6)],
-        3: [D("calcite", 0.06), D("tuff_bricks", 0.06), D("quartz_block", 0.25), K("creeper", 0.35)],
-        4: [D("white_glazed_terracotta", 0.1), D("dripstone_block", 0.08), D("prismarine_bricks", 0.3)],
-        5: [D("purpur_block", 0.15), D("end_stone_bricks", 0.12), D("prismarine_bricks", 0.3, 6),
+        1: [D("stone", 0.02), D("clay_ball", 0.1), D("deepslate", 0.02)],
+        2: [D("brick", 0.05), D("polished_granite", 0.02), D("polished_andesite", 0.02), D("polished_diorite", 0.02),
+            K("silverfish", 0.5), O("town_hall"), A([{"station": "minecraft:stone_bricks"}, {"deliver": "minecraft:stone_bricks"}], 0.03, 6)],
+        3: [D("calcite", 0.1), D("tuff_bricks", 0.07), D("quartz_block", 0.4), K("creeper", 0.6)],
+        4: [D("white_glazed_terracotta", 0.15), D("dripstone_block", 0.1), D("prismarine_bricks", 4.5)],
+        5: [D("purpur_block", 0.3), D("end_stone_bricks", 0.12), D("prismarine_bricks", 4.5, 6),
             A([{"visit_structure": "minecraft:end_city"}], 35.0, 6, (1, 1))],
     },
     "fletcher": {
-        1: [D("stick", 0.02), D("flint", 0.05), D("feather", 0.05), A([{"craft": "minecraft:arrow"}, {"deliver": "minecraft:arrow"}], 0.03),
+        1: [D("stick", 0.02), D("flint", 0.1), D("feather", 0.15), A([{"craft": "minecraft:arrow"}, {"deliver": "minecraft:arrow"}], 0.03),
             R("bow", 3, (8, 12))],
-        2: [D("string", 0.04), D("tripwire_hook", 0.1), D("bow", 0.6), K("skeleton", 0.25)],
-        3: [D("crossbow", 0.9), K("bogged", 0.5), K("stray", 0.5), O("hunters_pack"), R("crossbow", 2, (8, 12))],
-        4: [D("spectral_arrow", 0.1), K("pillager", 0.6), K("ghast", 1.5), K("phantom", 0.8), R("crossbow", 3, (15, 18))],
-        5: [D("wind_charge", 0.5), K("breeze", 2.5), A([{"visit_structure": "minecraft:trial_chambers"}], 30.0, 6, (1, 1)),
+        2: [D("string", 0.3), D("tripwire_hook", 0.3), D("bow", 1.0), K("skeleton", 0.5)],
+        3: [D("crossbow", 1.2), K("bogged", 1.0), K("stray", 1.0), O("hunters_pack"), R("crossbow", 2, (8, 12))],
+        4: [D("spectral_arrow", 0.2), K("pillager", 1.0), K("ghast", 2.5), K("phantom", 1.5), R("crossbow", 3, (15, 18))],
+        5: [D("wind_charge", 1.0), K("breeze", 3.0), A([{"visit_structure": "minecraft:trial_chambers"}], 30.0, 6, (1, 1)),
             R("bow", 3, (18, 21))],
     },
 }
@@ -442,34 +444,123 @@ def with_objectives(task, objectives, value_factor=None, value_add=0.0):
 # ---- orders: several things at once, each made and brought. (action, item, count, minutes per item) ----
 # Counts are scaled as a whole so that the order takes the middle of its pack's window.
 ORDERS = {
-    "winter_stock": [("craft", "bread", 16, 0.08), ("smelt", "baked_potato", 16, 0.03), ("craft", "pumpkin_pie", 8, 0.15)],
-    "beekeeper": [("deliver", "honey_bottle", 8, 1.0), ("deliver", "honeycomb", 8, 0.8), ("craft", "candle", 4, 0.3)],
-    "ancient_seeds": [("deliver", "sniffer_egg", 1, 20.0), ("deliver", "torchflower_seeds", 4, 2.5)],
-    "feast": [("smelt", "cooked_porkchop", 32, 0.08), ("craft", "pumpkin_pie", 8, 0.15), ("craft", "cake", 2, 0.6)],
-    "smiths_lunch": [("smelt", "cooked_beef", 16, 0.08), ("smelt", "baked_potato", 16, 0.03), ("craft", "bread", 16, 0.08)],
-    "wedding": [("craft", "cake", 4, 1.2), ("craft", "rabbit_stew", 8, 1.2), ("craft", "golden_carrot", 32, 0.1),
-                ("craft", "glistering_melon_slice", 8, 0.15)],
-    "fish_market": [("catch", "cod", 16, 0.3), ("catch", "salmon", 8, 0.35), ("catch", "tropical_fish", 2, 0.6)],
-    "color_set": [("deliver", "red_wool", 8, 0.06), ("deliver", "yellow_wool", 8, 0.06), ("deliver", "blue_wool", 8, 0.08),
-                  ("deliver", "green_wool", 8, 0.08)],
+    "winter_stock": [("craft", "bread", 16, 0.03), ("smelt", "baked_potato", 16, 0.02), ("craft", "pumpkin_pie", 8, 0.15)],
+    "beekeeper": [("deliver", "honey_bottle", 8, 2.0), ("deliver", "honeycomb", 8, 1.5), ("craft", "candle", 4, 1.5)],
+    "ancient_seeds": [("deliver", "sniffer_egg", 1, 28.0), ("deliver", "torchflower_seeds", 4, 3.0)],
+    "feast": [("smelt", "cooked_porkchop", 32, 0.3), ("craft", "pumpkin_pie", 8, 0.15), ("craft", "cake", 2, 0.3)],
+    "smiths_lunch": [("smelt", "cooked_beef", 16, 0.3), ("smelt", "baked_potato", 16, 0.02), ("craft", "bread", 16, 0.03)],
+    "wedding": [("craft", "cake", 4, 0.3), ("craft", "rabbit_stew", 8, 1.7), ("craft", "golden_carrot", 32, 1.0),
+                ("craft", "glistering_melon_slice", 8, 1.2)],
+    "fish_market": [("catch", "cod", 16, 0.6), ("catch", "salmon", 8, 0.7), ("catch", "tropical_fish", 2, 1.0)],
+    "color_set": [("deliver", "red_wool", 8, 0.05), ("deliver", "yellow_wool", 8, 0.05), ("deliver", "blue_wool", 8, 0.05),
+                  ("deliver", "green_wool", 8, 0.06)],
     "rainbow": [("deliver", c + "_wool", 16, 0.08) for c in ("white", "orange", "magenta", "light_blue", "yellow", "lime",
                                                             "pink", "gray", "light_gray", "cyan", "purple", "blue",
                                                             "brown", "green", "red", "black")],
-    "new_home": [("craft", "#minecraft:beds", 4, 0.8), ("craft", "#minecraft:wool_carpets", 16, 0.05), ("craft", "painting", 2, 0.2)],
-    "reading_room": [("craft", "bookshelf", 8, 0.6), ("craft", "lectern", 2, 1.0), ("craft", "lantern", 4, 0.1)],
-    "expedition_kit": [("craft", "map", 4, 0.3), ("craft", "compass", 2, 0.3), ("craft", "spyglass", 1, 0.5)],
-    "healers_kit": [("brew", "minecraft:healing", 2, 0.8), ("craft", "glass_bottle", 6, 0.05), ("craft", "golden_apple", 1, 0.4)],
-    "potions": [("craft", "blaze_powder", 4, 0.3), ("deliver", "nether_wart", 16, 0.05), ("craft", "glass_bottle", 12, 0.05)],
-    "guard_gear": [("craft", "shield", 2, 1.0), ("craft", "iron_helmet", 1, 1.0), ("craft", "iron_boots", 1, 1.0)],
-    "smith_order": [("deliver", "diamond", 16, 1.0), ("smelt", "netherite_scrap", 2, 6.0)],
-    "armory": [("craft", "iron_sword", 2, 1.0), ("craft", "bow", 1, 1.0), ("craft", "arrow", 32, 0.03)],
-    "tool_set": [("craft", "iron_pickaxe", 2, 1.0), ("craft", "iron_shovel", 2, 1.0), ("craft", "iron_axe", 2, 1.0)],
-    "town_hall": [("station", "stone_bricks", 32, 0.04), ("craft", "bricks", 16, 0.15), ("station", "polished_andesite", 16, 0.04)],
-    "hunters_pack": [("craft", "bow", 1, 1.0), ("craft", "crossbow", 1, 1.5), ("craft", "arrow", 32, 0.03)],
-    "riders_set": [("craft", "saddle", 1, 6.0), ("craft", "leather_horse_armor", 1, 1.0), ("craft", "lead", 2, 0.4)],
-    "armored_stable": [("deliver", "armadillo_scute", 24, 0.5), ("deliver", "leather", 64, 0.1), ("craft", "saddle", 2, 6.0)],
-    "picnic": [("craft", "cookie", 8, 0.05), ("deliver", "apple", 4, 0.3), ("craft", "cake", 1, 0.6)],
+    "new_home": [("craft", "#minecraft:beds", 4, 0.6), ("craft", "#minecraft:wool_carpets", 16, 0.1), ("craft", "painting", 2, 0.25)],
+    "reading_room": [("craft", "bookshelf", 8, 1.6), ("craft", "lectern", 2, 1.8), ("craft", "lantern", 4, 0.1)],
+    "expedition_kit": [("craft", "map", 4, 1.5), ("craft", "compass", 2, 1.3), ("craft", "spyglass", 1, 0.9)],
+    "healers_kit": [("brew", "minecraft:healing", 2, 2.0), ("craft", "glass_bottle", 6, 0.05), ("craft", "golden_apple", 1, 8.0)],
+    "potions": [("craft", "blaze_powder", 4, 0.5), ("deliver", "nether_wart", 16, 0.05), ("craft", "glass_bottle", 12, 0.05)],
+    "guard_gear": [("craft", "shield", 2, 0.5), ("craft", "iron_helmet", 1, 1.5), ("craft", "iron_boots", 1, 1.2)],
+    "smith_order": [("deliver", "diamond", 16, 3.0), ("smelt", "netherite_scrap", 2, 8.0)],
+    "armory": [("craft", "iron_sword", 2, 0.6), ("craft", "bow", 1, 1.0), ("craft", "arrow", 32, 0.03)],
+    "tool_set": [("craft", "iron_pickaxe", 2, 0.9), ("craft", "iron_shovel", 2, 0.3), ("craft", "iron_axe", 2, 0.9)],
+    "town_hall": [("station", "stone_bricks", 32, 0.03), ("craft", "bricks", 16, 0.2), ("station", "polished_andesite", 16, 0.02)],
+    "hunters_pack": [("craft", "bow", 1, 1.0), ("craft", "crossbow", 1, 1.2), ("craft", "arrow", 32, 0.03)],
+    "riders_set": [("craft", "saddle", 1, 6.0), ("craft", "leather_horse_armor", 1, 2.1), ("craft", "lead", 2, 1.5)],
+    "armored_stable": [("deliver", "armadillo_scute", 24, 1.5), ("deliver", "leather", 64, 0.3), ("craft", "saddle", 2, 6.0)],
+    "picnic": [("craft", "cookie", 8, 0.05), ("deliver", "apple", 4, 0.3), ("craft", "cake", 1, 0.3)],
 }
+
+# ---- what a task takes, for the audit table (docs/TASK_AUDIT.md, Bulgarian, for the user) ----
+NEED = {
+    "wheat": "от фермата", "potato": "от фермата", "carrot": "от фермата", "beetroot": "от фермата",
+    "sugar_cane": "ферма за тръстика", "pumpkin": "от фермата", "melon": "от фермата", "kelp": "ферма за водорасли",
+    "bread": "жито от фермата", "hay_block": "жито от фермата", "cake": "мляко, захар, яйца, жито",
+    "pumpkin_pie": "тиква, захар, яйце", "egg": "кокошки: яйце на 5-10 мин от кокошка",
+    "golden_carrot": "злато от копаене (няма ферма): 8 късчета на морков",
+    "golden_apple": "8 златни слитъка, копани на ръка: ~8 мин ябълка",
+    "glistering_melon_slice": "злато от копаене + пъпеш", "sniffer_egg": "крайморски руини, четка по подозрителен пясък",
+    "chicken": "развъдник с кокошки", "porkchop": "развъдник", "beef": "развъдник", "mutton": "развъдник",
+    "cooked_chicken": "развъдник + пещ", "cooked_beef": "развъдник + пещ", "cooked_porkchop": "развъдник + пещ",
+    "cooked_mutton": "развъдник + пещ", "mushroom_stew": "гъби + купа", "beetroot_soup": "6 цвекла + купа",
+    "rabbit_stew": "лов на заек + морков, картоф, гъба", "cod": "въдица", "salmon": "въдица в река или студено море",
+    "cooked_cod": "въдица + пещ", "cooked_salmon": "въдица + пещ", "tropical_fish": "кофа в топло море или въдица",
+    "pufferfish": "въдица или кофа в топло море", "lily_pad": "блато", "sea_pickle": "топло море, корали",
+    "prismarine_shard": "пазители в подводен храм", "prismarine_crystals": "пазители в подводен храм",
+    "ink_sac": "калмари", "glow_ink_sac": "светещи калмари в пещери", "nautilus_shell": "удавници (8%) или въдица",
+    "heart_of_the_sea": "карта за заровено съкровище от корабокрушение", "trident": "удавник с тризъбец (рядък дроп)",
+    "wet_sponge": "стаите на подводния храм / древен пазител", "string": "паяци нощем (няма ферма)",
+    "#minecraft:wool": "стрижене на овце", "white_dye": "кости или момина сълза", "#minecraft:wool_carpets": "вълна",
+    "#minecraft:beds": "вълна + дъски", "lead": "конец + топка слуз (слузове в блато)", "#minecraft:banners": "6 вълна + пръчка",
+    "painting": "вълна + пръчки", "piglin_banner_pattern": "сандък в бастион",
+    "paper": "тръстика от фермата", "feather": "кокошки", "book": "хартия + кожа", "candle": "конец + пчелна пита (ножица на кошер)",
+    "lantern": "железни късчета + факла", "bookshelf": "3 книги (кожа!) + дъски", "writable_book": "книга + мастило + перо",
+    "ender_pearl": "ендърмени нощем (няма ферма)", "clock": "4 златни слитъка + червен прах", "ender_eye": "перла + блейз прах",
+    "glass": "пясък + пещ", "glass_pane": "стъкло", "compass": "4 желязо + червен прах", "map": "8 хартия + компас",
+    "spyglass": "мед + аметист", "amethyst_shard": "аметистова геода", "recovery_compass": "8 ехо парчета от древен град + компас",
+    "rotten_flesh": "зомбита нощем", "bone": "скелети нощем", "redstone": "копаене или клерик", "spider_eye": "паяци нощем",
+    "lapis_lazuli": "копаене или клерик", "gold_ingot": "копаене (няма ферма)", "glowstone_dust": "Недър или клерик",
+    "gunpowder": "криипъри нощем", "rabbit_foot": "зайци, 10% шанс", "blaze_rod": "блейзове в крепост в Недъра",
+    "ghast_tear": "гасти в Недъра", "coal": "копаене", "copper_ingot": "копаене + пещ", "leather": "крави",
+    "iron_ingot": "копаене + пещ (няма ферма)", "lava_bucket": "езеро с лава", "iron_block": "9 желязо",
+    "obsidian": "лава + вода, диамантена кирка", "diamond": "копаене дълбоко (~20 на час)",
+    "netherite_scrap": "древни останки в Недъра (~7 на час)", "flint": "чакъл", "stick": "дърво",
+    "coal_block": "9 въглища", "quartz": "Недър", "echo_shard": "сандъци в древен град", "rabbit_hide": "зайци",
+    "leather_chestplate": "8 кожа", "turtle_scute": "малки костенурки порастват", "saddle": "сандъци, риболов или кожар",
+    "phantom_membrane": "фантоми (3 нощи без сън)", "armadillo_scute": "четка по армадилос в савана",
+    "wolf_armor": "8 люспи от армадилос", "stone": "кърваван камък + пещ", "clay_ball": "глина в реки",
+    "deepslate": "копаене дълбоко", "brick": "глина + пещ", "polished_granite": "гранит", "polished_andesite": "андезит",
+    "polished_diorite": "диорит", "calcite": "геоди / планини", "tuff_bricks": "туф", "quartz_block": "4 кварц от Недъра",
+    "white_glazed_terracotta": "теракота + пещ", "dripstone_block": "пещери с капкокамък",
+    "prismarine_bricks": "9 парчета призмарин (пазители)", "purpur_block": "хорус от Края",
+    "end_stone_bricks": "камък от Края", "tripwire_hook": "желязо + дърво", "bow": "3 конеца", "crossbow": "конец, желязо, кука",
+    "spectral_arrow": "светещ прах + стрела", "wind_charge": "бризове в изпитни зали", "arrow": "кремък, пръчка, перо",
+    # actions
+    "kill:rabbit": "лов на зайци", "kill:zombie": "нощем, ~2 в минута", "kill:spider": "нощем", "kill:husk": "пустиня нощем",
+    "kill:skeleton": "нощем", "kill:drowned": "реки и морета нощем", "kill:creeper": "нощем", "kill:witch": "блата / нападения, редки",
+    "kill:phantom": "3 нощи без сън", "kill:pillager": "аванпост или нападение", "kill:vindicator": "имение или нападение",
+    "kill:evoker": "имение (~2) или нападение (1-2)", "kill:ravager": "само в нападение: ~2 на нападение (normal), Bad Omen от капитан",
+    "kill:guardian": "подводен храм", "kill:elder_guardian": "подводен храм: 3 древни пазителя, умора",
+    "kill:blaze": "крепост в Недъра", "kill:enderman": "нощем / изкривена гора", "kill:hoglin": "пурпурна гора в Недъра",
+    "kill:piglin_brute": "бастион: 4-6 на бастион, не се появяват отново", "kill:wither_skeleton": "крепост в Недъра",
+    "kill:ghast": "Недър", "kill:breeze": "изпитни зали", "kill:magma_cube": "Недър, базалтови делти",
+    "kill:cave_spider": "мини с паешки спаунер", "kill:silverfish": "крепост или планини", "kill:bogged": "блата / изпитни зали",
+    "kill:stray": "ледени равнини нощем", "kill:slime": "блата нощем",
+    "breed:chicken": "семена", "breed:cow": "жито", "breed:pig": "моркови", "breed:sheep": "жито", "breed:rabbit": "хванати зайци + моркови",
+    "breed:bee": "пчели от гнезда + цветя, 5 мин почивка", "breed:goat": "кози от планини, жито", "breed:llama": "лами + бали сено",
+    "breed:turtle": "костенурки на плаж + морска трева", "tame:wolf": "кокали, гора", "tame:horse": "равнини, ябълки/захар",
+    "tame:donkey": "равнини", "tame:llama": "планини / савана", "tame:parrot": "джунгла, семена", "tame:cat": "село / блато, риба",
+    "cure": "зомби селянин + отвара Слабост + златна ябълка", "brew:healing": "Недър брадавица + блестящ пъпеш",
+    "brew:strong_strength": "блейз прах + светещ прах", "enchant": "маса за омагьосване + XP (няма ферма)",
+    "summon:iron_golem": "4 железни блока (36 желязо) + тиква", "mine:ancient_debris": "Недър, легла / TNT",
+    "fill_bucket:axolotl_bucket": "буйни пещери", "fill_bucket:tropical_fish_bucket": "топло море",
+    "catch:pufferfish": "въдица, рядко", "plant:wheat_seeds": "фермата", "bonemeal": "костно брашно от компостер",
+    "shear:mooshroom": "гъбени полета (рядък биом)",
+}
+
+
+def need_of(task):
+    """A short Bulgarian description of what a task takes."""
+    out = []
+    for o in task.get("objectives", [task]):
+        for key, target in o.items():
+            if key in ("count", "factor", "min_level", "value", "weight", "tiers", "market", "title", "reward"):
+                continue
+            if not isinstance(target, str):
+                continue
+            t = target.split(":")[-1] if not target.startswith("#") else target
+            if key == "deliver":
+                text = NEED.get(t)
+            elif key in ("visit_structure", "visit_biome"):
+                text = "пътуване"
+            else:
+                text = NEED.get(key + ":" + t) or NEED.get(key)
+            if text and text not in out:
+                out.append(text)
+    return "; ".join(out)
+
 # Inventory slots one order may need for what is brought: big orders are brought in parts ("Give what I have"),
 # but no more than three inventories' worth.
 ORDER_SLOTS = 108
@@ -656,6 +747,101 @@ def check(prof, task, items, entities):
         raise SystemExit(f"{prof}: unknown ids {bad}")
 
 
+# ---- the audit table for the user: every task, what it takes, minutes, pay ----
+AUDIT = os.path.join(os.path.dirname(__file__), "..", "docs", "TASK_AUDIT.md")
+BG_NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villageerrands", "vanilla_names", "bg_bg.json")
+VERB = {"deliver": "донеси", "craft": "направи", "smelt": "изпечи", "station": "изсечи", "kill": "убий", "catch": "хвани",
+        "breed": "развъди", "tame": "опитоми", "shear": "остражи", "harvest": "ожъни", "mine": "изкопай", "plant": "посади",
+        "bonemeal": "натори", "fill_bucket": "напълни кофа", "visit_structure": "посети", "visit_biome": "посети",
+        "cure": "излекувай зомби селянин", "brew": "свари", "enchant": "омагьоса предмет", "summon": "построй"}
+LANG_BG = {}
+PROF_BG = {"farmer": "Фермер", "butcher": "Касапин", "fisherman": "Рибар", "shepherd": "Овчар", "librarian": "Библиотекар",
+           "cartographer": "Картограф", "cleric": "Клерик", "armorer": "Бронар", "weaponsmith": "Оръжейник",
+           "toolsmith": "Инструментар", "leatherworker": "Кожар", "mason": "Зидар", "fletcher": "Стрелар", "nitwit": "Глупчо"}
+
+
+def bg_name(names, target, entity=False):
+    if target.startswith("#"):
+        return target.split(":")[-1].replace("_", " ")
+    path = target.split(":")[-1]
+    for kind in (("entity", "item", "block") if entity else ("item", "block", "entity")):
+        v = names.get(f"{kind}.minecraft.{path}")
+        if v:
+            return v
+    return path.replace("_", " ")
+
+
+def describe(names, task, lo, hi):
+    if task.get("title"):
+        parts = []
+        for o in task["objectives"]:
+            if "deliver" in o:
+                parts.append(f"{o['count'][0]} {bg_name(names, o['deliver'])}")
+        title = LANG_BG.get(task["title"], task["title"].split(".")[-1])
+        return f"Поръчка „{title}“: " + ", ".join(parts)
+    count = f"{lo}" if lo == hi else f"{lo}-{hi}"
+    words = []
+    objectives = task.get("objectives") or [{k: v for k, v in task.items() if k in VERB}]
+    for o in objectives:
+        for k, v in o.items():
+            if k in ("count", "factor", "min_level") or not isinstance(v, str):
+                continue
+            verb = VERB.get(k, k)
+            if k == "deliver" and len(objectives) > 1:
+                continue
+            target = bg_name(names, v, k in ("kill", "breed", "tame", "shear", "summon")) if v else ""
+            f = o.get("factor", 1.0)
+            a_n, b_n = max(1, round(lo * f)), max(1, round(hi * f))
+            n = (f"{a_n}" if a_n == b_n else f"{a_n}-{b_n}") if k not in ("visit_structure", "visit_biome") else ""
+            if k == "enchant":
+                words.append(f"{verb} {count}× на {o.get('min_level', 0)}+ нива")
+            elif k in ("cure",):
+                words.append(f"{verb} ×{count}")
+            else:
+                words.append(f"{verb} {n}{'× ' if n else ''}{target}".strip())
+    return ", ".join(words)
+
+
+def write_audit(all_tasks):
+    global LANG_BG
+    names = json.load(open(BG_NAMES, encoding="utf-8"))
+    LANG_BG = json.load(open(os.path.join(os.path.dirname(BG_NAMES), "..", "lang", "bg_bg.json"), encoding="utf-8"))
+    out = ["# Одит на задачите: какво трябва да се направи",
+           "",
+           "Генерира се от `tools/gen_errands.py`. Играчът има автоматични ферми за растения и търговска зала, но няма",
+           "ферми за мобове, желязо, злато, XP, нападения или риба. Минутите са реалистично време за една задача;",
+           "наградата е в изумруди + опит (опитът е сметнат по 6 точки за изумруд). „Продажба“ е колко биха дали",
+           "селяните за стоката; изумрудите от задачата са поне 1,5× това.",
+           "",
+           "Прозорци: T1 4-8 мин, T2 8-12, T3 12-18, T4 18-25, T5 25-35. Плащане на минута: 0,6 / 0,8 / 1,0 / 1,3 / 1,6.",
+           ""]
+    for prof, tasks in all_tasks:
+        out.append(f"## {PROF_BG.get(prof, prof)}")
+        out.append("")
+        out.append("| Ниво | Задача | Какво трябва | Минути | Награда | Продажба |")
+        out.append("|---|---|---|---|---|---|")
+        for t in tasks:
+            tier = t["tiers"][0] if t["tiers"][0] == t["tiers"][1] else 1
+            lo, hi = t["count"]
+            if t.get("reward"):
+                out.append(f"| T{tier} | Преизковаване: {describe(names, t, t['objectives'][0]['count'][0], t['objectives'][0]['count'][0])} | "
+                           f"еднократно, наградата е омагьосан предмет | - | омагьосан предмет | - |")
+                continue
+            rate = RATE.get(tier, 0.6) if prof != "nitwit" else 0.6
+            m_lo, m_hi = lo * t["value"], hi * t["value"]
+            pay = f"{m_lo * rate:.0f}" if lo == hi else f"{m_lo * rate:.0f}-{m_hi * rate:.0f}"
+            mins = f"{m_lo:.0f}" if lo == hi else f"{m_lo:.0f}-{m_hi:.0f}"
+            sell = t.get("market", 0) * (1 if t.get("title") else hi)
+            sell_s = f"{sell:.1f}" if sell else "-"
+            label = "T1-5" if t["tiers"][0] != t["tiers"][1] else f"T{tier}"
+            out.append(f"| {label} | {describe(names, t, lo, hi)} | {need_of(t)} | {mins} | {pay} | {sell_s} |")
+        out.append("")
+    os.makedirs(os.path.dirname(AUDIT), exist_ok=True)
+    with open(AUDIT, "w", encoding="utf-8") as f:
+        f.write("\n".join(out) + "\n")
+
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     add_top_rewards()
@@ -663,6 +849,7 @@ def main():
     problems = []
     lines = []
     biggest = []
+    audit = []
     for prof in list(PACKS) + ["nitwit"]:
         report = []
         if prof == "nitwit":
@@ -678,6 +865,7 @@ def main():
                 continue
             if rid and rid not in items:
                 raise SystemExit(f"{prof}: unknown reward {rid}")
+        audit.append((prof, tasks))
         doc = {"profession": "minecraft:" + prof, "tasks": tasks, "rewards": REWARDS[prof]}
         with open(os.path.join(OUT, prof + ".json"), "w", encoding="utf-8") as f:
             json.dump(doc, f, indent=2)
@@ -706,6 +894,7 @@ def main():
             if pay < sell * MARKET_PREMIUM / EMERALD_SHARE * 0.99:
                 problems.append(f"{prof} T{tier} {name_of(t)}: pays {pay:.1f}, goods sell for {sell:.1f}")
     print("\n".join(lines))
+    write_audit(audit)
     biggest.sort(reverse=True)
     print("\nBiggest goods (most a villager would pay for them / what the errand pays in emeralds' worth):")
     for sell, prof, tier, name, n, pay in biggest[:8]:

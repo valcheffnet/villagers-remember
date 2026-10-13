@@ -45,9 +45,9 @@
     {
       "deliver": "minecraft:sugar_cane",
       "weight": 10,
-      "value": 0.025,
+      "value": 0.02,
       "count": [
-        160,
+        200,
         256
       ],
       "tiers": [
@@ -172,10 +172,10 @@
     {
       "kill": "minecraft:phantom",
       "weight": 10,
-      "value": 0.8,
+      "value": 1.5,
       "count": [
-        10,
-        15
+        6,
+        8
       ],
       "tiers": [
         2,
@@ -291,10 +291,10 @@
         }
       ],
       "weight": 4,
-      "value": 9.0,
+      "value": 4.0,
       "count": [
-        1,
-        1
+        2,
+        3
       ],
       "tiers": [
         2,
@@ -323,7 +323,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.3,
       "objectives": [
         {
           "mine": "minecraft:amethyst_cluster",
@@ -334,8 +334,8 @@
         }
       ],
       "count": [
-        80,
-        120
+        40,
+        60
       ],
       "tiers": [
         3,
@@ -392,7 +392,7 @@
         1,
         1
       ],
-      "value": 16.21,
+      "value": 16.61,
       "market": 7.333,
       "weight": 6,
       "tiers": [
@@ -403,10 +403,10 @@
     {
       "kill": "minecraft:pillager",
       "weight": 10,
-      "value": 0.6,
+      "value": 1.0,
       "count": [
-        20,
-        30
+        12,
+        18
       ],
       "tiers": [
         3,
@@ -432,7 +432,7 @@
     },
     {
       "weight": 10,
-      "value": 2.1978,
+      "value": 4.0,
       "objectives": [
         {
           "craft": "minecraft:clock"
@@ -443,8 +443,8 @@
       ],
       "market": 1.3333,
       "count": [
-        9,
-        11
+        5,
+        6
       ],
       "tiers": [
         4,
@@ -454,10 +454,10 @@
     {
       "kill": "minecraft:witch",
       "weight": 10,
-      "value": 1.5,
+      "value": 3.0,
       "count": [
-        12,
-        16
+        6,
+        8
       ],
       "tiers": [
         4,
@@ -538,10 +538,10 @@
     {
       "kill": "minecraft:evoker",
       "weight": 8,
-      "value": 10.0,
+      "value": 15.0,
       "count": [
-        3,
-        3
+        2,
+        2
       ],
       "tiers": [
         5,

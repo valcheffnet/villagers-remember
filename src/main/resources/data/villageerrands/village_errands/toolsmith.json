@@ -39,7 +39,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.05,
       "objectives": [
         {
           "smelt": "minecraft:copper_ingot"
@@ -49,8 +49,8 @@
         }
       ],
       "count": [
-        134,
-        256
+        80,
+        160
       ],
       "tiers": [
         1,
@@ -138,10 +138,10 @@
     {
       "kill": "minecraft:spider",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -158,10 +158,10 @@
         }
       ],
       "weight": 6,
-      "value": 0.15,
+      "value": 0.3,
       "count": [
-        54,
-        80
+        27,
+        40
       ],
       "tiers": [
         2,
@@ -264,10 +264,10 @@
     {
       "kill": "minecraft:cave_spider",
       "weight": 10,
-      "value": 0.3,
+      "value": 0.6,
       "count": [
-        40,
-        60
+        20,
+        30
       ],
       "tiers": [
         3,
@@ -277,10 +277,10 @@
     {
       "kill": "minecraft:silverfish",
       "weight": 10,
-      "value": 0.3,
+      "value": 0.5,
       "count": [
-        40,
-        60
+        24,
+        36
       ],
       "tiers": [
         3,
@@ -289,7 +289,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.3,
       "objectives": [
         {
           "mine": "minecraft:amethyst_cluster",
@@ -300,8 +300,8 @@
         }
       ],
       "count": [
-        80,
-        120
+        40,
+        60
       ],
       "tiers": [
         3,
@@ -358,7 +358,7 @@
         1,
         1
       ],
-      "value": 16.86,
+      "value": 15.0,
       "market": 7.0,
       "weight": 6,
       "tiers": [
@@ -440,7 +440,7 @@
     },
     {
       "weight": 10,
-      "value": 1.6484,
+      "value": 3.0,
       "objectives": [
         {
           "mine": "#minecraft:diamond_ores",
@@ -452,8 +452,8 @@
       ],
       "market": 1.0,
       "count": [
-        11,
-        15
+        6,
+        8
       ],
       "tiers": [
         4,
@@ -467,10 +467,10 @@
         }
       ],
       "weight": 6,
-      "value": 4.0,
+      "value": 8.0,
       "count": [
-        5,
-        6
+        3,
+        3
       ],
       "tiers": [
         4,
@@ -480,10 +480,10 @@
     {
       "kill": "minecraft:magma_cube",
       "weight": 10,
-      "value": 0.5,
+      "value": 0.6,
       "count": [
-        36,
-        50
+        30,
+        41
       ],
       "tiers": [
         4,
@@ -587,10 +587,10 @@
     {
       "deliver": "minecraft:echo_shard",
       "weight": 10,
-      "value": 4.0,
+      "value": 3.0,
       "count": [
-        7,
-        8
+        9,
+        11
       ],
       "tiers": [
         5,
@@ -599,7 +599,7 @@
     },
     {
       "weight": 10,
-      "value": 6.0,
+      "value": 8.0,
       "objectives": [
         {
           "smelt": "minecraft:netherite_scrap"
@@ -609,8 +609,8 @@
         }
       ],
       "count": [
-        5,
-        5
+        4,
+        4
       ],
       "tiers": [
         5,

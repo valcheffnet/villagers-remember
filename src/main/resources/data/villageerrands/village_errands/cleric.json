@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.1116,
+      "value": 0.2,
       "objectives": [
         {
           "kill": "minecraft:zombie",
@@ -15,8 +15,8 @@
       ],
       "market": 0.0312,
       "count": [
-        36,
-        71
+        20,
+        40
       ],
       "tiers": [
         1,
@@ -25,7 +25,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.3,
       "objectives": [
         {
           "kill": "minecraft:skeleton",
@@ -36,8 +36,8 @@
         }
       ],
       "count": [
-        134,
-        256
+        14,
+        26
       ],
       "tiers": [
         1,
@@ -68,10 +68,10 @@
     {
       "kill": "minecraft:zombie",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        16,
-        32
+        8,
+        16
       ],
       "tiers": [
         1,
@@ -80,7 +80,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.8,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -91,8 +91,8 @@
         }
       ],
       "count": [
-        54,
-        80
+        10,
+        15
       ],
       "tiers": [
         2,
@@ -122,7 +122,7 @@
     },
     {
       "weight": 10,
-      "value": 0.8929,
+      "value": 1.0,
       "objectives": [
         {
           "smelt": "minecraft:gold_ingot"
@@ -133,8 +133,8 @@
       ],
       "market": 0.3333,
       "count": [
-        9,
-        13
+        8,
+        12
       ],
       "tiers": [
         2,
@@ -143,7 +143,7 @@
     },
     {
       "weight": 10,
-      "value": 0.05,
+      "value": 0.1,
       "objectives": [
         {
           "mine": "minecraft:glowstone",
@@ -154,8 +154,8 @@
         }
       ],
       "count": [
-        160,
-        240
+        80,
+        120
       ],
       "tiers": [
         2,
@@ -165,10 +165,10 @@
     {
       "kill": "minecraft:skeleton",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -178,10 +178,10 @@
     {
       "kill": "minecraft:drowned",
       "weight": 10,
-      "value": 0.4,
+      "value": 0.6,
       "count": [
-        20,
-        30
+        14,
+        20
       ],
       "tiers": [
         2,
@@ -190,7 +190,7 @@
     },
     {
       "weight": 10,
-      "value": 0.07,
+      "value": 0.7,
       "objectives": [
         {
           "kill": "minecraft:creeper",
@@ -201,8 +201,8 @@
         }
       ],
       "count": [
-        172,
-        213
+        18,
+        25
       ],
       "tiers": [
         3,
@@ -211,7 +211,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0714,
+      "value": 3.0,
       "objectives": [
         {
           "kill": "minecraft:rabbit",
@@ -223,8 +223,8 @@
       ],
       "market": 0.5,
       "count": [
-        12,
-        16
+        4,
+        6
       ],
       "tiers": [
         3,
@@ -234,10 +234,10 @@
     {
       "kill": "minecraft:witch",
       "weight": 10,
-      "value": 1.5,
+      "value": 3.0,
       "count": [
-        8,
-        12
+        4,
+        6
       ],
       "tiers": [
         3,
@@ -247,10 +247,10 @@
     {
       "kill": "minecraft:phantom",
       "weight": 10,
-      "value": 0.8,
+      "value": 1.5,
       "count": [
-        15,
-        22
+        8,
+        12
       ],
       "tiers": [
         3,
@@ -264,10 +264,10 @@
         }
       ],
       "weight": 6,
-      "value": 0.8,
+      "value": 2.0,
       "count": [
-        15,
-        22
+        6,
+        9
       ],
       "tiers": [
         3,
@@ -297,36 +297,36 @@
         {
           "brew": "minecraft:healing",
           "count": [
-            3,
-            3
+            2,
+            2
           ]
         },
         {
           "craft": "minecraft:glass_bottle",
           "count": [
-            10,
-            10
+            7,
+            7
           ]
         },
         {
           "deliver": "minecraft:glass_bottle",
           "count": [
-            10,
-            10
+            7,
+            7
           ]
         },
         {
           "craft": "minecraft:golden_apple",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         },
         {
           "deliver": "minecraft:golden_apple",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         }
       ],
@@ -334,8 +334,8 @@
         1,
         1
       ],
-      "value": 16.21,
-      "market": 6.444,
+      "value": 13.67,
+      "market": 3.444,
       "weight": 6,
       "tiers": [
         3,
@@ -348,36 +348,36 @@
         {
           "craft": "minecraft:blaze_powder",
           "count": [
-            19,
-            19
+            16,
+            16
           ]
         },
         {
           "deliver": "minecraft:blaze_powder",
           "count": [
-            19,
-            19
+            16,
+            16
           ]
         },
         {
           "deliver": "minecraft:nether_wart",
           "count": [
-            75,
-            75
+            64,
+            64
           ]
         },
         {
           "craft": "minecraft:glass_bottle",
           "count": [
-            56,
-            56
+            48,
+            48
           ]
         },
         {
           "deliver": "minecraft:glass_bottle",
           "count": [
-            56,
-            56
+            48,
+            48
           ]
         }
       ],
@@ -385,8 +385,8 @@
         1,
         1
       ],
-      "value": 21.58,
-      "market": 9.631,
+      "value": 21.59,
+      "market": 8.242,
       "weight": 6,
       "tiers": [
         4,
@@ -395,7 +395,7 @@
     },
     {
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "objectives": [
         {
           "kill": "minecraft:blaze",
@@ -406,8 +406,8 @@
         }
       ],
       "count": [
-        36,
-        50
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -417,10 +417,10 @@
     {
       "kill": "minecraft:blaze",
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "count": [
-        36,
-        50
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -430,10 +430,10 @@
     {
       "kill": "minecraft:enderman",
       "weight": 10,
-      "value": 0.5,
+      "value": 1.0,
       "count": [
-        36,
-        50
+        18,
+        25
       ],
       "tiers": [
         4,
@@ -442,7 +442,7 @@
     },
     {
       "weight": 10,
-      "value": 1.5,
+      "value": 3.0,
       "objectives": [
         {
           "kill": "minecraft:ghast",
@@ -453,8 +453,8 @@
         }
       ],
       "count": [
-        17,
-        23
+        9,
+        11
       ],
       "tiers": [
         5,
@@ -464,10 +464,10 @@
     {
       "kill": "minecraft:wither_skeleton",
       "weight": 10,
-      "value": 1.5,
+      "value": 2.5,
       "count": [
-        17,
-        23
+        10,
+        14
       ],
       "tiers": [
         5,
@@ -498,10 +498,10 @@
         }
       ],
       "weight": 6,
-      "value": 1.5,
+      "value": 3.0,
       "count": [
-        17,
-        23
+        9,
+        11
       ],
       "tiers": [
         5,

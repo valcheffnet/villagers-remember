@@ -170,7 +170,7 @@
     },
     {
       "weight": 10,
-      "value": 0.7653,
+      "value": 1.5,
       "objectives": [
         {
           "craft": "minecraft:lead"
@@ -181,8 +181,8 @@
       ],
       "market": 0.2857,
       "count": [
-        11,
-        15
+        6,
+        8
       ],
       "tiers": [
         2,
@@ -192,10 +192,10 @@
     {
       "kill": "minecraft:spider",
       "weight": 10,
-      "value": 0.25,
+      "value": 0.5,
       "count": [
-        32,
-        48
+        16,
+        24
       ],
       "tiers": [
         2,
@@ -204,7 +204,7 @@
     },
     {
       "weight": 10,
-      "value": 0.7143,
+      "value": 0.9,
       "objectives": [
         {
           "craft": "#minecraft:banners"
@@ -215,8 +215,8 @@
       ],
       "market": 0.3333,
       "count": [
-        17,
-        25
+        14,
+        20
       ],
       "tiers": [
         3,
@@ -225,7 +225,7 @@
     },
     {
       "weight": 10,
-      "value": 0.2,
+      "value": 0.25,
       "objectives": [
         {
           "craft": "minecraft:painting"
@@ -236,7 +236,7 @@
       ],
       "market": 0.0856,
       "count": [
-        60,
+        48,
         64
       ],
       "tiers": [
@@ -250,43 +250,43 @@
         {
           "craft": "#minecraft:beds",
           "count": [
-            12,
-            12
+            13,
+            13
           ]
         },
         {
           "deliver": "#minecraft:beds",
           "count": [
-            12,
-            12
+            13,
+            13
           ]
         },
         {
           "craft": "#minecraft:wool_carpets",
           "count": [
-            49,
-            49
+            53,
+            53
           ]
         },
         {
           "deliver": "#minecraft:wool_carpets",
           "count": [
-            49,
-            49
+            53,
+            53
           ]
         },
         {
           "craft": "minecraft:painting",
           "count": [
-            6,
-            6
+            7,
+            7
           ]
         },
         {
           "deliver": "minecraft:painting",
           "count": [
-            6,
-            6
+            7,
+            7
           ]
         }
       ],
@@ -294,8 +294,8 @@
         1,
         1
       ],
-      "value": 14.69,
-      "market": 4.328,
+      "value": 14.85,
+      "market": 4.729,
       "weight": 6,
       "tiers": [
         3,
@@ -309,10 +309,10 @@
         }
       ],
       "weight": 6,
-      "value": 2.5,
+      "value": 3.0,
       "count": [
-        5,
-        7
+        4,
+        6
       ],
       "tiers": [
         3,
@@ -322,139 +322,11 @@
     {
       "kill": "minecraft:phantom",
       "weight": 10,
-      "value": 0.8,
+      "value": 1.5,
       "count": [
-        23,
-        31
+        12,
+        16
       ],
-      "tiers": [
-        4,
-        4
-      ]
-    },
-    {
-      "title": "order.rainbow",
-      "objectives": [
-        {
-          "deliver": "minecraft:white_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:orange_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:magenta_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:light_blue_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:yellow_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:lime_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:pink_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:gray_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:light_gray_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:cyan_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:purple_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:blue_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:brown_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:green_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:red_wool",
-          "count": [
-            6,
-            6
-          ]
-        },
-        {
-          "deliver": "minecraft:black_wool",
-          "count": [
-            6,
-            6
-          ]
-        }
-      ],
-      "count": [
-        1,
-        1
-      ],
-      "value": 21.15,
-      "market": 12.833,
-      "weight": 6,
       "tiers": [
         4,
         4
@@ -467,10 +339,10 @@
         }
       ],
       "weight": 6,
-      "value": 1.5,
+      "value": 2.5,
       "count": [
-        12,
-        16
+        8,
+        10
       ],
       "tiers": [
         4,
@@ -478,40 +350,145 @@
       ]
     },
     {
-      "weight": 10,
-      "value": 30.0,
       "objectives": [
         {
-          "craft": "minecraft:skull_banner_pattern"
-        },
-        {
-          "deliver": "minecraft:skull_banner_pattern"
+          "shear": "minecraft:mooshroom"
         }
       ],
+      "weight": 6,
+      "value": 9.0,
       "count": [
-        1,
-        1
+        2,
+        2
       ],
       "tiers": [
-        5,
-        5
+        4,
+        4
       ]
     },
     {
-      "weight": 10,
-      "value": 28.0,
+      "title": "order.rainbow",
       "objectives": [
         {
-          "craft": "minecraft:creeper_banner_pattern"
+          "deliver": "minecraft:white_wool",
+          "count": [
+            10,
+            10
+          ]
         },
         {
-          "deliver": "minecraft:creeper_banner_pattern"
+          "deliver": "minecraft:orange_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:magenta_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:light_blue_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:yellow_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:lime_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:pink_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:gray_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:light_gray_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:cyan_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:purple_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:blue_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:brown_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:green_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:red_wool",
+          "count": [
+            10,
+            10
+          ]
+        },
+        {
+          "deliver": "minecraft:black_wool",
+          "count": [
+            10,
+            10
+          ]
         }
       ],
       "count": [
         1,
         1
       ],
+      "value": 28.7,
+      "market": 21.389,
+      "weight": 6,
       "tiers": [
         5,
         5
@@ -524,6 +501,23 @@
       "count": [
         1,
         1
+      ],
+      "tiers": [
+        5,
+        5
+      ]
+    },
+    {
+      "objectives": [
+        {
+          "breed": "minecraft:llama"
+        }
+      ],
+      "weight": 6,
+      "value": 2.5,
+      "count": [
+        10,
+        14
       ],
       "tiers": [
         5,
