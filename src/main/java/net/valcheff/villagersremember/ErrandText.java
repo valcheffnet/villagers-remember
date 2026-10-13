@@ -171,8 +171,11 @@ public final class ErrandText {
 		if (objectives.size() == 2) {
 			Objective action = errand.main();
 			Objective delivery = objectives.get(0) == action ? objectives.get(1) : objectives.get(0);
-			if (delivery.isDelivery() && MAKES_ITEM.contains(action.type()) && action.count() == delivery.count()
-				&& action.target().equals(delivery.target()) && action.tag() == delivery.tag()) {
+			// A harvested crop is a block (minecraft:potatoes) and what is brought its item (minecraft:potato).
+			boolean sameThing = action.type() == Objective.Type.HARVEST
+				|| action.target().equals(delivery.target()) && action.tag() == delivery.tag();
+			if (delivery.isDelivery() && (MAKES_ITEM.contains(action.type()) || action.type() == Objective.Type.HARVEST)
+				&& action.count() == delivery.count() && sameThing) {
 				String key = "pair." + action.type().key() + (action.type() == Objective.Type.SMELT ? smeltVariant(action) : "");
 				return Lang.tr(player, key, action.count(), targetName(player, delivery));
 			}

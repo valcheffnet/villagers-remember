@@ -441,6 +441,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			partialDelivery(sp);
 			rewardSwitches(sp);
 			commandPermissions(sp);
+			harvestTitle(sp);
 			settingsScreen(context, sp);
 			trials(context, sp, villagers);
 			treasury(context, sp, bell);
@@ -467,12 +468,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		walkTo(context, sp, stand);
 		context.runOnClient(mc -> mc.player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, eyes));
 		context.waitTicks(3);
-		// Right-click: the villager greets; Errands opens their list.
+		// Right-click: the villager greets; Tasks opens their list.
 		context.getInput().pressKey(options -> options.keyUse);
 		waitForDialog(context, null);
 		greeted++;
 		if (greeted == 1) context.takeScreenshot("dlg-0-greeting");
-		press(context, label -> label.contains("Errands ("));
+		press(context, label -> label.contains("Tasks ("));
 	}
 
 	private static int greeted;
@@ -1254,6 +1255,21 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return "ok";
 		});
 		check(result.equals("ok"), "settings screen: " + result);
+	}
+
+	/** Harvest plus bringing the same crop reads as one short task: "Harvest and bring 28× Beetroot". */
+	private static void harvestTitle(TestSingleplayerContext sp) {
+		String result = sp.getServer().computeOnServer(server -> {
+			for (int i = 0; i < 200; i++) {
+				for (Errand e : ErrandGenerator.generate(new UUID(48, i), i, "minecraft:farmer", "minecraft:plains", 1, Optional.empty(), 1)) {
+					if (e.objectives().size() != 2 || e.main().type() != Objective.Type.HARVEST) continue;
+					String title = ErrandText.task(player(server), e).getString();
+					return title.startsWith("Harvest and bring ") && !title.contains("+") && !title.contains("grown") ? "ok" : title;
+				}
+			}
+			return "no harvest errand";
+		});
+		check(result.equals("ok"), "harvest title: " + result);
 	}
 
 	/** A player without permissions sees only the commands about their own progress, plus the dialog plumbing. */

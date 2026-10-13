@@ -102,7 +102,7 @@
 	"obj.smelt.food": "Cook %s× %s in a furnace or smoker",
 	"obj.smelt.ore": "Smelt %s× %s in a furnace or blast furnace",
 	"obj.station": "Make %s× %s at a stonecutter or smithing table",
-	"obj.harvest": "Harvest %s× %s (fully grown)",
+	"obj.harvest": "Harvest %s× %s",
 	"obj.mine": "Mine %s× %s",
 	"obj.plant": "Plant %s× %s",
 	"obj.bonemeal": "Use bone meal %s times",
@@ -885,5 +885,7 @@
 	"villagersremember.config.choice.always": "Always",
 	"villagersremember.config.choice.look": "When looked at",
 	"villagersremember.config.choice.off": "Off",
-	"config.saved": "Villagers Remember settings saved."
+	"config.saved": "Villagers Remember settings saved.",
+	"pair.harvest": "Harvest and bring %s× %s",
+	"greet.tasks": "Tasks (%s)"
 }

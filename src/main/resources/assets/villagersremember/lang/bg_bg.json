@@ -102,7 +102,7 @@
 	"obj.smelt.food": "Изпечи %s× %s във фурна или пушилня",
 	"obj.smelt.ore": "Изпечи %s× %s във фурна или доменна пещ",
 	"obj.station": "Направи %s× %s на каменорезачка или ковашка маса",
-	"obj.harvest": "Ожъни %s× %s (узрели)",
+	"obj.harvest": "Ожъни %s× %s",
 	"obj.mine": "Изкопай %s× %s",
 	"obj.plant": "Засади %s× %s",
 	"obj.bonemeal": "Наторявай с костно брашно %s пъти",
@@ -885,5 +885,7 @@
 	"villagersremember.config.choice.always": "Винаги",
 	"villagersremember.config.choice.look": "При поглед",
 	"villagersremember.config.choice.off": "Изкл.",
-	"config.saved": "Настройките на Селяните помнят са записани."
+	"config.saved": "Настройките на Селяните помнят са записани.",
+	"pair.harvest": "Ожъни и донеси %s× %s",
+	"greet.tasks": "Задачи (%s)"
 }

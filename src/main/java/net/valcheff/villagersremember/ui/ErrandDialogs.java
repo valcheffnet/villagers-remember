@@ -54,6 +54,8 @@ public final class ErrandDialogs {
 	private static final int TEXT_WIDTH = 320;
 	/** Buttons of the bell menu, two in a row. */
 	private static final int MENU_WIDTH = 155;
+	/** Greeting buttons: a third of the old 220, two to a row. */
+	private static final int GREET_WIDTH = 74;
 	private static final double REACH = 8.0;
 
 	/** Where a detail screen was opened from: what the player may do there and how to get back. */
@@ -112,25 +114,12 @@ public final class ErrandDialogs {
 			p -> villager.isAlive() && villager.distanceToSqr(p) < REACH * REACH,
 			e -> e.villager().equals(villager.getUUID()),
 			p -> greet(p, villager));
+		// The first screen has only two small buttons side by side: Tasks, then Trade. Trials and contracts are in the list.
 		List<ActionButton> buttons = new ArrayList<>();
 		if (errands) {
-			ErrandGenerator.trial(level, giver, state).ifPresent(trial -> {
-				if (ErrandService.status(player, trial) == ErrandService.Status.AVAILABLE) {
-					buttons.add(button(player, Component.empty().append(Component.literal("◆ ").withStyle(ChatFormatting.GOLD))
-						.append(ErrandText.task(player, trial).withStyle(ChatFormatting.GOLD)), null, 220, p -> errand(p, trial, place)));
-				}
-			});
-			ErrandGenerator.contract(level, giver, state).ifPresent(contract -> {
-				if (ErrandService.status(player, contract) == ErrandService.Status.AVAILABLE) {
-					buttons.add(button(player, Component.empty().append(Component.literal("✦ ").withColor(0xFF8000))
-						.append(Lang.tr(player, "contract.button").withColor(0xFF8000)).append(" ").append(targetIcon(contract)),
-						null, 220, p -> errand(p, contract, place)));
-				}
-			});
 			int open = 0;
 			boolean ready = false;
 			for (Errand e : ErrandGenerator.shown(level, giver, state)) {
-				if (ErrandGenerator.isTrial(e) || ErrandGenerator.isContract(e)) continue;
 				if (ErrandService.status(player, e) == ErrandService.Status.AVAILABLE) open++;
 			}
 			for (ErrandsData.Active a : state.active) {
@@ -139,15 +128,15 @@ public final class ErrandDialogs {
 				else open++;
 			}
 			MutableComponent label = Component.empty().append(Icons.of(Items.WRITABLE_BOOK))
-				.append(Lang.tr(player, "board.errands", open).withStyle(open > 0 ? ChatFormatting.YELLOW : ChatFormatting.GRAY));
+				.append(Lang.tr(player, "greet.tasks", open).withStyle(open > 0 ? ChatFormatting.YELLOW : ChatFormatting.GRAY));
 			if (ready) label.append(Component.literal(" ✔").withStyle(ChatFormatting.GREEN));
-			buttons.add(button(player, label, null, 220, p -> villager(p, villager)));
+			buttons.add(button(player, label, null, GREET_WIDTH, p -> villager(p, villager)));
 		}
 		if (canTrade(villager) && !villager.getOffers().isEmpty()) {
 			buttons.add(button(player, Component.empty().append(Icons.of(Items.EMERALD))
-				.append(Lang.tr(player, "button.trade").withStyle(ChatFormatting.GREEN)), null, 220, p -> trade(p, villager)));
+				.append(Lang.tr(player, "button.trade").withStyle(ChatFormatting.GREEN)), null, GREET_WIDTH, p -> trade(p, villager)));
 		}
-		show(player, title, body, buttons, closeButton(player), 1);
+		show(player, title, body, buttons, closeButton(player), 2);
 	}
 
 	/** Opens vanilla's trading screen with this villager, unless someone else is trading with them. */
