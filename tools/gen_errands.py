@@ -403,8 +403,9 @@ ORDERS = {
     "armored_stable": [("deliver", "armadillo_scute", 24, 0.5), ("deliver", "leather", 64, 0.1), ("craft", "saddle", 2, 6.0)],
     "picnic": [("craft", "cookie", 8, 0.05), ("deliver", "apple", 4, 0.3), ("craft", "cake", 1, 0.6)],
 }
-# Inventory slots one order may need for what is brought.
-ORDER_SLOTS = 20
+# Inventory slots one order may need for what is brought: big orders are brought in parts ("Give what I have"),
+# but no more than three inventories' worth.
+ORDER_SLOTS = 108
 # Items the order may not ask more of than one (rare finds).
 ORDER_SINGLE = {"sniffer_egg"}
 
@@ -444,7 +445,6 @@ def order_task(name, tier):
             objectives.append({"deliver": target, "count": [n, n]})
         minutes += n * m
         slots += math.ceil(n / stack_of(target)) if action != "brew" else 0
-    # Everything to bring has to fit in the inventory, with room left for the reward.
     if slots > ORDER_SLOTS:
         raise SystemExit(f"order {name} needs {slots} slots (at most {ORDER_SLOTS})")
     return {"title": "order." + name, "objectives": objectives, "count": [1, 1], "value": round(minutes, 2), "weight": 6}

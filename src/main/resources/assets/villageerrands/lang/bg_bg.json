@@ -744,5 +744,9 @@
 	"advancement.villageerrands.collection.weaponsmith.title": "Книгата на оръжейника",
 	"advancement.villageerrands.collection.weaponsmith.description": "Изпълни всяка поръчка на оръжейника",
 	"advancement.villageerrands.collection.all.title": "Майстор на всички занаяти",
-	"advancement.villageerrands.collection.all.description": "Изпълни всяка поръчка на всяка професия"
+	"advancement.villageerrands.collection.all.description": "Изпълни всяка поръчка на всяка професия",
+	"button.give_part": "Дай каквото имам (%s)",
+	"button.give_part_tip": "Селянинът го задържа. Останалото донеси после.",
+	"msg.gave_part": "Даде %s. Останалото донеси, когато го имаш.",
+	"confirm.abandon_kept": "Дадените вече %s неща остават при селянина."
 }

@@ -744,5 +744,9 @@
 	"advancement.villageerrands.collection.weaponsmith.title": "Weaponsmith's Book",
 	"advancement.villageerrands.collection.weaponsmith.description": "Complete every errand a weaponsmith gives",
 	"advancement.villageerrands.collection.all.title": "Master of All Trades",
-	"advancement.villageerrands.collection.all.description": "Complete every errand of every profession"
+	"advancement.villageerrands.collection.all.description": "Complete every errand of every profession",
+	"button.give_part": "Give what I have (%s)",
+	"button.give_part_tip": "The villager keeps it. Bring the rest later.",
+	"msg.gave_part": "You gave %s. Bring the rest when you have it.",
+	"confirm.abandon_kept": "The %s things you already gave stay with the villager."
 }

@@ -630,6 +630,18 @@ public final class ErrandDialogs {
 					ErrandService.track(p, errand.id());
 					errand(p, errand, place);
 				}));
+				if (here && status != ErrandService.Status.READY) {
+					// Big orders don't fit in one inventory: what the player has now can be given, the rest later.
+					ErrandsData.Active accepted = state.find(errand.id());
+					int givable = accepted != null ? ErrandService.givable(player, accepted) : 0;
+					if (givable > 0) {
+						buttons.add(button(player, Lang.tr(player, "button.give_part", givable).withStyle(ChatFormatting.YELLOW),
+							Lang.tr(player, "button.give_part_tip"), 150, p -> {
+								if (place.near().test(p)) ErrandService.givePart(p, errand.id());
+								errand(p, errand, place);
+							}));
+					}
+				}
 				if (here) {
 					Component label = Lang.tr(player, "button.hand_in")
 						.withStyle(status == ErrandService.Status.READY ? ChatFormatting.GREEN : ChatFormatting.GRAY);
@@ -705,7 +717,14 @@ public final class ErrandDialogs {
 	private static void confirmAbandon(ServerPlayer player, Errand errand, Place place) {
 		DialogActions.begin(player);
 		Component title = Lang.tr(player, "button.abandon");
-		List<DialogBody> body = List.of(new PlainMessage(Lang.tr(player, "confirm.abandon", ErrandText.task(player, errand)), TEXT_WIDTH));
+		MutableComponent text = Lang.tr(player, "confirm.abandon", ErrandText.task(player, errand));
+		ErrandsData.Active accepted = ErrandService.state(player).find(errand.id());
+		if (accepted != null) {
+			int given = 0;
+			for (int i = 0; i < errand.objectives().size(); i++) given += ErrandService.delivered(accepted, i);
+			if (given > 0) text.append("\n").append(Lang.tr(player, "confirm.abandon_kept", given).withStyle(ChatFormatting.GOLD));
+		}
+		List<DialogBody> body = List.of(new PlainMessage(text, TEXT_WIDTH));
 		List<ActionButton> buttons = List.of(button(player, Lang.tr(player, "button.abandon_yes").withStyle(ChatFormatting.RED), null, 150, p -> {
 			ErrandService.abandon(p, errand.id());
 			place.back().accept(p);

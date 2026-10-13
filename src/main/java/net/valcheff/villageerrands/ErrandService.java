@@ -49,11 +49,58 @@ public final class ErrandService {
 		return n;
 	}
 
-	/** Progress of one objective: items in the inventory for deliveries, the counter for actions. */
+	/**
+	 * Progress of one objective: the counter for actions; for deliveries what was already given (big orders can be
+	 * brought in parts) plus what is in the inventory now.
+	 */
 	public static int progress(ServerPlayer player, ErrandsData.Active active, int index) {
 		Objective o = active.errand.objectives().get(index);
-		int done = o.isDelivery() ? countItems(player, o) : active.progress[index];
+		int done = o.isDelivery() ? active.progress[index] + countItems(player, o) : active.progress[index];
 		return Math.min(done, o.needed());
+	}
+
+	/** Items already given towards a delivery objective. */
+	public static int delivered(ErrandsData.Active active, int index) {
+		return active.errand.objectives().get(index).isDelivery() ? active.progress[index] : 0;
+	}
+
+	/** How many items the player could give now towards the errand's deliveries (what is still needed). */
+	public static int givable(ServerPlayer player, ErrandsData.Active active) {
+		int n = 0;
+		List<Objective> objectives = active.errand.objectives();
+		for (int i = 0; i < objectives.size(); i++) {
+			Objective o = objectives.get(i);
+			if (!o.isDelivery()) continue;
+			n += Math.min(countItems(player, o), Math.max(0, o.needed() - active.progress[i]));
+		}
+		return n;
+	}
+
+	/**
+	 * Gives the villager what the player has towards the deliveries now; the villager keeps it, and the rest can be
+	 * brought later. Returns how many items went.
+	 */
+	public static int givePart(ServerPlayer player, String errandId) {
+		ErrandsData data = ErrandsData.get(player.level().getServer());
+		ErrandsData.Active active = data.player(player.getUUID()).find(errandId);
+		if (active == null) return 0;
+		int given = 0;
+		List<Objective> objectives = active.errand.objectives();
+		for (int i = 0; i < objectives.size(); i++) {
+			Objective o = objectives.get(i);
+			if (!o.isDelivery()) continue;
+			int want = Math.max(0, o.needed() - active.progress[i]);
+			int taken = takeItems(player, o, want);
+			active.progress[i] += taken;
+			given += taken;
+		}
+		if (given > 0) {
+			data.setDirty();
+			player.sendSystemMessage(Lang.tr(player, "msg.gave_part", given).withStyle(ChatFormatting.GREEN));
+			sound(player, SoundEvents.VILLAGER_YES);
+			Hud.refresh(player);
+		}
+		return given;
 	}
 
 	/** The objective to show when there is room for only one: the first one not done yet (or the last). */
@@ -135,7 +182,10 @@ public final class ErrandService {
 			sound(player, SoundEvents.VILLAGER_NO);
 			return false;
 		}
-		for (Objective o : errand.objectives()) if (o.isDelivery()) takeItems(player, o);
+		for (int i = 0; i < errand.objectives().size(); i++) {
+			Objective o = errand.objectives().get(i);
+			if (o.isDelivery()) takeItems(player, o, o.count() - active.progress[i]);
+		}
 
 		double bonus = Reputation.VILLAGE_BONUS[Reputation.villageTier(state, errand.village())];
 		int emeralds = ErrandText.withBonus(errand.emeralds(), bonus);
@@ -240,9 +290,11 @@ public final class ErrandService {
 		ErrandsData.PlayerState state = state(player);
 		List<ItemStack> slots = new java.util.ArrayList<>();
 		for (ItemStack stack : player.getInventory().getNonEquipmentItems()) slots.add(stack.copy());
-		for (Objective o : errand.objectives()) {
+		ErrandsData.Active accepted = state.find(errand.id());
+		for (int i = 0; i < errand.objectives().size(); i++) {
+			Objective o = errand.objectives().get(i);
 			if (!o.isDelivery()) continue;
-			int left = o.count();
+			int left = o.count() - (accepted != null ? accepted.progress[i] : 0);
 			for (ItemStack stack : slots) {
 				if (left <= 0) break;
 				if (!deliverable(o, stack)) continue;
@@ -285,8 +337,10 @@ public final class ErrandService {
 		return missing;
 	}
 
-	private static void takeItems(ServerPlayer player, Objective objective) {
-		int left = objective.count();
+	/** Takes up to {@code amount} items for a delivery objective; returns how many were taken. */
+	private static int takeItems(ServerPlayer player, Objective objective, int amount) {
+		int left = Math.max(0, amount);
+		int want = left;
 		List<ItemStack> items = player.getInventory().getNonEquipmentItems();
 		for (ItemStack stack : items) {
 			if (left <= 0) break;
@@ -296,6 +350,7 @@ public final class ErrandService {
 			left -= take;
 		}
 		player.getInventory().setChanged();
+		return want - left;
 	}
 
 	static void give(ServerPlayer player, ItemStack template, int amount) {

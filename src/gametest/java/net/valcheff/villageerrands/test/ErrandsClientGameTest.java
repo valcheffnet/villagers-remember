@@ -435,6 +435,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			closeScreen(context);
 			adminCommands(context, sp, villagers);
 			packs(sp, villagers);
+			partialDelivery(sp);
 			trials(context, sp, villagers);
 			treasury(context, sp, bell);
 			uniqueNames(sp);
@@ -1132,6 +1133,43 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	}
 
 	/** A villager offers only the pack of the player's tier with it: T1 for a stranger, T2 once Acquaintance. */
+	/** A big order is brought in parts: what is given stays with the villager, hand-in takes only the rest. */
+	private static void partialDelivery(TestSingleplayerContext sp) {
+		String result = sp.getServer().computeOnServer(server -> {
+			ServerPlayer player = player(server);
+			ErrandsData.PlayerState state = state(server);
+			state.active.clear();
+			player.getInventory().clearContent();
+			Errand order = null;
+			for (int i = 0; i < 400 && order == null; i++) {
+				for (Errand e : ErrandGenerator.generate(new UUID(46, i), i, "minecraft:farmer", "minecraft:plains", 5, Optional.empty(), 3)) {
+					if (e.title().isPresent()) order = e;
+				}
+			}
+			if (order == null || !ErrandService.accept(player, order)) return "no order";
+			ErrandsData.Active a = state.find(order.id());
+			for (Objective o : order.objectives()) if (!o.isDelivery()) a.progress[order.objectives().indexOf(o)] = o.needed();
+			Objective first = order.objectives().stream().filter(Objective::isDelivery).findFirst().orElseThrow();
+			int half = Math.max(1, first.count() / 2);
+			ItemStack sample = ErrandText.icon(first).copyWithCount(half);
+			player.getInventory().add(sample);
+			int given = ErrandService.givePart(player, order.id());
+			if (given != half) return "gave " + given + " of " + half;
+			if (ErrandService.countItems(player, first) != 0) return "items left after giving a part";
+			if (ErrandService.canHandIn(player, a)) return "ready after half";
+			int index = order.objectives().indexOf(first);
+			if (ErrandService.progress(player, a, index) != half) return "progress " + ErrandService.progress(player, a, index);
+			// The rest of everything, plus extra: hand-in takes only what is still missing.
+			for (Objective o : order.objectives()) if (o.isDelivery()) giveTarget(player, o);
+			if (!ErrandService.canHandIn(player, a)) return "not ready with the rest";
+			if (!ErrandService.handIn(player, order.id())) return "hand in";
+			int left = ErrandService.countItems(player, first);
+			player.getInventory().clearContent();
+			return left == half ? "ok" : "left " + left + ", expected " + half;
+		});
+		check(result.equals("ok"), "partial delivery: " + result);
+	}
+
 	private static void packs(TestSingleplayerContext sp, List<UUID> villagers) {
 		String result = sp.getServer().computeOnServer(server -> {
 			ErrandsData.PlayerState state = state(server);
