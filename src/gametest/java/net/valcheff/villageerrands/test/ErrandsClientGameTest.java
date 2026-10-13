@@ -713,6 +713,26 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			});
 			check(progress == 1, "defend order counted " + progress);
 		}
+		// The patron names the village through the dialog's text field (a command template runs /errands input).
+		press(context, label -> label.equals("Back"));
+		press(context, label -> label.contains("Name the village"));
+		context.takeScreenshot("dlg-16-rename");
+		// What the Save button does with the text typed in the field: its command template filled in.
+		Screen renameScreen = context.computeOnClient(mc -> {
+			DialogScreen<?> screen = (DialogScreen<?>) mc.gui.screen();
+			ActionButton save = buttons(dialog(screen)).stream().filter(x -> x.button().label().getString().equals("Save")).findFirst().orElseThrow();
+			Optional<ClickEvent> click = save.action().orElseThrow().createAction(java.util.Map.of("name",
+				net.minecraft.server.dialog.action.Action.ValueGetter.of("Bodilovo Upper")));
+			screen.runAction(click);
+			return screen;
+		});
+		waitForDialog(context, renameScreen);
+		String renamed = sp.getServer().computeOnServer(server -> {
+			ServerPlayer player = player(server);
+			var village = net.valcheff.villageerrands.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			return village.name;
+		});
+		check("Bodilovo Upper".equals(renamed), "renamed through the dialog to " + renamed);
 		closeScreen(context);
 		String weekly = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);

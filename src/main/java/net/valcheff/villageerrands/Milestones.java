@@ -66,6 +66,14 @@ public final class Milestones {
 		MinecraftServer server = player.level().getServer();
 		if (server == null) return;
 		ErrandsData.PlayerState state = ErrandService.state(player);
+		if (state.flags.add("collection_v1")) {
+			// Saves from before the collection: the last errands in the history count.
+			for (Errand e : state.history) {
+				ErrandGenerator.taskNameOf(e).ifPresent(n ->
+					state.collection.computeIfAbsent(ErrandText.path(e.profession()), k -> new java.util.LinkedHashSet<>()).add(n));
+			}
+			ErrandsData.get(server).setDirty();
+		}
 		for (Map.Entry<String, BiPredicate<ServerPlayer, ErrandsData.PlayerState>> e : ALL.entrySet()) {
 			AdvancementHolder holder = server.getAdvancements().get(VillageErrands.id(e.getKey()));
 			if (holder == null || player.getAdvancements().getOrStartProgress(holder).isDone()) continue;
