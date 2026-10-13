@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:poppy"
+      "id": "minecraft:villager_spawn_egg"
     },
     "title": {
       "translate": "advancement.villageerrands.trust.acquaintance.title",

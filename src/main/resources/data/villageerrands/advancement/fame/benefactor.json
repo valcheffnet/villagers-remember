@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:golden_apple"
+      "id": "minecraft:golden_helmet"
     },
     "title": {
       "translate": "advancement.villageerrands.fame.benefactor.title",

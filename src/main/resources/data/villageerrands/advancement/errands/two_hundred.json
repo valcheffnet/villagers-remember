@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:gold_block"
+      "id": "minecraft:quartz_pillar"
     },
     "title": {
       "translate": "advancement.villageerrands.errands.two_hundred.title",

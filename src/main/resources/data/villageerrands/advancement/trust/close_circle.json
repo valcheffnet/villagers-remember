@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:totem_of_undying"
+      "id": "minecraft:campfire"
     },
     "title": {
       "translate": "advancement.villageerrands.trust.close_circle.title",

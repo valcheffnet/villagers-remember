@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:iron_ingot"
+      "id": "minecraft:saddle"
     },
     "title": {
       "translate": "advancement.villageerrands.errands.fifty.title",

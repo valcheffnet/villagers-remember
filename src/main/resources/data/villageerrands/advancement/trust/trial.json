@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:golden_carrot"
+      "id": "minecraft:shield"
     },
     "title": {
       "translate": "advancement.villageerrands.trust.trial.title",

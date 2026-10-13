@@ -7,7 +7,7 @@
   },
   "display": {
     "icon": {
-      "id": "minecraft:emerald_block"
+      "id": "minecraft:white_banner"
     },
     "title": {
       "translate": "advancement.villageerrands.villages.respected.title",
