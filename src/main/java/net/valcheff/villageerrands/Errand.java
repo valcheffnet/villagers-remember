@@ -52,7 +52,7 @@ public record Errand(
 			emeralds, xp, item, reputation);
 	}
 
-	/** Chance that an enchanted reward may get any enchantment, not only the enchanting table's (treasure, other mods'). */
+	/** Chance that an enchanted reward draws from the treasure enchantments instead of the enchanting table's. */
 	public static final float RARE_POOL_CHANCE = 0.15f;
 
 	/** A reward item, rebuilt from its seed whenever it is shown or given, so it never needs item serialization. */
@@ -79,9 +79,10 @@ public record Errand(
 				case ITEM -> BuiltInRegistries.ITEM.getOptional(Identifier.parse(id))
 					.ifPresent(item -> out.add(new ItemStack(item, amount)));
 				case ENCHANT, ENCHANT_MAX -> BuiltInRegistries.ITEM.getOptional(Identifier.parse(id)).ifPresent(item -> {
-					// Mostly the enchanting table's own list. Now and then (RARE_POOL_CHANCE) the rare ones the table never
-					// gives: treasure enchantments and those other mods add, never curses. Nothing is named here, so any set
-					// of mods works; without a rare one for this item the table's list is used.
+					// Mostly the enchanting table's own list (#minecraft:in_enchanting_table). Now and then
+					// (RARE_POOL_CHANCE) a treasure one (#minecraft:treasure: Mending, Frost Walker... and whatever other
+					// mods tag as treasure), never curses. Only tags are used, so any set of mods works; without a treasure
+					// enchantment for this item the table's list is used.
 					var registry = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
 					RandomSource random = RandomSource.create(seed);
 					var table = registry.get(net.minecraft.tags.EnchantmentTags.IN_ENCHANTING_TABLE)
@@ -89,7 +90,7 @@ public record Errand(
 					ItemStack stack = ItemStack.EMPTY;
 					if (random.nextFloat() < RARE_POOL_CHANCE) {
 						var rare = net.minecraft.core.HolderSet.direct(registry.listElements()
-							.filter(h -> !h.is(net.minecraft.tags.EnchantmentTags.CURSE) && !h.is(net.minecraft.tags.EnchantmentTags.IN_ENCHANTING_TABLE))
+							.filter(h -> h.is(net.minecraft.tags.EnchantmentTags.TREASURE) && !h.is(net.minecraft.tags.EnchantmentTags.CURSE))
 							.map(h -> (net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment>) h).toList());
 						stack = EnchantmentHelper.enchantItem(random, new ItemStack(item), amount + extraLevels, level.registryAccess(), Optional.of(rare));
 						if (!stack.isEnchanted()) stack = ItemStack.EMPTY;
