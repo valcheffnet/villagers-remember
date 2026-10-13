@@ -123,7 +123,8 @@ public final class ErrandDialogs {
 			ErrandGenerator.contract(level, giver, state).ifPresent(contract -> {
 				if (ErrandService.status(player, contract) == ErrandService.Status.AVAILABLE) {
 					buttons.add(button(player, Component.empty().append(Component.literal("✦ ").withColor(0xFF8000))
-						.append(ErrandText.task(player, contract).withColor(0xFF8000)), null, 220, p -> errand(p, contract, place)));
+						.append(Lang.tr(player, "contract.button").withColor(0xFF8000)).append(" ").append(targetIcon(contract)),
+						null, 220, p -> errand(p, contract, place)));
 				}
 			});
 			int open = 0;
@@ -917,8 +918,6 @@ public final class ErrandDialogs {
 						names.append(Icons.of(first.getItem())).append(Component.empty().append(first.getHoverName()).withStyle(ChatFormatting.AQUA));
 					}
 					out.append("\n ").append(names);
-					out.append("\n ").append(Lang.tr(player, options.size() > 1 ? "reward.top_choose" : "reward.top_surprise")
-						.withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
 					return;
 				}
 				for (ItemStack stack : item.create(level, Reputation.enchantBonus(state, errand.village()))) {

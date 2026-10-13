@@ -613,7 +613,7 @@
 	"weekly.defend.desc": "Чудовищата идват все по-близо всяка нощ. Прогони ги.",
 	"weekly.defend.want": "Нужни: %s убити чудовища в селото",
 	"weekly.defend.items": "Брои се всяко враждебно същество, убито в селото.",
-	"contract.name": "Договор: %s",
+	"contract.name": "Договор за %s",
 	"legend.received": "Легендарен предмет: %s",
 	"legend.title": "Легендарно!",
 	"legend.tag": "Легендарен · единствен по рода си",
@@ -744,5 +744,6 @@
 	"advancement.villageerrands.collection.weaponsmith.title": "Книгата на оръжейника",
 	"advancement.villageerrands.collection.weaponsmith.description": "Изпълни всяка поръчка на оръжейника",
 	"advancement.villageerrands.collection.all.title": "Майстор на всички занаяти",
-	"advancement.villageerrands.collection.all.description": "Изпълни всяка поръчка на всяка професия"
+	"advancement.villageerrands.collection.all.description": "Изпълни всяка поръчка на всяка професия",
+	"contract.button": "Договор"
 }

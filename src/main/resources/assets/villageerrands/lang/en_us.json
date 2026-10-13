@@ -613,7 +613,7 @@
 	"weekly.defend.desc": "Monsters come closer every night. Drive them off.",
 	"weekly.defend.want": "Wanted: %s monsters slain in the village",
 	"weekly.defend.items": "Any hostile mob killed inside the village counts.",
-	"contract.name": "Contract: %s",
+	"contract.name": "Contract for %s",
 	"legend.received": "Legendary item: %s",
 	"legend.title": "Legendary!",
 	"legend.tag": "Legendary · one of a kind",
@@ -744,5 +744,6 @@
 	"advancement.villageerrands.collection.weaponsmith.title": "Weaponsmith's Book",
 	"advancement.villageerrands.collection.weaponsmith.description": "Complete every errand a weaponsmith gives",
 	"advancement.villageerrands.collection.all.title": "Master of All Trades",
-	"advancement.villageerrands.collection.all.description": "Complete every errand of every profession"
+	"advancement.villageerrands.collection.all.description": "Complete every errand of every profession",
+	"contract.button": "Contract"
 }

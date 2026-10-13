@@ -48,6 +48,8 @@ public final class ErrandsConfig {
 	/** Contracts: one hard errand a day from each Best friend; how much more it asks and pays. */
 	public boolean contracts = true;
 	public double contractCountFactor = 2.0;
+	/** Emeralds' worth of goods a contract asks for in all (split between its two tasks). */
+	public double contractValue = 96;
 	public double contractRewardMultiplier = 2.5;
 	/** Contracts completed for one profession that bring its legendary item. */
 	public int contractsForLegend = 3;
@@ -150,6 +152,7 @@ public final class ErrandsConfig {
 		surchargePerNegativePoint = Math.clamp(surchargePerNegativePoint, 0.0, 1.0);
 		maxSurcharge = Math.clamp(maxSurcharge, 0.0, 10.0);
 		contractCountFactor = Math.clamp(contractCountFactor, 0.1, 10.0);
+		contractValue = Math.clamp(contractValue, 1.0, 100000.0);
 		contractRewardMultiplier = Math.clamp(contractRewardMultiplier, 0.0, 100.0);
 		contractsForLegend = Math.clamp(contractsForLegend, 1, 100);
 		patronDiscount = Math.clamp(patronDiscount, 0.0, 0.95);

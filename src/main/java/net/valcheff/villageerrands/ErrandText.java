@@ -164,7 +164,7 @@ public final class ErrandText {
 			int tier = errand.tier() - 1;
 			return Lang.tr(player, "trial.name", Lang.tr(player, "rep.villager." + tier));
 		}
-		if (ErrandGenerator.isContract(errand)) return Lang.tr(player, "contract.name", task(player, errand.withTitle(Optional.empty())));
+		if (ErrandGenerator.isContract(errand)) return Lang.tr(player, "contract.name", villagerName(player, errand.villager(), null));
 		if (errand.title().isPresent()) return Lang.tr(player, errand.title().get());
 		List<Objective> objectives = errand.objectives();
 		if (objectives.size() == 1) return objective(player, objectives.getFirst());

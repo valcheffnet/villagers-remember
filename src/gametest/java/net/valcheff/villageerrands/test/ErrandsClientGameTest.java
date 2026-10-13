@@ -769,6 +769,10 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (c == null) return "no contract offered";
 			if (!ErrandGenerator.shown(server.overworld(), ErrandGenerator.Giver.of(v), state).stream().anyMatch(ErrandGenerator::isContract)) return "contract not shown";
 			String prof = ErrandText.path(c.profession());
+			// Two tasks, sized by value: well beyond a plain top-pack errand.
+			if (c.objectives().size() < 2 || c.value() < 40) return "contract too light: " + c.objectives().size() + " objectives, value " + c.value();
+			System.out.println("CONTRACT " + ErrandText.task(player, c).getString() + ": " + c.objectives().stream()
+				.map(o -> o.type() + " " + o.count() + " " + o.target()).toList() + " value " + Math.round(c.value()) + ", " + c.emeralds() + " emeralds");
 			state.contracts.put(prof, 2);
 			int fameBefore = state.fame;
 			if (!ErrandService.accept(player, c)) return "accept";

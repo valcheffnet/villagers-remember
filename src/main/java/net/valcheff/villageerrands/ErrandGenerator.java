@@ -154,8 +154,9 @@ public final class ErrandGenerator {
 	}
 
 	/**
-	 * A contract (TIERS.md section 7): once the player is a villager's Best friend, one hard errand a day from the
-	 * top pack, asking twice as much and paying far more, always with the profession's top reward when it has one.
+	 * A contract (TIERS.md section 7): once the player is a villager's Best friend, one hard job a day. It joins two
+	 * different tasks of the top packs, each sized by value (about {@code contractValue} / 2 emeralds of goods, at
+	 * most four stacks of an item), pays far more and always gives the profession's top reward when it has one.
 	 * Contracts bring fame, and the third one for a profession brings its legendary item.
 	 */
 	public static Optional<Errand> contract(ServerLevel level, Giver giver, ErrandsData.PlayerState state) {
@@ -163,21 +164,42 @@ public final class ErrandGenerator {
 		ErrandPools.Pool pool = ErrandPools.get(giver.profession());
 		if (pool == null) return Optional.empty();
 		long day = day(level);
-		List<ErrandPools.Task> eligible = pool.tasks().stream()
-			.filter(t -> 5 >= t.minTier() && 5 <= t.maxTier() && t.title().isEmpty() && t.reward().isEmpty()).toList();
-		if (eligible.isEmpty()) eligible = pool.tasks().stream().filter(t -> t.title().isEmpty() && t.reward().isEmpty()).toList();
+		// The hardest tasks first: those of the top two packs, then anything from the third pack up.
+		List<ErrandPools.Task> plain = pool.tasks().stream().filter(t -> t.title().isEmpty() && t.reward().isEmpty()).toList();
+		List<ErrandPools.Task> eligible = plain.stream().filter(t -> t.maxTier() >= 4).toList();
+		if (eligible.stream().map(ErrandPools.Task::key).distinct().count() < 2) eligible = plain.stream().filter(t -> t.maxTier() >= 3).toList();
+		if (eligible.isEmpty()) eligible = plain;
 		if (eligible.isEmpty()) return Optional.empty();
 		RandomSource random = RandomSource.create(seed(giver.id(), day, 20, 0));
-		ErrandPools.Task task = pick(eligible, Set.of(), random);
 		ErrandsConfig cfg = ErrandsConfig.INSTANCE;
-		Errand e = build(giver.id(), day, 0, giver.profession(), giver.type(), giver.level(), 5, giver.village(), task, pool,
-			random, cfg.contractCountFactor, cfg.contractRewardMultiplier);
-		Optional<Errand.ItemReward> item = e.item();
-		boolean hasTop = pool.rewards().stream().anyMatch(r -> r.kind() == ErrandPools.RewardKind.TOP);
-		if (hasTop) item = Optional.of(new Errand.ItemReward(ErrandPools.RewardKind.TOP, giver.profession(), 1, random.nextLong()));
-		return Optional.of(new Errand(giver.id() + "/" + day + "/contract", e.villager(), e.profession(), e.villagerType(),
-			e.villagerLevel(), e.tier(), e.village(), Optional.of("contract"), e.objectives(), e.value(), e.emeralds(), e.xp(),
-			item, e.reputation()));
+		ErrandPools.Task first = pick(eligible, Set.of(), random);
+		ErrandPools.Task second = pick(eligible, Set.of(first.key()), random);
+		List<ErrandPools.Task> tasks = second.key().equals(first.key()) ? List.of(first) : List.of(first, second);
+		double part = cfg.contractValue / tasks.size();
+		List<Objective> objectives = new ArrayList<>();
+		double value = 0;
+		int emeralds = 0;
+		int xp = 0;
+		int reputation = 0;
+		Optional<Errand.ItemReward> item = Optional.empty();
+		for (ErrandPools.Task task : tasks) {
+			double mid = Math.max(1, (task.min() + task.max()) / 2.0) * Math.max(task.value(), 0.01);
+			double factor = Math.clamp(part / mid, cfg.contractCountFactor, 64.0);
+			Errand e = build(giver.id(), day, 0, giver.profession(), giver.type(), giver.level(), 5, giver.village(), task, pool,
+				random, factor, cfg.contractRewardMultiplier);
+			objectives.addAll(e.objectives());
+			value += e.value();
+			emeralds += e.emeralds();
+			xp += e.xp();
+			reputation = Math.max(reputation, e.reputation());
+			if (item.isEmpty()) item = e.item();
+		}
+		if (pool.rewards().stream().anyMatch(r -> r.kind() == ErrandPools.RewardKind.TOP)) {
+			item = Optional.of(new Errand.ItemReward(ErrandPools.RewardKind.TOP, giver.profession(), 1, random.nextLong()));
+		}
+		emeralds = Math.min(emeralds, cfg.maxEmeraldsPerErrand);
+		return Optional.of(new Errand(giver.id() + "/" + day + "/contract", giver.id(), giver.profession(), giver.type(),
+			giver.level(), 5, giver.village(), Optional.of("contract"), List.copyOf(objectives), value, emeralds, xp, item, reputation));
 	}
 
 	public static boolean isContract(Errand errand) {
@@ -333,6 +355,7 @@ public final class ErrandGenerator {
 				? t.fixedMin() + (t.fixedMax() > t.fixedMin() ? random.nextInt(t.fixedMax() - t.fixedMin() + 1) : 0)
 				: Math.max(1, (int) Math.round(count * t.factor()));
 			n = Math.max(1, (int) Math.round(n * countFactor));
+			n = Math.min(n, maxCount(t));
 			objectives.add(new Objective(t.type(), t.target(), t.tag(), n, t.minLevel()));
 		}
 
@@ -387,6 +410,14 @@ public final class ErrandGenerator {
 		emeralds = Math.min(emeralds, cfg.maxEmeraldsPerErrand);
 		return new Errand(id, villager, profession, type, level, tier, village, task.title(), List.copyOf(objectives),
 			value, emeralds, xp, item, reputation);
+	}
+
+	/** The most an objective may ask for: four stacks of an item (64 of a tag of items), 128 of anything else. */
+	private static int maxCount(ErrandPools.ObjectiveTemplate t) {
+		if (t.type().target != Objective.Target.ITEM) return 128;
+		if (t.tag() || t.target().isEmpty()) return 256;
+		return 4 * BuiltInRegistries.ITEM.getOptional(net.minecraft.resources.Identifier.parse(t.target()))
+			.map(i -> i.getDefaultMaxStackSize()).orElse(64);
 	}
 
 	private record ItemChoice(Errand.ItemReward reward, double value) {
