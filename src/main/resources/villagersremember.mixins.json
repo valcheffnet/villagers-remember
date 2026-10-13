@@ -17,7 +17,8 @@
 		"TradeTriggerMixin",
 		"VillagerInvoker",
 		"EntityNameAccessor",
-		"VillagerPricesMixin"
+		"VillagerPricesMixin",
+		"UseItemOnMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

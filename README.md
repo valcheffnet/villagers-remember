@@ -18,7 +18,7 @@ Rewards are tuned to the work. Every errand pays more than the same goods would 
 
 Right-click a villager and they greet you the way your standing deserves. "Yes? Do I know you?" from a stranger, "My friend! Come, sit." from someone you have helped for weeks. From there you pick Errands or Trade. Sneak + right-click still trades straight away, so trading halls stay one click.
 
-Every villager with a job offers a few errands a day, more as their trade level grows. Each errand is one or more of 21 kinds of tasks: craft, smelt, mine, harvest, fish, breed, tame, kill, brew, enchant, visit a structure or a biome, and so on. Taking an item to a villager is counted apart from making it, so you can't just buy what was asked.
+Every villager with a job offers a few errands a day, more as their trade level grows. Each errand is one or more of 21 kinds of tasks: craft, smelt, mine, harvest, fish, breed, tame, kill, brew, enchant, visit a structure or a biome, and so on. Harvesting counts whether you break the crop or pick it with a right-click mod like RightClickHarvest. Taking an item to a villager is counted apart from making it, so you can't just buy what was asked.
 
 Right-click the village bell for the board: all of the village's errands, its residents, your standing, the treasury and the village order. Sneak + right-click rings the bell as usual.
 
@@ -57,7 +57,7 @@ With emerald rewards on, villagers who trust you put a share of their work aside
 
 - 230 village names (Bulgarian villages, many of them real) and 314 villager names, mostly old Bulgarian ones, the same name in both languages (Мария is Maria in English). More languages can be added as lang files.
 - Villager names above their heads and in Jade, for each player in their language.
-- A sidebar tracker for the errands you follow, "!" over villagers with work for you and "?" when you can hand something in.
+- A sidebar tracker for the errands you follow. Over villagers: "!" when they have work for you and your journal has room, a yellow "?" when you can hand something in, a grey "?" when you carry one of their errands.
 - A chronicle book with your errands, villages, fame and collection (`/errands book`).
 - A villager who turns into a zombie villager and is cured keeps your standing, errands and name.
 - Works with the Waystones mod (BlayTheNinth) and the KawaMood's Waystones datapack: the waystone in a village is named after it (English name, or the name its patron gave it), so the waystone list shows villages. Waystones a player named keep their name. Setting `waystoneNames`, shown only when one of them is installed.

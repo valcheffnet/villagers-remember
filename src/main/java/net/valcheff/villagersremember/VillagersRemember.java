@@ -86,6 +86,7 @@ public final class VillagersRemember implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(VillageRegistry::tick);
 		ServerTickEvents.END_SERVER_TICK.register(Hud::tick);
 		ServerTickEvents.END_SERVER_TICK.register(ActionHooks::tick);
+		ServerTickEvents.END_SERVER_TICK.register(ActionHooks::afterUse);
 		ServerTickEvents.END_SERVER_TICK.register(GroupOrder::tick);
 		ServerTickEvents.END_SERVER_TICK.register(Waystones::tick);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, s) -> {

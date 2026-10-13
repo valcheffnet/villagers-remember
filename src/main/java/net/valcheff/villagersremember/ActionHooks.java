@@ -49,6 +49,42 @@ public final class ActionHooks {
 		Actions.record(player, type, count, o -> o.matchesItem(stack));
 	}
 
+	/**
+	 * Mods like RightClickHarvest pick a crop with a right-click and replant it without breaking the block, so
+	 * {@link #blockBroken} never sees it. A right-click remembers the mature crops around the spot (radius 2, for
+	 * harvesting with a hoe's reach); at the end of the tick each one that is the same crop but young again counts
+	 * as a harvest. A broken crop is gone by then and was counted by the break.
+	 */
+	private static final java.util.Map<ServerPlayer, java.util.Map<BlockPos, BlockState>> CLICKED = new java.util.HashMap<>();
+	private static final int CLICK_RADIUS = 2;
+
+	public static void beforeUse(ServerPlayer player, BlockPos pos) {
+		Level level = player.level();
+		java.util.Map<BlockPos, BlockState> crops = null;
+		for (BlockPos at : BlockPos.betweenClosed(pos.offset(-CLICK_RADIUS, -1, -CLICK_RADIUS), pos.offset(CLICK_RADIUS, 1, CLICK_RADIUS))) {
+			BlockState state = level.getBlockState(at);
+			if (!mature(state)) continue;
+			if (crops == null) crops = CLICKED.computeIfAbsent(player, p -> new java.util.HashMap<>());
+			crops.putIfAbsent(at.immutable(), state);
+		}
+	}
+
+	/** End of the server tick: crops right-clicked this tick that are young again were harvested. */
+	public static void afterUse(MinecraftServer server) {
+		if (CLICKED.isEmpty()) return;
+		for (java.util.Map.Entry<ServerPlayer, java.util.Map<BlockPos, BlockState>> e : CLICKED.entrySet()) {
+			ServerPlayer player = e.getKey();
+			if (player.isRemoved()) continue;
+			for (java.util.Map.Entry<BlockPos, BlockState> crop : e.getValue().entrySet()) {
+				BlockState now = player.level().getBlockState(crop.getKey());
+				if (now.getBlock() != crop.getValue().getBlock() || mature(now)) continue;
+				BlockState before = crop.getValue();
+				Actions.record(player, Objective.Type.HARVEST, 1, o -> o.matchesBlock(before));
+			}
+		}
+		CLICKED.clear();
+	}
+
 	/** Breaking a block: a fully grown crop is a harvest; any block mined without Silk Touch counts as mined. */
 	public static void blockBroken(Level level, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
 		if (!(player instanceof ServerPlayer sp)) return;

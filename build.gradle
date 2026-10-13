@@ -60,6 +60,9 @@ dependencies {
 	gametestRuntimeOnly "maven.modrinth:waystones:${project.waystones_version}"
 	gametestRuntimeOnly "maven.modrinth:balm:${project.balm_version}"
 	gametestRuntimeOnly "maven.modrinth:shogi:${project.shogi_version}"
+	// RightClickHarvest (our server has it): harvests that replant instead of breaking must count.
+	gametestRuntimeOnly "maven.modrinth:rightclickharvest:${project.rightclickharvest_version}"
+	gametestRuntimeOnly "maven.modrinth:jamlib:${project.jamlib_version}"
 	localRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 

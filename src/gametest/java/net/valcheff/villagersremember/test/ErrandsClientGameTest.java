@@ -119,6 +119,16 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			press(context, label -> label.equals("Accept"));
 			sp.getServer().waitFor(server -> active(server).size() == 1, 40);
 			context.takeScreenshot("dlg-3-accepted");
+			// With a full journal the giver keeps a grey "?" (no "!" for new work).
+			check(sp.getServer().computeOnServer(server -> {
+				int max = ErrandsConfig.INSTANCE.maxActiveErrands;
+				ErrandsConfig.INSTANCE.maxActiveErrands = 1;
+				try {
+					return mark(server, deliver.villager());
+				} finally {
+					ErrandsConfig.INSTANCE.maxActiveErrands = max;
+				}
+			}).equals("WAITING"), "grey ? over the giver of an accepted errand when the journal is full");
 			closeScreen(context);
 
 			// Tracker, "!" marks; then the items arrive: "Errand ready!" title and a "?" above the giver.
@@ -136,6 +146,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			sp.getServer().runOnServer(server -> craft(server, deliver.main(), deliver.main().count() - half));
 			context.waitTicks(25);
 			context.takeScreenshot("hud-2-ready-title");
+			check(sp.getServer().computeOnServer(server -> mark(server, deliver.villager())).equals("READY"),
+				"yellow ? when the errand is ready");
 
 			// Hand in from the villager dialog: afterwards a dialog must be shown again (not "waiting for server").
 			int emeraldsBefore = sp.getServer().computeOnServer(server -> countEmeralds(player(server)));
@@ -225,6 +237,39 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				new Objective(Objective.Type.BONEMEAL, "", false, 1, 0));
 			Errand synthetic = new Errand("test/0/0", UUID.randomUUID(), "minecraft:farmer", "minecraft:plains", 1, 1, Optional.empty(),
 				Optional.empty(), actions, 1, 0, 1, Optional.empty(), 1);
+			// A right-click harvest mod (RightClickHarvest): the crop is picked and replanted, never broken.
+			Errand clickHarvest = new Errand("test/0/1", UUID.randomUUID(), "minecraft:farmer", "minecraft:plains", 1, 1, Optional.empty(),
+				Optional.empty(), List.of(new Objective(Objective.Type.HARVEST, "minecraft:carrots", false, 3, 0)), 1, 0, 1, Optional.empty(), 1);
+			String rightClick = sp.getServer().computeOnServer(server -> {
+				ServerPlayer player = player(server);
+				ServerLevel level = server.overworld();
+				if (!ErrandService.accept(player, clickHarvest)) return "accept";
+				BlockPos field = base.offset(6, 0, -6);
+				for (int i = 0; i < 2; i++) {
+					level.setBlockAndUpdate(field.offset(i, -1, 0), Blocks.FARMLAND.defaultBlockState());
+					level.setBlockAndUpdate(field.offset(i, 0, 0), ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(7));
+				}
+				// One right-click picks both (a hoe's reach); the mod sets them back to age 0 in the same tick.
+				net.valcheff.villagersremember.ActionHooks.beforeUse(player, field);
+				for (int i = 0; i < 2; i++) level.setBlockAndUpdate(field.offset(i, 0, 0), ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(0));
+				net.valcheff.villagersremember.ActionHooks.afterUse(server);
+				int picked = state(server).find(clickHarvest.id()).progress[0];
+				// Clicking a young crop counts nothing; a mature one broken by hand counts once (break hook only).
+				net.valcheff.villagersremember.ActionHooks.beforeUse(player, field);
+				net.valcheff.villagersremember.ActionHooks.afterUse(server);
+				level.setBlockAndUpdate(field, ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(7));
+				net.valcheff.villagersremember.ActionHooks.beforeUse(player, field);
+				player.gameMode.destroyBlock(field);
+				net.valcheff.villagersremember.ActionHooks.afterUse(server);
+				int total = state(server).find(clickHarvest.id()).progress[0];
+				ErrandService.abandon(player, clickHarvest.id());
+				for (int i = 0; i < 2; i++) {
+					level.setBlockAndUpdate(field.offset(i, 0, 0), Blocks.AIR.defaultBlockState());
+					level.setBlockAndUpdate(field.offset(i, -1, 0), Blocks.GRASS_BLOCK.defaultBlockState());
+				}
+				return picked == 2 && total == 3 ? "ok" : "right-click picked " + picked + ", total " + total;
+			});
+			check(rightClick.equals("ok"), "right-click harvest: " + rightClick);
 			sp.getServer().runOnServer(server -> {
 				ServerPlayer player = player(server);
 				ServerLevel level = server.overworld();
@@ -445,6 +490,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			harvestTitle(sp);
 			waystones(sp, bell);
 			blayWaystones(sp, bell);
+			rightClickHarvest(context, sp, bell);
 			settingsScreen(context, sp);
 			trials(context, sp, villagers);
 			treasury(context, sp, bell);
@@ -1353,6 +1399,42 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		check(result.equals("ok"), "Waystones mod: " + result);
 	}
 
+	/** RightClickHarvest (test runtime only): a real right-click on a ripe crop picks and replants it, and it counts. */
+	private static void rightClickHarvest(ClientGameTestContext context, TestSingleplayerContext sp, BlockPos bell) {
+		BlockPos crop = bell.offset(-6, 0, -6);
+		ItemStack[] held = new ItemStack[1];
+		Errand errand = new Errand("test/0/2", UUID.randomUUID(), "minecraft:farmer", "minecraft:plains", 1, 1, Optional.empty(),
+			Optional.empty(), List.of(new Objective(Objective.Type.HARVEST, "minecraft:carrots", false, 2, 0)), 1, 0, 1, Optional.empty(), 1);
+		sp.getServer().runOnServer(server -> {
+			ServerPlayer player = player(server);
+			ServerLevel level = server.overworld();
+			check(ErrandService.accept(player, errand), "accept the right-click harvest errand");
+			level.setBlockAndUpdate(crop.below(), Blocks.FARMLAND.defaultBlockState());
+			level.setBlockAndUpdate(crop, ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(7));
+			// Empty hand, in the slot the client has selected (changing the slot on the server alone desyncs the client).
+			held[0] = player.getInventory().getSelectedItem().copy();
+			player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+		});
+		walkTo(context, sp, Vec3.atBottomCenterOf(crop).add(0, 0, -2));
+		context.getInput().lookAt(crop);
+		context.waitTicks(3);
+		context.getInput().pressKey(options -> options.keyUse);
+		context.waitTicks(10);
+		String result = sp.getServer().computeOnServer(server -> {
+			var state = server.overworld().getBlockState(crop);
+			int progress = state(server).find(errand.id()).progress[0];
+			ErrandService.abandon(player(server), errand.id());
+			player(server).getInventory().setItem(player(server).getInventory().getSelectedSlot(), held[0]);
+			var inventory = player(server).getInventory();
+			for (int i = 0; i < inventory.getContainerSize(); i++) if (inventory.getItem(i).is(net.minecraft.world.item.Items.CARROT)) inventory.setItem(i, ItemStack.EMPTY);
+			server.overworld().setBlockAndUpdate(crop, Blocks.AIR.defaultBlockState());
+			server.overworld().setBlockAndUpdate(crop.below(), Blocks.GRASS_BLOCK.defaultBlockState());
+			if (!state.is(Blocks.CARROTS)) return "the crop was broken, not replanted: " + state;
+			return progress == 1 ? "ok" : "progress " + progress + " after a right-click harvest, crop now " + state;
+		});
+		check(result.equals("ok"), "RightClickHarvest: " + result);
+	}
+
 	/** Harvest plus bringing the same crop reads as one short task: "Harvest and bring 28× Beetroot". */
 	private static void harvestTitle(TestSingleplayerContext sp) {
 		String result = sp.getServer().computeOnServer(server -> {
@@ -1762,6 +1844,11 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			level.addFreshEntity(living);
 			living.hurtServer(level, player.damageSources().playerAttack(player), 10000f);
 		}
+	}
+
+	private static String mark(MinecraftServer server, UUID villager) {
+		return server.overworld().getEntity(villager) instanceof Villager v
+			? net.valcheff.villagersremember.Hud.markOf(player(server), v) : "no villager";
 	}
 
 	private static int countEmeralds(ServerPlayer player) {

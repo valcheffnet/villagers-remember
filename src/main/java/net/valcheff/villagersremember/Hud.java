@@ -59,14 +59,15 @@ import java.util.UUID;
 
 /**
  * Per-player screen elements, all sent as vanilla packets to that player only: the errand tracker in the
- * sidebar, big titles when an errand is ready or done, and "!" / "?" marks above villagers.
+ * sidebar, big titles when an errand is ready or done, and "!" / "?" (yellow: ready, grey: in progress) above villagers.
  */
 public final class Hud {
 	private static final String OBJECTIVE = "villagersremember";
 	private static final int MAX_LINES = 15;
 	private static final Scoreboard DUMMY_BOARD = new Scoreboard();
 
-	private enum Mark { NONE, OFFER, READY }
+	/** "!" new work, yellow "?" ready to hand in, grey "?" an accepted errand still in progress. */
+	private enum Mark { NONE, OFFER, READY, WAITING }
 
 	private static final class Marker {
 		final int displayId;
@@ -407,20 +408,31 @@ public final class Hud {
 	}
 
 	private static Mark mark(ServerPlayer player, ServerLevel level, ErrandsData.PlayerState state, Villager villager) {
+		boolean waiting = false;
 		for (ErrandsData.Active a : state.active) {
-			if (a.errand.villager().equals(villager.getUUID()) && ErrandService.canHandIn(player, a)) return Mark.READY;
+			if (!a.errand.villager().equals(villager.getUUID())) continue;
+			if (ErrandService.canHandIn(player, a)) return Mark.READY;
+			waiting = true;
 		}
-		if (state.active.size() >= ErrandsConfig.INSTANCE.maxActiveErrands) return Mark.NONE;
-		for (Errand e : ErrandGenerator.shown(level, ErrandGenerator.Giver.of(villager), state)) {
-			String id = e.id();
-			if (!state.done.containsKey(id) && state.find(id) == null) return Mark.OFFER;
+		// New work only shows while the journal has room; the villagers to go back to keep their grey "?".
+		if (state.active.size() < ErrandsConfig.INSTANCE.maxActiveErrands) {
+			for (Errand e : ErrandGenerator.shown(level, ErrandGenerator.Giver.of(villager), state)) {
+				String id = e.id();
+				if (!state.done.containsKey(id) && state.find(id) == null) return Mark.OFFER;
+			}
 		}
-		return Mark.NONE;
+		return waiting ? Mark.WAITING : Mark.NONE;
+	}
+
+	/** For the game test: the mark this player sees over the villager ("NONE", "OFFER", "READY", "WAITING"). */
+	public static String markOf(ServerPlayer player, Villager villager) {
+		return mark(player, (ServerLevel) player.level(), ErrandService.state(player), villager).name();
 	}
 
 	/** Entity data for a floating "!" or "?": built by loading a throwaway text display from NBT. */
 	private static List<SynchedEntityData.DataValue<?>> markData(ServerLevel level, Mark mark) {
-		Component text = Component.literal(mark == Mark.READY ? "?" : "!").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD);
+		Component text = Component.literal(mark == Mark.OFFER ? "!" : "?")
+			.withStyle(mark == Mark.WAITING ? ChatFormatting.GRAY : ChatFormatting.YELLOW, ChatFormatting.BOLD);
 		CompoundTag tag = new CompoundTag();
 		tag.put("Pos", list(DoubleTag.valueOf(0), DoubleTag.valueOf(0), DoubleTag.valueOf(0)));
 		tag.put("text", ComponentSerialization.CODEC.encodeStart(level.registryAccess().createSerializationContext(NbtOps.INSTANCE), text).getOrThrow());
