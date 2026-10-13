@@ -575,6 +575,10 @@ public final class AdminCommands {
 
 	private static void done(ErrandsData data, ServerPlayer target) {
 		data.setDirty();
+		// Standing changed: patrons and advancements now, not at the next bell.
+		MinecraftServer server = target.level().getServer();
+		for (VillageRegistry.Village v : VillageRegistry.get(server).all()) Patron.check(server, Optional.of(v.center));
+		Milestones.check(target);
 		Hud.refresh(target);
 	}
 

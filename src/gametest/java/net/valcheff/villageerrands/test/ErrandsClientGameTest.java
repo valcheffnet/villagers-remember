@@ -693,6 +693,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		context.takeScreenshot("dlg-14-board-patron");
 		press(context, label -> label.contains("Village order"));
 		context.takeScreenshot("dlg-15-village-order");
+		press(context, label -> label.contains("Track"));
+		check(sp.getServer().computeOnServer(server -> state(server).trackedOrders.size() == 1), "village order tracked");
 		if (!kind.equals("defend")) {
 			press(context, label -> label.contains("Give what I have"));
 			int progress = sp.getServer().computeOnServer(server -> {
@@ -749,6 +751,26 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return "ok";
 		});
 		check(villageOrder.equals("ok"), "village order: " + villageOrder);
+		String mapped = sp.getServer().computeOnServer(server -> {
+			ServerPlayer player = player(server);
+			// The flat test world has no structures: a map to the biome the player stands in.
+			String biome = player.level().getBiome(player.blockPosition()).unwrapKey().orElseThrow().identifier().toString();
+			Objective visit = new Objective(Objective.Type.VISIT_BIOME, biome, false, 1, 0);
+			var map = net.valcheff.villageerrands.Maps.forVisit(player, visit, "Odo");
+			if (map.isEmpty()) return "no map to " + biome;
+			if (!map.get().is(Items.FILLED_MAP) || !map.get().getHoverName().getString().startsWith("Map:")) return "map " + map.get();
+			// Enchanted rewards: from any set of enchantments, never a curse, always at the highest level.
+			for (int i = 0; i < 60; i++) {
+				ItemStack sword = new Errand.ItemReward(net.valcheff.villageerrands.ErrandPools.RewardKind.ENCHANT_MAX, "minecraft:iron_sword", 12, i)
+					.create(server.overworld()).getFirst();
+				for (var e : sword.getEnchantments().entrySet()) {
+					if (e.getKey().is(net.minecraft.tags.EnchantmentTags.CURSE)) return "curse on reward " + i;
+					if (e.getIntValue() != e.getKey().value().getMaxLevel()) return "level " + e.getIntValue() + " of " + e.getKey().getRegisteredName();
+				}
+			}
+			return "ok";
+		});
+		check(mapped.equals("ok"), "visit map and enchantments: " + mapped);
 		// Sized by regular players: two friends who played on three days of the month count, a one-day visitor does not.
 		int regulars = sp.getServer().computeOnServer(server -> {
 			long today = ErrandGenerator.day(server.overworld());

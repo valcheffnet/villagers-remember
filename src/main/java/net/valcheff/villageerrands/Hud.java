@@ -204,6 +204,23 @@ public final class Hud {
 					ErrandText.bar(s.haveCount(), s.needCount(), s.needCount())));
 			}
 		}
+		// Tracked village orders: what is wanted, how far the village is, and the player's own part.
+		for (String key : state.trackedOrders) {
+			if (lines.size() + 2 > MAX_LINES) break;
+			java.util.Optional<VillageRegistry.Village> village = registry.all().stream()
+				.filter(v -> ErrandsData.villageKey(v.center).equals(key)).findFirst();
+			if (village.isEmpty()) continue;
+			java.util.Optional<GroupOrder.View> view = GroupOrder.current(level.getServer(), village.get());
+			if (view.isEmpty()) continue;
+			GroupOrder.View v = view.get();
+			int progress = Math.min(v.order().progress, v.target());
+			lines.add(Line.of(Component.empty().append(Icons.of(v.kind().icon))
+				.append(Lang.tr(player, "group." + v.kind().key() + ".name").withStyle(v.done() ? ChatFormatting.GREEN : ChatFormatting.GOLD))
+				.append(Component.literal(" · " + ErrandText.villageName(player, village.get().center)).withStyle(ChatFormatting.DARK_GRAY))));
+			int mine = v.order().contrib.getOrDefault(player.getUUID(), 0);
+			lines.add(new Line(Component.literal("  ").append(Lang.tr(player, "side.order_mine", mine).withStyle(ChatFormatting.GRAY)),
+				ErrandText.bar(progress, v.target(), 5)));
+		}
 		// Only the errands the player chose to track: who gives it, then every part of it on its own line.
 		for (ErrandsData.Active a : state.active) {
 			if (!state.isTracked(a.errand.id())) continue;

@@ -64,6 +64,8 @@ public final class ErrandsData extends SavedData {
 		 */
 		public final Map<UUID, Integer> gossipToClean = new HashMap<>();
 		public final Map<String, Integer> villageRep = new HashMap<>();
+		/** Villages whose village order is shown in the on-screen tracker. */
+		public final Set<String> trackedOrders = new LinkedHashSet<>();
 		/** Villages (keys of their centers) shown in the on-screen tracker. */
 		public final Set<String> trackedVillages = new LinkedHashSet<>();
 		/** Errands shown in the on-screen tracker (ids of accepted errands). */
@@ -296,6 +298,7 @@ public final class ErrandsData extends SavedData {
 			state.completed = p.getIntOr("completed", 0);
 			p.getListOrEmpty("tracked").forEach(t -> t.asString().ifPresent(state.tracked::add));
 			p.getListOrEmpty("tracked_villages").forEach(t -> t.asString().ifPresent(state.trackedVillages::add));
+			p.getListOrEmpty("tracked_orders").forEach(t -> t.asString().ifPresent(state.trackedOrders::add));
 			state.tracked.retainAll(state.active.stream().map(a -> a.errand.id()).toList());
 			CompoundTag found = p.getCompoundOrEmpty("discovered");
 			for (String k : found.keySet()) state.discovered.put(k, found.getLongOr(k, 0L));
@@ -386,6 +389,9 @@ public final class ErrandsData extends SavedData {
 			ListTag trackedVillages = new ListTag();
 			state.trackedVillages.forEach(k -> trackedVillages.add(StringTag.valueOf(k)));
 			p.put("tracked_villages", trackedVillages);
+			ListTag trackedOrders = new ListTag();
+			state.trackedOrders.forEach(k -> trackedOrders.add(StringTag.valueOf(k)));
+			p.put("tracked_orders", trackedOrders);
 			p.putInt("completed", state.completed);
 			CompoundTag found = new CompoundTag();
 			state.discovered.forEach(found::putLong);

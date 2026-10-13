@@ -125,6 +125,19 @@ public final class ErrandService {
 		state.tracked.add(errand.id());
 		data.setDirty();
 		player.sendSystemMessage(Lang.tr(player, "msg.accepted", ErrandText.task(player, errand)).withStyle(ChatFormatting.GREEN));
+		// A place to visit: the villager marks the way on a map.
+		ServerLevel here = (ServerLevel) player.level();
+		String who = ErrandText.villagerName(player, errand.villager(), here.getEntity(errand.villager()) instanceof Villager v ? v : null);
+		for (Objective o : errand.objectives()) {
+			if (o.type() != Objective.Type.VISIT_STRUCTURE && o.type() != Objective.Type.VISIT_BIOME) continue;
+			Optional<ItemStack> map = Maps.forVisit(player, o, who);
+			if (map.isPresent()) {
+				give(player, map.get(), 1);
+				player.sendSystemMessage(Lang.tr(player, "map.given", who, ErrandText.targetName(player, o)).withStyle(ChatFormatting.GOLD));
+			} else {
+				player.sendSystemMessage(Lang.tr(player, "map.none", ErrandText.targetName(player, o)).withStyle(ChatFormatting.GRAY));
+			}
+		}
 		Hud.refresh(player);
 		sound(player, SoundEvents.VILLAGER_YES);
 		Milestones.check(player);

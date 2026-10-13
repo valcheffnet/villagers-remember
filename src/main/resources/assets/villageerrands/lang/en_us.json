@@ -749,5 +749,10 @@
 	"button.give_part_tip": "The villager keeps it. Bring the rest later.",
 	"msg.gave_part": "You gave %s. Bring the rest when you have it.",
 	"confirm.abandon_kept": "The %s things you already gave stay with the villager.",
-	"group.players": "Sized for %s regular players"
+	"group.players": "Sized for %s regular players",
+	"map.to": "Map: %s",
+	"map.from": "Drawn by %s",
+	"map.given": "%s marks the way to %s on a map.",
+	"map.none": "Nobody here knows the way to %s. You'll have to find it.",
+	"side.order_mine": "You: %s"
 }

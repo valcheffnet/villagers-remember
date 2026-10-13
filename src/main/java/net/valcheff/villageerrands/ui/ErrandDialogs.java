@@ -391,6 +391,17 @@ public final class ErrandDialogs {
 			.withStyle(ChatFormatting.DARK_GREEN));
 		List<DialogBody> body = List.of(new PlainMessage(text, TEXT_WIDTH));
 		List<ActionButton> buttons = new ArrayList<>();
+		String orderKey = ErrandsData.villageKey(village.center);
+		boolean trackedOrder = ErrandService.state(player).trackedOrders.contains(orderKey);
+		buttons.add(button(player, Lang.tr(player, trackedOrder ? "button.tracked" : "button.track")
+				.withStyle(trackedOrder ? ChatFormatting.GOLD : ChatFormatting.WHITE),
+			Lang.tr(player, trackedOrder ? "button.tracked_tip" : "button.track_tip"), 300, p -> {
+				ErrandsData.PlayerState st = ErrandService.state(p);
+				if (!st.trackedOrders.remove(orderKey)) st.trackedOrders.add(orderKey);
+				ErrandsData.get(p.level().getServer()).setDirty();
+				net.valcheff.villageerrands.Hud.refresh(p);
+				villageOrder(p, bell, center);
+			}));
 		if (!view.done()) {
 			if (view.kind() == net.valcheff.villageerrands.GroupOrder.Kind.DEFEND) {
 				buttons.add(button(player, Lang.tr(player, "group.defend_hint").withStyle(ChatFormatting.GRAY), null, 300,
