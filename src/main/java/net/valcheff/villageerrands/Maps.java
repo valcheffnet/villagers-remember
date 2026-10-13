@@ -55,7 +55,8 @@ public final class Maps {
 		lore.add(Lang.tr(player, "chart.use").withStyle(s -> s.withItalic(false).withColor(ChatFormatting.GRAY)));
 		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.DARK_GRAY)));
 		chart.set(DataComponents.LORE, new ItemLore(lore));
-		chart.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
+		// Looks like a rolled-up chart (the globe banner pattern) until it is unfolded into the map.
+		chart.set(DataComponents.ITEM_MODEL, net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(net.minecraft.world.item.Items.GLOBE_BANNER_PATTERN));
 		chart.set(DataComponents.MAX_STACK_SIZE, 1);
 		return Optional.of(chart);
 	}
@@ -154,6 +155,7 @@ public final class Maps {
 		} else {
 			map.set(DataComponents.ITEM_NAME, Lang.tr(player, "map.to", ErrandText.targetName(player, o)));
 			map.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
+			map.set(DataComponents.TOOLTIP_DISPLAY, net.minecraft.world.item.component.TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
 		}
 		List<Component> lore = new ArrayList<>();
 		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.GRAY)));
