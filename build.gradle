@@ -11,6 +11,15 @@ repositories {
 		name = 'TerraformersMC'
 		url = 'https://maven.terraformersmc.com/releases/'
 	}
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = 'Modrinth'
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter { includeGroup 'maven.modrinth' }
+	}
 }
 
 loom {
@@ -41,6 +50,16 @@ dependencies {
 
 	// Optional: Mod Menu shows the settings button. Not bundled, not required.
 	clientCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+	// Optional: Waystones (BlayTheNinth) names village waystones after the village. Compiled against, never bundled.
+	compileOnly "maven.modrinth:waystones:${project.waystones_version}"
+	compileOnly "maven.modrinth:balm:${project.balm_version}"
+	// The game test runs with Waystones to check the real naming; it is never part of the mod.
+	gametestCompileOnly "maven.modrinth:waystones:${project.waystones_version}"
+	gametestCompileOnly "maven.modrinth:balm:${project.balm_version}"
+	gametestRuntimeOnly "maven.modrinth:waystones:${project.waystones_version}"
+	gametestRuntimeOnly "maven.modrinth:balm:${project.balm_version}"
+	gametestRuntimeOnly "maven.modrinth:shogi:${project.shogi_version}"
 	localRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 

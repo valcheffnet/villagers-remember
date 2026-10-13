@@ -81,6 +81,8 @@ public final class ErrandsConfig {
 	 * (Dungeons and Taverns' rolled chart, for clients with that mod) or "auto" (dnt when that mod is installed).
 	 */
 	public String chartLook = "auto";
+	/** Waystones of KawaMood's Waystones datapack in a village are named after it (English name). */
+	public boolean waystoneNames = true;
 	/**
 	 * False: errands, contracts and village orders pay no emeralds, and villages stop putting emeralds into the
 	 * treasury; what is already there can still be sent. Experience and standing are paid as usual. /errands emeralds on|off.

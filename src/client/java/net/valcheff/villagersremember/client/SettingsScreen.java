@@ -67,7 +67,7 @@ public class SettingsScreen extends Screen {
 			"contractMaxEmeralds", "contractsForLegend", "groupOrders", "groupOrderDays", "groupOrderScale",
 			"groupRegularDays", "groupRewardEmeralds", "groupMinShare"));
 		SECTIONS.put("display", List.of("showMarkers", "markerRange", "villagerNames", "villagerNameRange", "showTracker",
-			"chartLook"));
+			"chartLook", "waystoneNames"));
 	}
 
 	private enum Mode { LOADING, SERVER, LOCAL, DENIED }
@@ -77,6 +77,8 @@ public class SettingsScreen extends Screen {
 	private Mode mode;
 	private boolean otherServer;
 	private boolean saving;
+	/** Waystones (mod or KawaMood's datapack) where the settings apply; without them their setting is hidden. */
+	private boolean waystones;
 	private JsonObject values;
 	private final Set<String> invalid = new LinkedHashSet<>();
 	private SettingsList list;
@@ -127,6 +129,7 @@ public class SettingsScreen extends Screen {
 		} else {
 			mode = Mode.LOCAL;
 			otherServer = mc.getConnection() != null;
+			waystones = net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("waystones");
 			values = JsonParser.parseString(ErrandsConfig.toJson(ErrandsConfig.INSTANCE)).getAsJsonObject();
 		}
 	}
@@ -149,6 +152,7 @@ public class SettingsScreen extends Screen {
 			return;
 		} else {
 			mode = Mode.SERVER;
+			waystones = settings.waystones();
 			values = JsonParser.parseString(settings.json()).getAsJsonObject();
 			invalid.clear();
 		}
@@ -201,6 +205,10 @@ public class SettingsScreen extends Screen {
 		values.add(key, value);
 	}
 
+	public boolean showsWaystones() {
+		return waystones;
+	}
+
 	public boolean loaded() {
 		return mode == Mode.SERVER || mode == Mode.LOCAL;
 	}
@@ -222,7 +230,7 @@ public class SettingsScreen extends Screen {
 			for (Map.Entry<String, List<String>> section : SECTIONS.entrySet()) {
 				addEntry(new HeaderRow(Component.translatable(KEY + "section." + section.getKey())));
 				for (String key : section.getValue()) {
-					if (values.has(key)) addEntry(setting(key));
+					if (values.has(key) && (waystones || !key.equals("waystoneNames"))) addEntry(setting(key));
 					shown.add(key);
 				}
 			}

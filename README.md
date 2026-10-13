@@ -1,5 +1,7 @@
 # Villagers Remember: Quests, Trust & Fair Trades
 
+[![Villager heads from Minecraft Heads](art/minecraft-heads-banner.png)](https://minecraft-heads.com)
+
 **Server-side. Vanilla clients welcome.**
 
 Villagers in vanilla Minecraft trade and that's it. With this mod they ask you for help. The farmer needs 20 bread baked, the cleric wants zombies cleared off the road, the cartographer sends you to find a shipwreck. Do the job, bring what was asked, and get paid. Keep helping and every villager remembers it: they greet you by how well they know you, give you better work, sell to you cheaper and one day make you the patron of their village.
@@ -58,6 +60,7 @@ With emerald rewards on, villagers who trust you put a share of their work aside
 - A sidebar tracker for the errands you follow, "!" over villagers with work for you and "?" when you can hand something in.
 - A chronicle book with your errands, villages, fame and collection (`/errands book`).
 - A villager who turns into a zombie villager and is cured keeps your standing, errands and name.
+- Works with the Waystones mod (BlayTheNinth) and the KawaMood's Waystones datapack: the waystone in a village is named after it (English name, or the name its patron gave it), so the waystone list shows villages. Waystones a player named keep their name. Setting `waystoneNames`, shown only when one of them is installed.
 - Errands are datapack JSON (`data/<namespace>/errands/*.json`), so packs can add their own.
 
 ## Install
@@ -93,7 +96,7 @@ Players have `/errands` (journal), `/errands book` and `/errands village`, which
 
 ## Credits
 
-Villager head textures come from [minecraft-heads.com](https://minecraft-heads.com). Item and block names shown in the screens are Minecraft's own translations and belong to Mojang.
+Villager head textures come from [minecraft-heads.com](https://minecraft-heads.com) and are used with their permission. Item and block names shown in the screens are Minecraft's own translations and belong to Mojang.
 
 ## License
 

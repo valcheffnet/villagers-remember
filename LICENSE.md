@@ -26,5 +26,6 @@ For permission requests or questions, open an issue at https://github.com/valche
 
 ## Third-party content
 
-- Villager head textures (`assets/villagersremember/heads.json`) are skins made by the community and listed on minecraft-heads.com. They are credited to that site and are not covered by this license.
+- Villager head textures (`assets/villagersremember/heads.json`) are skins made by the community and listed on minecraft-heads.com. They are used with the permission of minecraft-heads.com (October 2026), credited to that site, and are not covered
+by this license.
 - Item, block and entity names in `assets/villagersremember/vanilla_names/` are Minecraft's own translations, the property of Mojang Studios, included so the server can show names in each player's language.

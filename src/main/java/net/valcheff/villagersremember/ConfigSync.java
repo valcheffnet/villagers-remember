@@ -49,12 +49,13 @@ public final class ConfigSync {
 	}
 
 	/** Server answers: the settings as JSON when the player may change them, or an empty string when not. */
-	public record Settings(String json, boolean allowed, boolean saved) implements CustomPacketPayload {
+	public record Settings(String json, boolean allowed, boolean saved, boolean waystones) implements CustomPacketPayload {
 		public static final Type<Settings> TYPE = new Type<>(VillagersRemember.id("config"));
 		public static final StreamCodec<RegistryFriendlyByteBuf, Settings> CODEC = StreamCodec.composite(
 			ByteBufCodecs.stringUtf8(1 << 16), Settings::json,
 			ByteBufCodecs.BOOL, Settings::allowed,
 			ByteBufCodecs.BOOL, Settings::saved,
+			ByteBufCodecs.BOOL, Settings::waystones,
 			Settings::new);
 
 		@Override
@@ -70,13 +71,13 @@ public final class ConfigSync {
 		ServerPlayNetworking.registerGlobalReceiver(Request.TYPE, (payload, context) -> {
 			ServerPlayer player = context.player();
 			boolean allowed = canEdit(player);
-			context.responseSender().sendPacket(new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, false));
+			context.responseSender().sendPacket(new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, false, Waystones.available(context.server())));
 		});
 		ServerPlayNetworking.registerGlobalReceiver(Update.TYPE, (payload, context) -> {
 			ServerPlayer player = context.player();
 			boolean saved = apply(player.getScoreboardName(), canEdit(player), payload.json());
 			boolean allowed = canEdit(player);
-			context.responseSender().sendPacket(new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, saved));
+			context.responseSender().sendPacket(new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, saved, Waystones.available(context.server())));
 			if (saved) player.sendSystemMessage(Lang.tr(player, "config.saved").withStyle(ChatFormatting.GREEN));
 		});
 	}

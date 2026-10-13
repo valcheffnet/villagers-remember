@@ -36,6 +36,7 @@
 		"java": ">=${java_version}"
 	},
 	"suggests": {
-		"modmenu": "*"
+		"modmenu": "*",
+		"waystones": "*"
 	}
 }

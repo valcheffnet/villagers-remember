@@ -15,4 +15,5 @@ First release, for Minecraft 26.3 on Fabric. Server-side: players join with a va
 - Two economy switches for server owners: `/errands emeralds on|off` (off by default) and `/errands xp <multiplier>`.
 - A settings screen for clients with the mod (Mod Menu or `/villagersremember`). Admins edit the server's settings from it.
 - Players can only use the commands about their own progress; everything else needs permission level 3.
+- Waystones (mod by BlayTheNinth, or KawaMood's datapack): village waystones are named after their village.
 - English and Bulgarian.

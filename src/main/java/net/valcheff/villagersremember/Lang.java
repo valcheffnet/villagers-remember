@@ -111,7 +111,12 @@ public final class Lang {
 
 	/** The village name with this index; past the end of the list the names come round again as "Foxhollow 2". */
 	public static String villageNameAt(ServerPlayer player, int index) {
-		List<String> names = VILLAGE_NAMES.getOrDefault(language(player), List.of());
+		return villageNameAt(language(player), index);
+	}
+
+	/** The same in a given language ("bg_bg", "en_us"). */
+	public static String villageNameAt(String language, int index) {
+		List<String> names = VILLAGE_NAMES.getOrDefault(language, List.of());
 		if (names.isEmpty()) names = VILLAGE_NAMES.getOrDefault("en_us", List.of());
 		if (names.isEmpty()) return "Village " + (index + 1);
 		String name = names.get(index % names.size());

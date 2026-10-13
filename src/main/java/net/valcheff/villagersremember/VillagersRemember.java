@@ -59,6 +59,7 @@ public final class VillagersRemember implements ModInitializer {
 		Icons.load();
 		TextWidth.load();
 		ConfigSync.register();
+		BlayWaystones.register();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(s -> {
 			server = s;
@@ -86,6 +87,7 @@ public final class VillagersRemember implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(Hud::tick);
 		ServerTickEvents.END_SERVER_TICK.register(ActionHooks::tick);
 		ServerTickEvents.END_SERVER_TICK.register(GroupOrder::tick);
+		ServerTickEvents.END_SERVER_TICK.register(Waystones::tick);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, s) -> {
 			var player = handler.getPlayer();
 			Fame.updateTeam(player);

@@ -13,6 +13,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -442,6 +443,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			rewardSwitches(sp);
 			commandPermissions(sp);
 			harvestTitle(sp);
+			waystones(sp, bell);
+			blayWaystones(sp, bell);
 			settingsScreen(context, sp);
 			trials(context, sp, villagers);
 			treasury(context, sp, bell);
@@ -1235,6 +1238,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		context.runOnClient(mc -> mc.gui.setScreen(new net.valcheff.villagersremember.client.SettingsScreen(null)));
 		context.waitFor(mc -> mc.gui.screen() instanceof net.valcheff.villagersremember.client.SettingsScreen s && s.loaded(), 100);
 		context.takeScreenshot("settings-1-server");
+		// Waystones is in the test runtime, so the waystone setting is offered.
+		check(context.computeOnClient(mc -> ((net.valcheff.villagersremember.client.SettingsScreen) mc.gui.screen()).showsWaystones()),
+			"waystone setting hidden with Waystones installed");
 		context.runOnClient(mc -> {
 			var screen = (net.valcheff.villagersremember.client.SettingsScreen) mc.gui.screen();
 			screen.setForTest("xpMultiplier", new com.google.gson.JsonPrimitive(1.5));
@@ -1255,6 +1261,83 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return "ok";
 		});
 		check(result.equals("ok"), "settings screen: " + result);
+	}
+
+	/**
+	 * KawaMood's Waystones keeps its waystones in the storage pk:waystones (simulated here, the datapack isn't part of the
+	 * test): one still called "Waystone" in the village gets the village's English name, one a player named keeps it.
+	 */
+	private static void waystones(TestSingleplayerContext sp, BlockPos bell) {
+		String result = sp.getServer().computeOnServer(server -> {
+			var level = server.overworld();
+			var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
+			var village = registry.villageAt(level.dimension(), bell).orElse(null);
+			if (village == null) return "no village at the bell";
+			BlockPos at = bell.offset(3, 0, 0);
+			level.setBlockAndUpdate(at.above(), net.minecraft.world.level.block.Blocks.BARREL.defaultBlockState());
+			var barrel = (net.minecraft.world.level.block.entity.BarrelBlockEntity) level.getBlockEntity(at.above());
+			ItemStack pane = new ItemStack(Items.GLASS_PANE);
+			net.minecraft.nbt.CompoundTag pk = new net.minecraft.nbt.CompoundTag();
+			net.minecraft.nbt.CompoundTag pkData = new net.minecraft.nbt.CompoundTag();
+			pkData.putBoolean("custom_block", true);
+			pk.put("pk_data", pkData);
+			pane.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(pk));
+			barrel.setItem(0, pane);
+			String location = "location:{dimension:\"minecraft:overworld\",x:" + at.getX() + ",y:" + at.getY() + ",z:" + at.getZ() + "}";
+			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "data modify storage pk:waystones database.waystones set value ["
+				+ "{id:7,name:{text:\"Waystone\"}," + location + "},"
+				+ "{id:8,name:{text:\"My base\"}," + location + "}]");
+			int renamed = net.valcheff.villagersremember.Waystones.sync(server);
+			var list = server.getCommandStorage().get(net.minecraft.resources.Identifier.fromNamespaceAndPath("pk", "waystones"))
+				.getCompoundOrEmpty("database").getListOrEmpty("waystones");
+			String expected = net.valcheff.villagersremember.Lang.villageNameAt("en_us", registry.nameIndex(village, net.valcheff.villagersremember.Lang.villageNameCount()));
+			String first = list.getCompoundOrEmpty(0).getCompoundOrEmpty("name").getStringOr("text", "?");
+			String second = list.getCompoundOrEmpty(1).getCompoundOrEmpty("name").getStringOr("text", "?");
+			if (renamed != 1 || !first.equals(expected) || !second.equals("My base")) return renamed + " renamed: " + first + ", " + second + ", expected " + expected;
+			if (net.valcheff.villagersremember.Waystones.sync(server) != 0) return "renamed again";
+			String title = barrel.getCustomName() == null ? "none" : barrel.getCustomName().getString();
+			if (!title.equals(expected + " (7)")) return "barrel title " + title;
+			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "data remove storage pk:waystones database");
+			level.setBlockAndUpdate(at.above(), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+			return "ok";
+		});
+		check(result.equals("ok"), "waystones: " + result);
+	}
+
+	/**
+	 * The Waystones mod (in the test runtime only): a village waystone gets the village's name on its first activation,
+	 * follows the village when it is renamed, and a waystone a player renamed is left alone.
+	 */
+	private static void blayWaystones(TestSingleplayerContext sp, BlockPos bell) {
+		String result = sp.getServer().computeOnServer(server -> {
+			var level = server.overworld();
+			var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
+			var village = registry.villageAt(level.dimension(), bell).orElse(null);
+			if (village == null) return "no village at the bell";
+			String oldName = village.name;
+			var store = net.blay09.mods.waystones.store.SavedDataWaystonesStore.get(server);
+			var waystone = new net.blay09.mods.waystones.core.WaystoneImpl(net.blay09.mods.waystones.api.WaystoneKinds.WAYSTONE,
+				UUID.randomUUID(), level.dimension(), bell.offset(-3, 0, 0), net.blay09.mods.waystones.api.WaystoneOrigin.VILLAGE,
+				Component.empty(), net.blay09.mods.waystones.api.WaystoneVisibility.ACTIVATION);
+			store.addWaystone(waystone);
+			try {
+				net.blay09.mods.waystones.core.PlayerWaystoneManager.activateWaystone(player(server), waystone);
+				String expected = net.valcheff.villagersremember.Waystones.name(registry, village).getString();
+				if (!waystone.getName().getString().equals(expected)) return "activated as " + waystone.getName().getString() + ", expected " + expected;
+				village.name = "Brightwater";
+				net.valcheff.villagersremember.BlayWaystones.sync(server);
+				if (!waystone.getName().getString().equals("Brightwater")) return "after rename: " + waystone.getName().getString();
+				waystone.setName(Component.literal("Home"));
+				village.name = "Clearbrook";
+				net.valcheff.villagersremember.BlayWaystones.sync(server);
+				if (!waystone.getName().getString().equals("Home")) return "player's name replaced: " + waystone.getName().getString();
+				return "ok";
+			} finally {
+				village.name = oldName;
+				store.removeWaystone(waystone);
+			}
+		});
+		check(result.equals("ok"), "Waystones mod: " + result);
 	}
 
 	/** Harvest plus bringing the same crop reads as one short task: "Harvest and bring 28× Beetroot". */

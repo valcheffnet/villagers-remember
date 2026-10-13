@@ -887,5 +887,7 @@
 	"villagersremember.config.choice.off": "Изкл.",
 	"config.saved": "Настройките на Селяните помнят са записани.",
 	"pair.harvest": "Ожъни и донеси %s× %s",
-	"greet.tasks": "Задачи (%s)"
+	"greet.tasks": "Задачи (%s)",
+	"villagersremember.config.waystoneNames": "Имена на waystone-ите",
+	"villagersremember.config.waystoneNames.tooltip": "Waystone-ите в село (модът Waystones или датапакът KawaMood's Waystones) получават английското му име. Кръстените от играч остават."
 }

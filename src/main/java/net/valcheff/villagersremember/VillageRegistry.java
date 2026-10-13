@@ -81,6 +81,9 @@ public final class VillageRegistry extends SavedData {
 		/** The village's patron (one player, see {@link Patron}) and their name for when they are offline. */
 		public UUID patron;
 		public String patronName;
+		/** A waystone of the Waystones mod this mod named after the village, and the name it gave (see {@link BlayWaystones}). */
+		public UUID waystone;
+		public String waystoneName;
 		public final Set<Long> bells = new LinkedHashSet<>();
 		public final Map<UUID, Resident> residents = new LinkedHashMap<>();
 
@@ -366,6 +369,14 @@ public final class VillageRegistry extends SavedData {
 				} catch (IllegalArgumentException ignored) {
 				}
 			}
+			String waystone = t.getStringOr("waystone", "");
+			if (!waystone.isEmpty()) {
+				try {
+					v.waystone = UUID.fromString(waystone);
+					v.waystoneName = t.getStringOr("waystone_name", "");
+				} catch (IllegalArgumentException ignored) {
+				}
+			}
 			t.getLongArray("bells").ifPresent(arr -> {
 				for (long b : arr) v.bells.add(b);
 			});
@@ -415,6 +426,10 @@ public final class VillageRegistry extends SavedData {
 			if (v.patron != null) {
 				t.putString("patron", v.patron.toString());
 				if (v.patronName != null) t.putString("patron_name", v.patronName);
+			}
+			if (v.waystone != null) {
+				t.putString("waystone", v.waystone.toString());
+				t.putString("waystone_name", v.waystoneName == null ? "" : v.waystoneName);
 			}
 			t.put("bells", new LongArrayTag(v.bells.stream().mapToLong(Long::longValue).toArray()));
 			ListTag residents = new ListTag();
