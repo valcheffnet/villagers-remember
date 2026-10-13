@@ -83,14 +83,14 @@ Tiers and the points they start at:
 
 Names are the ones the target player sees, and they depend on that player's language. Tab completion lists them. A name with spaces or non-Latin letters needs quotes (`"Ябълково"`), and the suggestions add them for you.
 
-Two villagers in one village can share a name. They get their trade added (`Lotte.fisherman`, `Lotte.weaponsmith`), and a short id on top if even that repeats.
+Two villagers in one village can share a name. They get their trade added (`Stoyan.fisherman`, `Stoyan.weaponsmith`), and a short id on top if even that repeats.
 
 ### Testing
 
 | Command | What it does |
 |---|---|
 | `/errands villager levelup [levels]` | Raises the nearest villager (8 blocks) by one trade level, or by `levels`, the way trading does: the new level gets its trades. Unlike `/data merge ... {VillagerData:{level:5}}`, which changes only the number. |
-| `/errands villager <village> <villager> levelup [levels]` | The same for a villager named as you see them (the villager must be loaded). Example: `/errands villager here Lotte.weaponsmith levelup 4`. |
+| `/errands villager <village> <villager> levelup [levels]` | The same for a villager named as you see them (the villager must be loaded). Example: `/errands villager here Stoyan.weaponsmith levelup 4`. |
 | `/errands finish <player>` | Fills every action counter (craft, kill, catch...) of the player's active errands. |
 | `/errands give <player> <village> <villager> <errand>` | Gives the player a chosen errand from that villager, already accepted, as it would come in its pack. Tab completion lists the villager's errands: `reforge.iron_sword`, `order.winter_stock`, `craft.bread`, `kill.zombie`... A name used in two packs gets the pack added (`reforge.crossbow.t4`). |
 | `/errands finish <player> items` | The same, and gives the items still missing to bring, so every active errand can be handed in right away. |
@@ -103,7 +103,7 @@ Two villagers in one village can share a name. They get their trade added (`Lott
 /errands rep Steve 2 all tier 4
 /errands rep Steve here village reset
 /errands standing @p 3
-/errands give @p here Lotte.weaponsmith reforge.iron_sword
+/errands give @p here Stoyan.weaponsmith reforge.iron_sword
 /errands finish @p items
 /errands fame @p set 1500
 /errands order here add @p 500

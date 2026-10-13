@@ -8,7 +8,7 @@ The whole mod runs on the server. Players join with a normal vanilla client and 
 
 ## What makes it different
 
-Most quest mods give a village a board or a quest master, and every player has to install the mod. Here each villager is a person with their own memory of you. Lena the farmer may be your best friend while the butcher next door has never heard of you. That trust shows up where you already look: the prices in the trading screen go down for friends and up for people who hurt the village.
+Most quest mods give a village a board or a quest master, and every player has to install the mod. Here each villager is a person with their own memory of you. Stoyan the farmer may be your best friend while the butcher next door has never heard of you. That trust shows up where you already look: the prices in the trading screen go down for friends and up for people who hurt the village.
 
 Rewards are tuned to the work. Every errand pays more than the same goods would fetch from a villager, so an errand never earns less than plain trading. Big jobs are for the whole server: a monthly village order sized by how many people play, paid by what each of them brought.
 
@@ -45,7 +45,7 @@ With emerald rewards on, villagers who trust you put a share of their work aside
 ## End game
 
 - Fame from everything you do, with titles in chat and TAB: Helper, Benefactor, Legend. A Legend finds rare goods with the wandering trader.
-- Contracts: once a week every Best friend has a big job in three parts, about an hour and a half of work, paid in emeralds, experience, standing and fame. The third contract for a profession brings its legendary item, named after the villager who gave it ("Lena's Hoe") and enchanted to the limit.
+- Contracts: once a week every Best friend has a big job in three parts, about an hour and a half of work, paid in emeralds, experience, standing and fame. The third contract for a profession brings its legendary item, named after the villager who gave it ("Stoyan's Hoe") and enchanted to the limit.
 - Village orders: once a game month every village posts one big order for everyone on the server, sized by how many people play regularly: 512 food before winter for each of them, or 50 monsters cleared out of the village. Two friends get an order for two, a busy server one for its crowd. Bring any amount, any time. When it's done everyone is paid by their share, and never less than the goods would fetch from a villager.
 - Patron: the Hero of a village who has passed every trial with five of its villagers can become its patron. A village has one patron, the one with the most standing; anyone who does more takes the place, and the whole server hears about it. The patron's head is shown at the bell, they trade there at 45% off and they can give the village a name.
 - A collection for every profession: do each of its errands once.
@@ -53,7 +53,7 @@ With emerald rewards on, villagers who trust you put a share of their work aside
 
 ## Everything else
 
-- 230 village names (Bulgarian villages, many of them real) and villager names, in English and Bulgarian. More languages can be added as lang files.
+- 230 village names (Bulgarian villages, many of them real) and 314 villager names, mostly old Bulgarian ones, the same name in both languages (Мария is Maria in English). More languages can be added as lang files.
 - Villager names above their heads and in Jade, for each player in their language.
 - A sidebar tracker for the errands you follow, "!" over villagers with work for you and "?" when you can hand something in.
 - A chronicle book with your errands, villages, fame and collection (`/errands book`).

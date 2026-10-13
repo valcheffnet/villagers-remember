@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Legendary items (TIERS.md section 7): one per profession and player, with a name, a story and every fitting
  * enchantment at its best. Earned with contracts: the third contract a player completes for a profession brings
- * its legendary item, named after the villager who gave it ("Lena's Hoe").
+ * its legendary item, named after the villager who gave it ("Stoyan's Hoe").
  */
 public final class Legends {
 	private record Legend(Item item, Object[] enchantments) {
