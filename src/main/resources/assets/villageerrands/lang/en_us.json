@@ -660,7 +660,7 @@
 	"msg.gave_part": "You gave %s. Bring the rest when you have it.",
 	"confirm.abandon_kept": "The %s things you already gave stay with the villager.",
 	"group.players": "Sized for %s regular players",
-	"map.to": "Map: %s",
+	"map.to": "%s Map",
 	"map.from": "Drawn by %s",
 	"map.given": "%s gives you a chart to %s.",
 	"map.none": "Nobody here knows the way to %s. You'll have to find it.",

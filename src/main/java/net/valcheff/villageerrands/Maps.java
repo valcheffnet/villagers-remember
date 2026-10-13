@@ -142,28 +142,52 @@ public final class Maps {
 
 	/** A map in this dimension to the nearest such place, or empty when there is none in reach. */
 	private static Optional<ItemStack> mapIn(ServerPlayer player, ServerLevel level, Objective o, String villagerName) {
-		{
-			BlockPos found = find(player, level, o);
-			Holder<MapDecorationType> mark = MapDecorationTypes.RED_X;
-			String id = o.target();
-			if (o.type() == Objective.Type.VISIT_STRUCTURE) {
-				if (id.endsWith("mansion")) mark = MapDecorationTypes.WOODLAND_MANSION;
-				else if (id.endsWith("monument")) mark = MapDecorationTypes.OCEAN_MONUMENT;
-				else if (id.endsWith("trial_chambers")) mark = MapDecorationTypes.TRIAL_CHAMBERS;
-			}
-			if (found == null) return Optional.empty();
-			ItemStack map = MapItem.create(level, found.getX(), found.getZ(), (byte) 2, true, true);
-			MapItem.renderBiomePreviewMap(level, map);
-			MapItemSavedData.addTargetDecoration(map, found, "+", mark);
-			map.set(DataComponents.CUSTOM_NAME, Lang.tr(player, "map.to", ErrandText.targetName(player, o))
-				.withStyle(s -> s.withItalic(false).withColor(ChatFormatting.GOLD)));
-			List<Component> lore = new ArrayList<>();
-			lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.GRAY)));
-			map.set(DataComponents.LORE, new ItemLore(lore));
-			return Optional.of(map);
+		BlockPos found = find(player, level, o);
+		if (found == null) return Optional.empty();
+		Kind kind = kindOf(o);
+		ItemStack map = MapItem.create(level, found.getX(), found.getZ(), (byte) 2, true, true);
+		MapItem.renderBiomePreviewMap(level, map);
+		MapItemSavedData.addTargetDecoration(map, found, "+", kind.mark);
+		if (kind.item != null) {
+			// The game's own explorer map for this place: its icon in the inventory and its name in every language.
+			map = map.transmuteCopy(kind.item);
+		} else {
+			map.set(DataComponents.ITEM_NAME, Lang.tr(player, "map.to", ErrandText.targetName(player, o)));
+			map.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
 		}
+		List<Component> lore = new ArrayList<>();
+		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.GRAY)));
+		map.set(DataComponents.LORE, new ItemLore(lore));
+		return Optional.of(map);
 	}
 
+	/** The game's explorer map item and map icon for a place, where it has them (26.3). */
+	private record Kind(net.minecraft.world.item.Item item, Holder<MapDecorationType> mark) {
+	}
+
+	private static Kind kindOf(Objective o) {
+		if (o.type() != Objective.Type.VISIT_STRUCTURE) return new Kind(null, MapDecorationTypes.RED_X);
+		String id = o.target().substring(o.target().indexOf(':') + 1);
+		return switch (id) {
+			case "ancient_city" -> new Kind(net.minecraft.world.item.Items.BURIED_ANCIENT_CITY_MAP, MapDecorationTypes.ANCIENT_CITY);
+			case "mansion" -> new Kind(net.minecraft.world.item.Items.WOODLAND_MANSION_MAP, MapDecorationTypes.WOODLAND_MANSION);
+			case "monument" -> new Kind(net.minecraft.world.item.Items.OCEAN_MONUMENT_MAP, MapDecorationTypes.OCEAN_MONUMENT);
+			case "trial_chambers" -> new Kind(net.minecraft.world.item.Items.BURIED_TRIAL_CHAMBERS_MAP, MapDecorationTypes.TRIAL_CHAMBERS);
+			case "desert_pyramid" -> new Kind(net.minecraft.world.item.Items.DESERT_PYRAMID_MAP, MapDecorationTypes.DESERT_PYRAMID);
+			case "jungle_pyramid" -> new Kind(net.minecraft.world.item.Items.JUNGLE_PYRAMID_MAP, MapDecorationTypes.JUNGLE_TEMPLE);
+			case "swamp_hut" -> new Kind(net.minecraft.world.item.Items.SWAMP_HUT_MAP, MapDecorationTypes.SWAMP_HUT);
+			case "abandoned_camp" -> new Kind(net.minecraft.world.item.Items.ABANDONED_CAMP_MAP, MapDecorationTypes.ABANDONED_CAMP);
+			case "mineshaft", "mineshaft_mesa" -> new Kind(net.minecraft.world.item.Items.BURIED_MINESHAFT_MAP, MapDecorationTypes.MINESHAFT);
+			case "ocean_ruin_warm" -> new Kind(net.minecraft.world.item.Items.WARM_OCEAN_RUINS_MAP, MapDecorationTypes.OCEAN_RUIN_WARM);
+			case "buried_treasure" -> new Kind(net.minecraft.world.item.Items.BURIED_TREASURE_MAP, MapDecorationTypes.RED_X);
+			case "village_desert" -> new Kind(net.minecraft.world.item.Items.DESERT_VILLAGE_MAP, MapDecorationTypes.DESERT_VILLAGE);
+			case "village_plains" -> new Kind(net.minecraft.world.item.Items.PLAINS_VILLAGE_MAP, MapDecorationTypes.PLAINS_VILLAGE);
+			case "village_savanna" -> new Kind(net.minecraft.world.item.Items.SAVANNA_VILLAGE_MAP, MapDecorationTypes.SAVANNA_VILLAGE);
+			case "village_snowy" -> new Kind(net.minecraft.world.item.Items.SNOWY_VILLAGE_MAP, MapDecorationTypes.SNOWY_VILLAGE);
+			case "village_taiga" -> new Kind(net.minecraft.world.item.Items.TAIGA_VILLAGE_MAP, MapDecorationTypes.TAIGA_VILLAGE);
+			default -> new Kind(null, MapDecorationTypes.RED_X);
+		};
+	}
 	private static List<ServerLevel> searchOrder(MinecraftServer server, ServerLevel here) {
 		List<ServerLevel> out = new ArrayList<>();
 		out.add(here);
