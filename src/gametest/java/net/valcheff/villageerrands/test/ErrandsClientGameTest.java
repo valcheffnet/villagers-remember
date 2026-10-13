@@ -766,7 +766,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			ItemStack unfolded = player.getMainHandItem();
 			player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
 			if (unfolded.get(net.minecraft.core.component.DataComponents.MAP_ID) == null) return "chart did not unfold: " + unfolded;
-			if (!map.get().is(Items.FILLED_MAP) || !map.get().getHoverName().getString().startsWith("Map:")) return "map " + map.get();
+			if (!map.get().is(Items.FILLED_MAP) || !map.get().getHoverName().getString().endsWith(" Map")) return "map " + map.get();
 			// Enchanted rewards: from any set of enchantments, never a curse, always at the highest level.
 			for (int i = 0; i < 60; i++) {
 				ItemStack sword = new Errand.ItemReward(net.valcheff.villageerrands.ErrandPools.RewardKind.ENCHANT_MAX, "minecraft:iron_sword", 12, i)
