@@ -662,7 +662,7 @@
 	"group.players": "За %s редовни играчи",
 	"map.to": "Карта: %s",
 	"map.from": "Нарисувана от %s",
-	"map.given": "%s ти отбелязва пътя до %s на карта.",
+	"map.given": "%s ти дава свита карта до %s.",
 	"map.none": "Никой тук не знае пътя до %s. Ще трябва да го намериш сам.",
 	"side.order_mine": "Ти: %s",
 	"advancement.villageerrands.root.title": "Селски поръчки",
@@ -754,5 +754,13 @@
 	"advancement.villageerrands.collection.weaponsmith.title": "Книгата на оръжейника",
 	"advancement.villageerrands.collection.weaponsmith.description": "Изпълни всяка поръчка на оръжейника",
 	"advancement.villageerrands.collection.all.title": "Майстор на всички занаяти",
-	"advancement.villageerrands.collection.all.description": "Изпълни всяка поръчка на всяка професия"
+	"advancement.villageerrands.collection.all.description": "Изпълни всяка поръчка на всяка професия",
+	"chart.name": "Свита карта: %s",
+	"chart.use": "Използвай я, за да я разгънеш",
+	"chart.unfolding": "Картата се разгъва...",
+	"chart.wrong_dimension": "Тази карта се разгъва само в %s.",
+	"chart.nothing": "Наблизо няма %s. Опитай другаде.",
+	"dim.overworld": "Горния свят",
+	"dim.the_nether": "Недъра",
+	"dim.the_end": "Края"
 }

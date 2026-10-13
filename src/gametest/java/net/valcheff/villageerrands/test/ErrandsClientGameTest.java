@@ -758,6 +758,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			Objective visit = new Objective(Objective.Type.VISIT_BIOME, biome, false, 1, 0);
 			var map = net.valcheff.villageerrands.Maps.forVisit(player, visit, "Odo");
 			if (map.isEmpty()) return "no map to " + biome;
+			// The chart given with an errand unfolds into the map when used.
+			ItemStack chart = net.valcheff.villageerrands.Maps.chart(player, visit, "Odo").orElseThrow();
+			ItemStack held = player.getMainHandItem().copy();
+			player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, chart);
+			net.valcheff.villageerrands.Maps.use(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+			ItemStack unfolded = player.getMainHandItem();
+			player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
+			if (unfolded.get(net.minecraft.core.component.DataComponents.MAP_ID) == null) return "chart did not unfold: " + unfolded;
 			if (!map.get().is(Items.FILLED_MAP) || !map.get().getHoverName().getString().startsWith("Map:")) return "map " + map.get();
 			// Enchanted rewards: from any set of enchantments, never a curse, always at the highest level.
 			for (int i = 0; i < 60; i++) {

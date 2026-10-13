@@ -29,37 +29,129 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * A map to the place an errand sends the player to: given when an errand with a visit is accepted, like the
- * explorer maps of cartographers. The nearest structure (or biome) is searched in the player's dimension first,
- * then in the others (a fortress is found in the Nether, an end city in the End).
+ * Charts to the places errands send the player to. Accepting an errand with a visit gives a folded chart (a blank
+ * filled map with the target in its custom data, tinted by kind). Using it unfolds it: the nearest structure or
+ * biome is searched then, in the dimension the player is in, and the chart becomes a map with the place marked, like
+ * an explorer map. A chart for another dimension says where it unfolds. Vanilla clients see an ordinary map item.
  */
 public final class Maps {
+	private static final String CHART = "villageerrands_chart";
+
+	/** A folded chart for a visit objective, drawn by the villager. */
+	public static Optional<ItemStack> chart(ServerPlayer player, Objective o, String villagerName) {
+		if (o.type() != Objective.Type.VISIT_STRUCTURE && o.type() != Objective.Type.VISIT_BIOME) return Optional.empty();
+		ItemStack chart = new ItemStack(net.minecraft.world.item.Items.FILLED_MAP);
+		net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+		tag.putString("type", o.type().key());
+		tag.putString("target", o.target());
+		tag.putBoolean("tag", o.tag());
+		tag.putString("by", villagerName);
+		net.minecraft.nbt.CompoundTag root = new net.minecraft.nbt.CompoundTag();
+		root.put(CHART, tag);
+		chart.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(root));
+		chart.set(DataComponents.CUSTOM_NAME, Lang.tr(player, "chart.name", ErrandText.targetName(player, o))
+			.withStyle(s -> s.withItalic(false).withColor(ChatFormatting.AQUA)));
+		List<Component> lore = new ArrayList<>();
+		lore.add(Lang.tr(player, "chart.use").withStyle(s -> s.withItalic(false).withColor(ChatFormatting.GRAY)));
+		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.DARK_GRAY)));
+		chart.set(DataComponents.LORE, new ItemLore(lore));
+		chart.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
+		chart.set(DataComponents.MAX_STACK_SIZE, 1);
+		return Optional.of(chart);
+	}
+
+	/** The objective a chart leads to, if the stack is one of our charts. */
+	public static Optional<Objective> chartTarget(ItemStack stack) {
+		net.minecraft.world.item.component.CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+		if (data == null) return Optional.empty();
+		net.minecraft.nbt.CompoundTag tag = data.copyTag().getCompoundOrEmpty(CHART);
+		if (tag.isEmpty()) return Optional.empty();
+		Objective.Type type = tag.getStringOr("type", "").equals(Objective.Type.VISIT_BIOME.key())
+			? Objective.Type.VISIT_BIOME : Objective.Type.VISIT_STRUCTURE;
+		return Optional.of(new Objective(type, tag.getStringOr("target", ""), tag.getBooleanOr("tag", false), 1, 0));
+	}
+
+	/**
+	 * Right-click with a chart: searched now, in this dimension. Found: the chart becomes the map. Elsewhere: it says
+	 * which dimension it unfolds in. Nowhere near: it stays folded.
+	 */
+	public static net.minecraft.world.InteractionResult use(ServerPlayer player, net.minecraft.world.InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		Optional<Objective> target = chartTarget(stack);
+		if (target.isEmpty()) return net.minecraft.world.InteractionResult.PASS;
+		Objective o = target.get();
+		String by = stack.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(CHART).getStringOr("by", "?");
+		ServerLevel here = (ServerLevel) player.level();
+		Optional<ItemStack> map = mapIn(player, here, o, by);
+		if (map.isPresent()) {
+			player.setItemInHand(hand, map.get());
+			Hud.title(player, Component.empty(), Lang.tr(player, "chart.unfolding").withStyle(ChatFormatting.GOLD));
+			player.level().playSound(null, player.getX(), player.getY(), player.getZ(), net.minecraft.sounds.SoundEvents.BOOK_PAGE_TURN,
+				net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, 1.0f);
+			return net.minecraft.world.InteractionResult.SUCCESS;
+		}
+		// Not in this dimension: where then?
+		for (ServerLevel level : searchOrder(player.level().getServer(), here)) {
+			if (level == here) continue;
+			if (find(player, level, o) != null) {
+				player.sendSystemMessage(Lang.tr(player, "chart.wrong_dimension", Lang.tr(player, "dim." + level.dimension().identifier().getPath()))
+					.withStyle(ChatFormatting.YELLOW));
+				return net.minecraft.world.InteractionResult.SUCCESS;
+			}
+		}
+		player.sendSystemMessage(Lang.tr(player, "chart.nothing", ErrandText.targetName(player, o)).withStyle(ChatFormatting.GRAY));
+		return net.minecraft.world.InteractionResult.SUCCESS;
+	}
+
+	/** Tint of a folded chart by what it leads to. */
+	private static int tint(Objective o) {
+		String id = o.target();
+		if (o.type() == Objective.Type.VISIT_BIOME) return 0x3C8C3C;
+		if (id.contains("ancient_city")) return 0x0D3B4F;
+		if (id.contains("mansion")) return 0x5A3A1E;
+		if (id.contains("monument") || id.contains("shipwreck")) return 0x2E6FA8;
+		if (id.contains("trial")) return 0xB06A2A;
+		if (id.contains("fortress") || id.contains("bastion") || id.contains("ruined_portal")) return 0x8A1E1E;
+		if (id.contains("end_city") || id.contains("stronghold")) return 0x6A4A8A;
+		return 0x8C7A55;
+	}
 	/** Chunks searched for a structure, as vanilla explorer maps do. */
 	private static final int STRUCTURE_RADIUS = 100;
 	private static final int BIOME_RADIUS = 6400;
 
+	/** A finished map to the nearest such place in any dimension (the player's first). */
 	public static Optional<ItemStack> forVisit(ServerPlayer player, Objective o, String villagerName) {
 		if (o.type() != Objective.Type.VISIT_STRUCTURE && o.type() != Objective.Type.VISIT_BIOME) return Optional.empty();
 		MinecraftServer server = player.level().getServer();
 		for (ServerLevel level : searchOrder(server, (ServerLevel) player.level())) {
+			Optional<ItemStack> map = mapIn(player, level, o, villagerName);
+			if (map.isPresent()) return map;
+		}
+		return Optional.empty();
+	}
+
+	private static BlockPos find(ServerPlayer player, ServerLevel level, Objective o) {
+		try {
 			BlockPos origin = scaled(player, level);
-			BlockPos found;
+			return o.type() == Objective.Type.VISIT_STRUCTURE ? findStructure(level, o, origin) : findBiome(level, o, origin);
+		} catch (RuntimeException e) {
+			VillageErrands.LOG.debug("Map search for {} failed", o.target(), e);
+			return null;
+		}
+	}
+
+	/** A map in this dimension to the nearest such place, or empty when there is none in reach. */
+	private static Optional<ItemStack> mapIn(ServerPlayer player, ServerLevel level, Objective o, String villagerName) {
+		{
+			BlockPos found = find(player, level, o);
 			Holder<MapDecorationType> mark = MapDecorationTypes.RED_X;
-			try {
-				if (o.type() == Objective.Type.VISIT_STRUCTURE) {
-					found = findStructure(level, o, origin);
-					String id = o.target();
-					if (id.endsWith("mansion")) mark = MapDecorationTypes.WOODLAND_MANSION;
-					else if (id.endsWith("monument")) mark = MapDecorationTypes.OCEAN_MONUMENT;
-					else if (id.endsWith("trial_chambers")) mark = MapDecorationTypes.TRIAL_CHAMBERS;
-				} else {
-					found = findBiome(level, o, origin);
-				}
-			} catch (RuntimeException e) {
-				VillageErrands.LOG.debug("Map search for {} failed", o.target(), e);
-				found = null;
+			String id = o.target();
+			if (o.type() == Objective.Type.VISIT_STRUCTURE) {
+				if (id.endsWith("mansion")) mark = MapDecorationTypes.WOODLAND_MANSION;
+				else if (id.endsWith("monument")) mark = MapDecorationTypes.OCEAN_MONUMENT;
+				else if (id.endsWith("trial_chambers")) mark = MapDecorationTypes.TRIAL_CHAMBERS;
 			}
-			if (found == null) continue;
+			if (found == null) return Optional.empty();
 			ItemStack map = MapItem.create(level, found.getX(), found.getZ(), (byte) 2, true, true);
 			MapItem.renderBiomePreviewMap(level, map);
 			MapItemSavedData.addTargetDecoration(map, found, "+", mark);
@@ -70,7 +162,6 @@ public final class Maps {
 			map.set(DataComponents.LORE, new ItemLore(lore));
 			return Optional.of(map);
 		}
-		return Optional.empty();
 	}
 
 	private static List<ServerLevel> searchOrder(MinecraftServer server, ServerLevel here) {

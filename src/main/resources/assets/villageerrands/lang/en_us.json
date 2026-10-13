@@ -662,7 +662,7 @@
 	"group.players": "Sized for %s regular players",
 	"map.to": "Map: %s",
 	"map.from": "Drawn by %s",
-	"map.given": "%s marks the way to %s on a map.",
+	"map.given": "%s gives you a chart to %s.",
 	"map.none": "Nobody here knows the way to %s. You'll have to find it.",
 	"side.order_mine": "You: %s",
 	"advancement.villageerrands.root.title": "Village Errands",
@@ -754,5 +754,13 @@
 	"advancement.villageerrands.collection.weaponsmith.title": "Weaponsmith's Book",
 	"advancement.villageerrands.collection.weaponsmith.description": "Complete every errand a weaponsmith gives",
 	"advancement.villageerrands.collection.all.title": "Master of All Trades",
-	"advancement.villageerrands.collection.all.description": "Complete every errand of every profession"
+	"advancement.villageerrands.collection.all.description": "Complete every errand of every profession",
+	"chart.name": "Chart: %s",
+	"chart.use": "Use it to unfold the map",
+	"chart.unfolding": "The chart unfolds...",
+	"chart.wrong_dimension": "This chart unfolds only in %s.",
+	"chart.nothing": "No %s near here. Try somewhere else.",
+	"dim.overworld": "the Overworld",
+	"dim.the_nether": "the Nether",
+	"dim.the_end": "the End"
 }

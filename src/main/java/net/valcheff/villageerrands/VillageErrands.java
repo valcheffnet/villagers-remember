@@ -56,6 +56,10 @@ public final class VillageErrands implements ModInitializer {
 		});
 
 		UseEntityCallback.EVENT.register(Interactions::onUseEntity);
+		// Folded charts from errands unfold when used.
+		net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) ->
+			!level.isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer sp ? Maps.use(sp, hand)
+				: net.minecraft.world.InteractionResult.PASS);
 		UseBlockCallback.EVENT.register(Interactions::onUseBlock);
 		ServerLivingEntityEvents.AFTER_DEATH.register(Tracking::onDeath);
 		ServerLivingEntityEvents.AFTER_DAMAGE.register(Tracking::onDamage);
