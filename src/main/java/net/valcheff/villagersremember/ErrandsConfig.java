@@ -81,6 +81,13 @@ public final class ErrandsConfig {
 	 * (Dungeons and Taverns' rolled chart, for clients with that mod) or "auto" (dnt when that mod is installed).
 	 */
 	public String chartLook = "auto";
+	/**
+	 * False: errands, contracts and village orders pay no emeralds, and villages stop putting emeralds into the
+	 * treasury; what is already there can still be sent. Experience and standing are paid as usual. /errands emeralds on|off.
+	 */
+	public boolean emeraldRewards = true;
+	/** Experience from errands, contracts and village orders, times their usual amount. /errands xp <multiplier>. */
+	public double xpMultiplier = 1.0;
 	/** Experience points granted per emerald of reward budget. */
 	public double xpPerEmerald = 6.0;
 	public int maxEmeraldsPerErrand = 64;
@@ -141,7 +148,7 @@ public final class ErrandsConfig {
 		save();
 	}
 
-	private static void save() {
+	public static void save() {
 		try {
 			Files.createDirectories(FILE.getParent());
 			try (Writer writer = Files.newBufferedWriter(FILE, StandardCharsets.UTF_8)) {
@@ -185,6 +192,7 @@ public final class ErrandsConfig {
 		discountPerVillagerTier = Math.clamp(discountPerVillagerTier, 0.0, 1.0);
 		discountPerVillageTier = Math.clamp(discountPerVillageTier, 0.0, 1.0);
 		maxDiscount = Math.clamp(maxDiscount, 0.0, 0.95);
+		xpMultiplier = Math.clamp(xpMultiplier, 0.0, 10.0);
 		surchargePerNegativePoint = Math.clamp(surchargePerNegativePoint, 0.0, 1.0);
 		maxSurcharge = Math.clamp(maxSurcharge, 0.0, 10.0);
 		contractMinutes = Math.clamp(contractMinutes, 1.0, 10000.0);

@@ -78,6 +78,8 @@ Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into th
 | `fameTitles` | `true` | Titles in chat and TAB. Turn off if another plugin or mod manages teams. |
 | `tierEmeraldsPerMinute` | `0.6 ... 1.6` | Pay per minute of work, by pack. |
 | `groupOrders` | `true` | `groupOrderDays` 30; per regular player (online on `groupRegularDays` 3 days of the month): `groupOrderScale` 1.0 of the size, `groupRewardEmeralds` 80. |
+| `emeraldRewards` | `true` | `false` stops emeralds from errands, contracts, village orders and the treasury. Same as `/errands emeralds off`. |
+| `xpMultiplier` | `1.0` | Experience from errands, contracts and village orders. Same as `/errands xp`. |
 | `contracts` | `true` | `contractMinutes` 90, `contractMaxEmeralds` 160, `contractsForLegend` 3. |
 | `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |
 
@@ -85,7 +87,7 @@ Run `/errands reload` after editing.
 
 ## Commands
 
-Players have `/errands` (journal), `/errands book` and `/errands village`. Operators get standing, testing and end game commands, all listed in [COMMANDS.md](COMMANDS.md).
+Players have `/errands` (journal), `/errands book` and `/errands village`, which only show their own progress. Everything else needs permission level 3: standing, testing and end game commands, and two switches for the economy (`/errands emeralds on|off`, `/errands xp <multiplier>`). All of them are listed in [COMMANDS.md](COMMANDS.md).
 
 ## Credits
 

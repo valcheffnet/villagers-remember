@@ -1,6 +1,6 @@
 # Commands
 
-Everything lives under `/errands`. Players need no permission for the first group. The rest needs operator level 2 (`/op`, or cheats on in single player).
+Everything lives under `/errands`. Players can only use the first group, which shows them their own errands and the village they stand in. Everything else needs permission level 3 (an operator with the default `op-permission-level` 4, or cheats on in single player). Command blocks and datapack functions run at level 2 and can't use them.
 
 ## For players
 
@@ -18,6 +18,8 @@ The journal and the villager screens open from the game too: right-click a villa
 
 | Command | What it does |
 |---|---|
+| `/errands emeralds [on\|off]` | Shows or switches emerald rewards. Off: errands, contracts and village orders pay no emeralds, and villages stop filling the treasury (what is already there can still be sent). Experience and standing are paid as usual. Saved in the config. |
+| `/errands xp [multiplier]` | Shows or sets the experience from errands, contracts and village orders, times the usual amount (0 to 10, default 1). Saved in the config. |
 | `/errands reload` | Reloads the config and the errand pools (datapacks under `data/<namespace>/errands/`). |
 | `/errands reset <player>` | Wipes a player's errands and all of their standing, everywhere. |
 | `/errands village name <name>` | Renames the village you stand in. Everyone sees the new name, in any language. |

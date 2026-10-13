@@ -762,5 +762,8 @@
 	"chart.nothing": "No %s near here. Try somewhere else.",
 	"dim.overworld": "the Overworld",
 	"dim.the_nether": "the Nether",
-	"dim.the_end": "the End"
+	"dim.the_end": "the End",
+	"group.paid_xp": "The village order \"%s\" in %s is done! Your share: %s experience.",
+	"group.paid_partial_xp": "The month ended before \"%s\" in %s was done. Your share: %s experience.",
+	"treasury.closed": "Villages here don't set emeralds aside."
 }

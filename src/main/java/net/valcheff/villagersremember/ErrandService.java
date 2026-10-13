@@ -198,8 +198,8 @@ public final class ErrandService {
 		}
 
 		double bonus = Reputation.VILLAGE_BONUS[Reputation.villageTier(state, errand.village())];
-		int emeralds = ErrandText.withBonus(errand.emeralds(), bonus);
-		int xp = ErrandText.withBonus(errand.xp(), bonus);
+		int emeralds = ErrandText.withBonus(errand.paidEmeralds(), bonus);
+		int xp = ErrandText.withBonus(errand.paidXp(), bonus);
 		give(player, new ItemStack(Items.EMERALD), emeralds);
 		if (xp > 0) player.giveExperiencePoints(xp);
 		int extraLevels = Reputation.enchantBonus(state, errand.village());
@@ -315,7 +315,7 @@ public final class ErrandService {
 		}
 		List<ItemStack> reward = new java.util.ArrayList<>();
 		double bonus = Reputation.VILLAGE_BONUS[Reputation.villageTier(state, errand.village())];
-		int emeralds = ErrandText.withBonus(errand.emeralds(), bonus);
+		int emeralds = ErrandText.withBonus(errand.paidEmeralds(), bonus);
 		while (emeralds > 0) {
 			int n = Math.min(64, emeralds);
 			reward.add(new ItemStack(Items.EMERALD, n));

@@ -265,6 +265,8 @@ public final class GroupOrder {
 			double goods = order.contribValue.getOrDefault(e.getKey(), 0.0);
 			int emeralds = Math.max(1, (int) Math.round(Math.max(pool * share * pay, goods * cfg.marketPremium)));
 			int xp = Math.max(1, (int) Math.round(pool * share * pay * cfg.xpPerEmerald));
+			xp = (int) Math.round(xp * cfg.xpMultiplier);
+			if (!cfg.emeraldRewards) emeralds = 0;
 			int fame = Math.max(1, (int) Math.round(FAME_POOL * share * pay));
 			state.mail += emeralds;
 			state.mailXp += xp;
@@ -273,8 +275,8 @@ public final class GroupOrder {
 			ServerPlayer player = server.getPlayerList().getPlayer(e.getKey());
 			if (player != null) {
 				String name = village.map(v -> ErrandText.villageName(player, v.center)).orElse("?");
-				player.sendSystemMessage(Lang.tr(player, done ? "group.paid" : "group.paid_partial",
-					Lang.tr(player, "group." + kind.key() + ".name"), name, emeralds).withStyle(ChatFormatting.GOLD));
+				player.sendSystemMessage(Lang.tr(player, (done ? "group.paid" : "group.paid_partial") + (emeralds > 0 ? "" : "_xp"),
+					Lang.tr(player, "group." + kind.key() + ".name"), name, emeralds > 0 ? emeralds : xp).withStyle(ChatFormatting.GOLD));
 				if (done) {
 					Hud.title(player, Lang.tr(player, "group.done_title").withStyle(ChatFormatting.GOLD),
 						Lang.tr(player, "group." + kind.key() + ".name").withStyle(ChatFormatting.YELLOW));

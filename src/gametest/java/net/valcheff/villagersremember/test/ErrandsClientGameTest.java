@@ -436,6 +436,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			adminCommands(context, sp, villagers);
 			packs(sp, villagers);
 			partialDelivery(sp);
+			rewardSwitches(sp);
+			commandPermissions(sp);
 			trials(context, sp, villagers);
 			treasury(context, sp, bell);
 			uniqueNames(sp);
@@ -1174,6 +1176,72 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		int chest = sp.getServer().computeOnServer(server -> player(server).getEnderChestInventory().countItem(Items.EMERALD));
 		check(chest >= 10, "send button put " + chest + " emeralds in the ender chest");
 		closeScreen(context);
+	}
+
+	/** /errands emeralds off: hand-in pays no emeralds and the treasury stops; /errands xp 2 doubles the experience. */
+	private static void rewardSwitches(TestSingleplayerContext sp) {
+		String result = sp.getServer().computeOnServer(server -> {
+			ServerPlayer player = player(server);
+			ErrandsData.PlayerState state = state(server);
+			state.active.clear();
+			player.getInventory().clearContent();
+			Errand errand = null;
+			for (int i = 0; i < 400 && errand == null; i++) {
+				for (Errand e : ErrandGenerator.generate(new UUID(47, i), i, "minecraft:farmer", "minecraft:plains", 3, Optional.empty(), 2)) {
+					if (e.title().isEmpty() && e.emeralds() > 0 && e.xp() > 0 && e.item().isEmpty()) errand = e;
+				}
+			}
+			if (errand == null) return "no errand with emeralds and experience";
+			var source = server.createCommandSourceStack();
+			server.getCommands().performPrefixedCommand(source, "errands emeralds off");
+			server.getCommands().performPrefixedCommand(source, "errands xp 2");
+			try {
+				ErrandsConfig cfg = ErrandsConfig.INSTANCE;
+				if (cfg.emeraldRewards || cfg.xpMultiplier != 2.0) return "commands did not set " + cfg.emeraldRewards + " x" + cfg.xpMultiplier;
+				if (errand.paidEmeralds() != 0 || errand.paidXp() != Math.round(errand.xp() * 2.0)) return "paid " + errand.paidEmeralds() + "/" + errand.paidXp();
+				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
+				if (village.isPresent() && net.valcheff.villagersremember.Treasury.perDay(state, village.get()) != 0) return "treasury still pays";
+				if (!ErrandService.accept(player, errand)) return "accept";
+				ErrandsData.Active a = state.find(errand.id());
+				for (Objective o : errand.objectives()) {
+					if (o.isDelivery()) giveTarget(player, o);
+					else a.progress[errand.objectives().indexOf(o)] = o.needed();
+				}
+				int xpBefore = player.totalExperience;
+				int emeraldsBefore = countEmeralds(player);
+				if (!ErrandService.handIn(player, errand.id())) return "hand in";
+				int gotXp = player.totalExperience - xpBefore;
+				int gotEmeralds = countEmeralds(player) - emeraldsBefore;
+				if (gotEmeralds != 0) return "got " + gotEmeralds + " emeralds";
+				if (gotXp != errand.paidXp()) return "got " + gotXp + " xp, expected " + errand.paidXp();
+				return "ok";
+			} finally {
+				server.getCommands().performPrefixedCommand(source, "errands emeralds on");
+				server.getCommands().performPrefixedCommand(source, "errands xp 1");
+				player.getInventory().clearContent();
+			}
+		});
+		check(result.equals("ok"), "reward switches: " + result);
+		check(ErrandsConfig.INSTANCE.emeraldRewards && ErrandsConfig.INSTANCE.xpMultiplier == 1.0, "reward switches restored");
+	}
+
+	/** A player without permissions sees only the commands about their own progress, plus the dialog plumbing. */
+	private static void commandPermissions(TestSingleplayerContext sp) {
+		String result = sp.getServer().computeOnServer(server -> {
+			var plain = player(server).createCommandSourceStack().withPermission(net.minecraft.server.permissions.PermissionSet.NO_PERMISSIONS);
+			var gamemaster = player(server).createCommandSourceStack().withPermission(net.minecraft.server.permissions.LevelBasedPermissionSet.GAMEMASTER);
+			var root = server.getCommands().getDispatcher().getRoot().getChild("errands");
+			if (root == null || !root.canUse(plain)) return "/errands not open to players";
+			java.util.Set<String> open = new java.util.TreeSet<>();
+			for (var child : root.getChildren()) {
+				if (child.canUse(plain)) open.add(child.getName());
+				else if (child.canUse(gamemaster)) return child.getName() + " open to level 2";
+			}
+			if (!open.equals(new java.util.TreeSet<>(List.of("book", "click", "input", "track", "village")))) return "open to players: " + open;
+			if (root.getChild("village").getChild("name").canUse(plain)) return "village name open to players";
+			return "ok";
+		});
+		check(result.equals("ok"), "command permissions: " + result);
 	}
 
 	/** A villager offers only the pack of the player's tier with it: T1 for a stranger, T2 once Acquaintance. */

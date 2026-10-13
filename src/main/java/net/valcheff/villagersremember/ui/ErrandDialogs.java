@@ -275,7 +275,7 @@ public final class ErrandDialogs {
 			buttons.add(button(player, label, Lang.tr(player, "group." + view.kind().key() + ".name"), MENU_WIDTH,
 				p -> villageOrder(p, bell, village.center)));
 		});
-		buttons.add(treasuryButton(player, p -> board(p, bell, village.center), MENU_WIDTH));
+		addIfAny(buttons, treasuryButton(player, p -> board(p, bell, village.center), MENU_WIDTH));
 		buttons.add(journalButton(player, p -> board(p, bell, village.center), MENU_WIDTH));
 		String key = ErrandsData.villageKey(village.center);
 		boolean trackedVillage = state.trackedVillages.contains(key);
@@ -553,7 +553,7 @@ public final class ErrandDialogs {
 			body.add(new PlainMessage(Lang.tr(player, "journal.empty").withStyle(ChatFormatting.GRAY)
 				.append("\n").append(Lang.tr(player, "journal.how").withStyle(ChatFormatting.DARK_GRAY)), TEXT_WIDTH));
 		}
-		buttons.add(treasuryButton(player, p -> journal(p, back), LIST_WIDTH));
+		addIfAny(buttons, treasuryButton(player, p -> journal(p, back), LIST_WIDTH));
 		buttons.add(button(player, Component.empty().append(Icons.of(Items.WRITTEN_BOOK))
 			.append(Lang.tr(player, "menu.chronicle").withStyle(ChatFormatting.GOLD)), null, LIST_WIDTH, Chronicle::open));
 		ActionButton exit = back != null ? button(player, Lang.tr(player, "menu.back"), null, 150, back) : closeButton(player);
@@ -782,10 +782,16 @@ public final class ErrandDialogs {
 
 	// ---- treasury ----
 
+	private static void addIfAny(List<ActionButton> buttons, ActionButton button) {
+		if (button != null) buttons.add(button);
+	}
+
+	/** Null when the server pays no emeralds and nothing is left to send. */
 	private static ActionButton treasuryButton(ServerPlayer player, Consumer<ServerPlayer> back, int width) {
 		ErrandsData.PlayerState state = ErrandService.state(player);
 		Treasury.settle(player.level().getServer(), state, ErrandGenerator.day((ServerLevel) player.level()));
 		int waiting = (int) Math.floor(Treasury.waiting(state));
+		if (waiting <= 0 && !ErrandsConfig.INSTANCE.emeraldRewards) return null;
 		Component label = Component.empty().append(Icons.of(Items.EMERALD))
 			.append(Lang.tr(player, "board.treasury", waiting).withStyle(waiting > 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY));
 		return button(player, label, null, width, p -> treasury(p, back));
@@ -805,7 +811,9 @@ public final class ErrandDialogs {
 		Component title = Component.empty().append(Icons.of(Items.EMERALD)).append(Lang.tr(player, "treasury.title"));
 		List<DialogBody> body = new ArrayList<>();
 		MutableComponent head = Component.empty()
-			.append(Lang.tr(player, "treasury.income", money(perDay)).withStyle(ChatFormatting.GREEN))
+			.append(ErrandsConfig.INSTANCE.emeraldRewards
+				? Lang.tr(player, "treasury.income", money(perDay)).withStyle(ChatFormatting.GREEN)
+				: Lang.tr(player, "treasury.closed").withStyle(ChatFormatting.GRAY))
 			.append("\n").append(Lang.tr(player, "treasury.waiting", (int) Math.floor(waiting)).withStyle(ChatFormatting.YELLOW));
 		if (friendly > 0) {
 			head.append("\n").append(Lang.tr(player, friendly == 1 ? "treasury.network.one" : "treasury.network",
@@ -933,8 +941,8 @@ public final class ErrandDialogs {
 	private static Component rewards(ServerPlayer player, ServerLevel level, Errand errand, ErrandsData.PlayerState state) {
 		double bonus = Reputation.VILLAGE_BONUS[Reputation.villageTier(state, errand.village())];
 		MutableComponent out = Lang.tr(player, "errand.rewards").withStyle(ChatFormatting.GOLD);
-		int emeralds = ErrandText.withBonus(errand.emeralds(), bonus);
-		int xp = ErrandText.withBonus(errand.xp(), bonus);
+		int emeralds = ErrandText.withBonus(errand.paidEmeralds(), bonus);
+		int xp = ErrandText.withBonus(errand.paidXp(), bonus);
 		if (emeralds > 0) out.append("\n ").append(Icons.of(Items.EMERALD)).append(Lang.tr(player, "reward.emeralds", emeralds).withStyle(ChatFormatting.GREEN));
 		if (xp > 0) out.append("\n ").append(Icons.of(Items.EXPERIENCE_BOTTLE)).append(Lang.tr(player, "reward.xp", xp).withStyle(ChatFormatting.YELLOW));
 		errand.item().ifPresent(item -> {

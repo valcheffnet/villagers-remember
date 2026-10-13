@@ -47,6 +47,16 @@ public record Errand(
 	int reputation
 ) {
 	/** The same errand under another title (or none). */
+	/** Emeralds handed over: none when the server pays rewards without emeralds. */
+	public int paidEmeralds() {
+		return ErrandsConfig.INSTANCE.emeraldRewards ? emeralds : 0;
+	}
+
+	/** Experience handed over, times the server's experience multiplier. */
+	public int paidXp() {
+		return (int) Math.round(xp * ErrandsConfig.INSTANCE.xpMultiplier);
+	}
+
 	public Errand withTitle(Optional<String> newTitle) {
 		return new Errand(id, villager, profession, villagerType, villagerLevel, tier, village, newTitle, objectives, value,
 			emeralds, xp, item, reputation);

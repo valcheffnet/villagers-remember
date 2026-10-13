@@ -72,7 +72,7 @@ public final class ErrandsCommand {
 			.then(Commands.literal("village")
 				.executes(ctx -> villageInfo(ctx.getSource()))
 				.then(Commands.literal("name")
-					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
 					.then(Commands.argument("name", StringArgumentType.greedyString())
 						.executes(ctx -> {
 							ServerPlayer player = ctx.getSource().getPlayerOrException();
@@ -86,8 +86,34 @@ public final class ErrandsCommand {
 							ctx.getSource().sendSuccess(() -> Component.literal("Village renamed to " + village.get().name), true);
 							return 1;
 						}))))
+			.then(Commands.literal("emeralds")
+				.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
+				.executes(ctx -> {
+					boolean on = ErrandsConfig.INSTANCE.emeraldRewards;
+					ctx.getSource().sendSuccess(() -> Component.literal(on
+						? "Emerald rewards are on: errands, contracts, village orders and the treasury pay emeralds"
+						: "Emerald rewards are off: no emeralds from errands, contracts or village orders, and the treasury is closed"), false);
+					return on ? 1 : 0;
+				})
+				.then(Commands.literal("on").executes(ctx -> emeralds(ctx.getSource(), true)))
+				.then(Commands.literal("off").executes(ctx -> emeralds(ctx.getSource(), false))))
+			.then(Commands.literal("xp")
+				.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
+				.executes(ctx -> {
+					double m = ErrandsConfig.INSTANCE.xpMultiplier;
+					ctx.getSource().sendSuccess(() -> Component.literal("Experience multiplier: x" + m), false);
+					return (int) Math.round(m * 100);
+				})
+				.then(Commands.argument("multiplier", com.mojang.brigadier.arguments.DoubleArgumentType.doubleArg(0, 10))
+					.executes(ctx -> {
+						double m = com.mojang.brigadier.arguments.DoubleArgumentType.getDouble(ctx, "multiplier");
+						ErrandsConfig.INSTANCE.xpMultiplier = m;
+						ErrandsConfig.save();
+						ctx.getSource().sendSuccess(() -> Component.literal("Experience from errands, contracts and village orders: x" + m), true);
+						return 1;
+					})))
 			.then(Commands.literal("reload")
-				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
 				.executes(ctx -> {
 					ErrandsConfig.load();
 					Lang.load();
@@ -96,7 +122,7 @@ public final class ErrandsCommand {
 					return 1;
 				}))
 			.then(Commands.literal("reset")
-				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
 				.then(Commands.argument("player", EntityArgument.player())
 					.executes(ctx -> {
 						ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
@@ -112,5 +138,15 @@ public final class ErrandsCommand {
 						return 1;
 					}))));
 		AdminCommands.register(dispatcher);
+	}
+
+	/** Turns emerald rewards on or off for the whole server and saves the choice in the config file. */
+	private static int emeralds(net.minecraft.commands.CommandSourceStack source, boolean on) {
+		ErrandsConfig.INSTANCE.emeraldRewards = on;
+		ErrandsConfig.save();
+		source.sendSuccess(() -> Component.literal(on
+			? "Emerald rewards on. Errands offered before keep their listed pay."
+			: "Emerald rewards off. Errands, contracts and village orders pay no emeralds, and the treasury is closed."), true);
+		return 1;
 	}
 }
