@@ -116,8 +116,35 @@ public final class Trust {
 		return n;
 	}
 
+	/** Vanilla trading memory that makes a villager know the player: about ten recent trades (2 per trade, up to 25). */
+	private static final int REMEMBERED_TRADING = 20;
+
+	/**
+	 * Villagers who remember the player by their own vanilla memory (gossip) join on top of the places earned: cured
+	 * by the player (major positive, it never fades), or traded with them a lot lately. So a trading hall the player
+	 * has used for ages knows them from the start, Master villagers included (user, 2026-10-14).
+	 */
+	private static boolean remembered(MinecraftServer server, ErrandsData.PlayerState state, VillageRegistry.Village village, Circle circle) {
+		net.minecraft.server.level.ServerLevel level = server.getLevel(village.center.dimension());
+		if (level == null) return false;
+		boolean added = false;
+		for (VillageRegistry.Resident r : village.residents.values()) {
+			if (r.baby || circle.members.contains(r.id) || ErrandPools.get(r.profession) == null) continue;
+			net.minecraft.world.entity.npc.villager.Villager villager = Villages.loaded(level, r.id);
+			if (villager == null) continue;
+			var memory = villager.getGossips().getGossipEntries().get(state.id);
+			if (memory == null) continue;
+			if (memory.getInt(net.minecraft.world.entity.ai.gossip.GossipType.MAJOR_POSITIVE) <= 0
+				&& memory.getInt(net.minecraft.world.entity.ai.gossip.GossipType.TRADING) < REMEMBERED_TRADING) continue;
+			circle.members.add(r.id);
+			tell(server, state, r.id, "trust.known");
+			added = true;
+		}
+		return added;
+	}
+
 	private static void fill(MinecraftServer server, ErrandsData.PlayerState state, VillageRegistry.Village village, Circle circle) {
-		boolean changed = false;
+		boolean changed = remembered(server, state, village, circle);
 		if (living(circle) == 0 && !circle.members.isEmpty()) {
 			// Everyone who trusted the player is gone: someone new dares, the day after the last one died.
 			long today = ErrandGenerator.day(server.overworld());

@@ -18,7 +18,7 @@ First release, for Minecraft 26.3 on Fabric. Server-side: players join with a va
 - Waystones (mod by BlayTheNinth, or KawaMood's datapack): village waystones are named after their village.
 - Grey "?" over villagers whose errands you carry, also when the journal is full.
 - Harvests picked with a right-click mod (RightClickHarvest and similar) count.
-- Gradual trust: in a new village one villager talks to you first; every tier with someone who trusts you, a finished village order, trading a villager up a level and the village's standing open up more. Per player.
+- Gradual trust: in a new village one villager talks to you first; every tier with someone who trusts you, a finished village order, trading a villager up a level and the village's standing open up more; villagers you cured or traded with a lot lately know you from the start. Per player.
 - The first trial of trust a player ever gets asks for an ender chest (kept): that is where the treasury leaves its daily share. The treasury pays whether errand emeralds are on or off.
 - Treasury income is a 24th of before (about 0.6 a game day for a Hero village of best friends) and is kept for 504 game days (a real week).
 - The first pack is sized for players without farms (20-odd wheat, 30-50 sugar cane instead of hundreds); each pack after it expects a bit more of a farm, the top one the usual farms.

@@ -1541,6 +1541,24 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				if (open.get().size() != before + 1) return "after trading up " + open.get().size() + " open, expected " + (before + 1);
 				real.circles.remove(ErrandsData.villageKey(village.center));
 
+				// A villager's own memory: a few trades aren't enough, many recent trades or a cure are.
+				List<Villager> strangers = new java.util.ArrayList<>();
+				for (UUID id : everyone) {
+					if (level.getEntity(id) instanceof Villager v && v.isAlive() && ErrandGenerator.givesErrands(v)
+						&& !net.valcheff.villagersremember.Trust.circle(server, fresh, village).members.contains(v.getUUID())) strangers.add(v);
+				}
+				if (strangers.size() < 2) return "not enough strangers left: " + strangers.size();
+				Villager traded = strangers.get(0);
+				Villager curedBy = strangers.get(1);
+				traded.getGossips().add(fresh.id, net.minecraft.world.entity.ai.gossip.GossipType.TRADING, 10);
+				net.valcheff.villagersremember.Trust.refresh(server, fresh, village);
+				if (net.valcheff.villagersremember.Trust.circle(server, fresh, village).members.contains(traded.getUUID())) return "five trades were enough";
+				traded.getGossips().add(fresh.id, net.minecraft.world.entity.ai.gossip.GossipType.TRADING, 10);
+				curedBy.getGossips().add(fresh.id, net.minecraft.world.entity.ai.gossip.GossipType.MAJOR_POSITIVE, 20);
+				var known = net.valcheff.villagersremember.Trust.refresh(server, fresh, village);
+				if (!known.members.contains(traded.getUUID())) return "ten recent trades didn't make the villager remember";
+				if (!known.members.contains(curedBy.getUUID())) return "a cure didn't make the villager remember";
+
 				// Gradual trust off: everyone offers errands again.
 				ErrandsConfig.INSTANCE.gradualTrust = false;
 				int all = 0;
