@@ -96,7 +96,6 @@ public final class VillagersRemember implements ModInitializer {
 			GroupOrder.deliverMail(player);
 			Milestones.check(player);
 		});
-		PlayerBlockBreakEvents.AFTER.register(ActionHooks::blockBroken);
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
 			Hud.forget(handler.getPlayer().getUUID());
 			DialogActions.forget(handler.getPlayer().getUUID());

@@ -76,6 +76,19 @@ public final class ErrandText {
 		};
 	}
 
+	/**
+	 * The sidebar line for an objective of an errand: mining and harvesting count what they give, so with something
+	 * to bring they are named by it ("Mine Coal", not "Mine Coal Ore").
+	 */
+	public static MutableComponent shortName(ServerPlayer player, Errand errand, Objective o) {
+		if (o.type() == Objective.Type.MINE || o.type() == Objective.Type.HARVEST) {
+			for (Objective d : errand.objectives()) {
+				if (d.isDelivery()) return Lang.tr(player, "side." + o.type().key(), targetName(player, d));
+			}
+		}
+		return shortName(player, o);
+	}
+
 	/** The sidebar line for an objective, without the count: "Defeat Squid", "Cook Steak", "Visit Igloo". */
 	public static MutableComponent shortName(ServerPlayer player, Objective o) {
 		return switch (o.type()) {
@@ -177,9 +190,10 @@ public final class ErrandText {
 			Objective action = errand.main();
 			Objective delivery = objectives.get(0) == action ? objectives.get(1) : objectives.get(0);
 			// A harvested crop is a block (minecraft:potatoes) and what is brought its item (minecraft:potato).
-			boolean sameThing = action.type() == Objective.Type.HARVEST
-				|| action.target().equals(delivery.target()) && action.tag() == delivery.tag();
-			if (delivery.isDelivery() && (MAKES_ITEM.contains(action.type()) || action.type() == Objective.Type.HARVEST)
+			// Mining counts what the ore gives: coal ore and coal are the same thing too.
+			boolean gives = action.type() == Objective.Type.HARVEST || action.type() == Objective.Type.MINE;
+			boolean sameThing = gives || action.target().equals(delivery.target()) && action.tag() == delivery.tag();
+			if (delivery.isDelivery() && (MAKES_ITEM.contains(action.type()) || gives)
 				&& action.count() == delivery.count() && sameThing) {
 				String key = "pair." + action.type().key() + (action.type() == Objective.Type.SMELT ? smeltVariant(action) : "");
 				return Lang.tr(player, key, action.count(), targetName(player, delivery));

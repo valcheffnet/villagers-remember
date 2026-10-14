@@ -468,7 +468,7 @@ def to_actions(task):
         return with_objectives(task, [{"kill": "minecraft:" + mob, "factor": factor}, {"deliver": target}], None, extra)
     if it in MINED:
         block, factor = MINED[it]
-        return with_objectives(task, [{"mine": block, "factor": factor}, {"deliver": target}], 1.2)
+        return with_objectives(task, [{"mine": block}, {"deliver": target}], 1.2)
     kinds = RECIPES.get(it, set())
     if it in ALWAYS_SMELT or ("smelt" in kinds and "craft" not in kinds):
         return with_objectives(task, [{"smelt": target}, {"deliver": target}], 1.2)

@@ -6,8 +6,7 @@
       "value": 0.3571,
       "objectives": [
         {
-          "mine": "#minecraft:coal_ores",
-          "factor": 1.0
+          "mine": "#minecraft:coal_ores"
         },
         {
           "deliver": "minecraft:coal"
@@ -218,8 +217,7 @@
       "value": 0.5,
       "objectives": [
         {
-          "mine": "minecraft:obsidian",
-          "factor": 1.0
+          "mine": "minecraft:obsidian"
         },
         {
           "deliver": "minecraft:obsidian"
@@ -399,8 +397,7 @@
       "value": 3.0,
       "objectives": [
         {
-          "mine": "#minecraft:diamond_ores",
-          "factor": 1.0
+          "mine": "#minecraft:diamond_ores"
         },
         {
           "deliver": "minecraft:diamond"

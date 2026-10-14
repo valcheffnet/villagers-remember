@@ -286,6 +286,39 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 					: "right-click picked " + picked + ", young " + afterYoung + ", broken dropped " + dropped + ", total " + total;
 			});
 			check(rightClick.equals("ok"), "right-click harvest: " + rightClick);
+			// Mining counts what the ore gave (Fortune too), and with coal to bring it reads "Mine Coal".
+			Errand mineCoal = new Errand("test/0/3", UUID.randomUUID(), "minecraft:toolsmith", "minecraft:plains", 1, 1, Optional.empty(),
+				Optional.empty(), List.of(new Objective(Objective.Type.MINE, "minecraft:coal_ores", true, 30, 0),
+					new Objective(Objective.Type.DELIVER, "minecraft:coal", false, 30, 0)), 1, 0, 1, Optional.empty(), 1);
+			String mined = sp.getServer().computeOnServer(server -> {
+				ServerPlayer player = player(server);
+				ServerLevel level = server.overworld();
+				if (!ErrandService.accept(player, mineCoal)) return "accept";
+				int slot = player.getInventory().getSelectedSlot();
+				ItemStack held = player.getInventory().getItem(slot).copy();
+				ItemStack pick = new ItemStack(Items.DIAMOND_PICKAXE);
+				pick.enchant(level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+					.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE), 3);
+				player.getInventory().setItem(slot, pick);
+				BlockPos ore = base.offset(-6, 0, 6);
+				var around = new net.minecraft.world.phys.AABB(ore).inflate(3);
+				level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).forEach(net.minecraft.world.entity.Entity::discard);
+				for (int i = 0; i < 3; i++) {
+					level.setBlockAndUpdate(ore, Blocks.COAL_ORE.defaultBlockState());
+					player.gameMode.destroyBlock(ore);
+				}
+				player.getInventory().setItem(slot, held);
+				int coal = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).stream()
+					.filter(e -> e.getItem().is(Items.COAL)).mapToInt(e -> e.getItem().getCount()).sum();
+				level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).forEach(net.minecraft.world.entity.Entity::discard);
+				int progress = state(server).find(mineCoal.id()).progress[0];
+				String line = net.valcheff.villagersremember.ErrandText.shortName(player, mineCoal, mineCoal.objectives().get(0)).getString();
+				String title = net.valcheff.villagersremember.ErrandText.task(player, mineCoal).getString();
+				ErrandService.abandon(player, mineCoal.id());
+				return coal >= 3 && progress == coal && line.equals("Mine Coal") && title.equals("Mine and bring 30× Coal") ? "ok"
+					: "coal dropped " + coal + ", progress " + progress + ", line '" + line + "', title '" + title + "'";
+			});
+			check(mined.equals("ok"), "mine coal: " + mined);
 			sp.getServer().runOnServer(server -> {
 				ServerPlayer player = player(server);
 				ServerLevel level = server.overworld();

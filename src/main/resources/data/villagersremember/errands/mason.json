@@ -27,8 +27,7 @@
       "value": 0.3571,
       "objectives": [
         {
-          "mine": "minecraft:clay",
-          "factor": 0.25
+          "mine": "minecraft:clay"
         },
         {
           "deliver": "minecraft:clay_ball"
@@ -245,8 +244,7 @@
       "value": 0.1,
       "objectives": [
         {
-          "mine": "minecraft:calcite",
-          "factor": 1.0
+          "mine": "minecraft:calcite"
         },
         {
           "deliver": "minecraft:calcite"
@@ -340,8 +338,7 @@
       "value": 0.1,
       "objectives": [
         {
-          "mine": "minecraft:dripstone_block",
-          "factor": 1.0
+          "mine": "minecraft:dripstone_block"
         },
         {
           "deliver": "minecraft:dripstone_block"

@@ -49,8 +49,7 @@
       "value": 0.15,
       "objectives": [
         {
-          "mine": "#minecraft:redstone_ores",
-          "factor": 0.25
+          "mine": "#minecraft:redstone_ores"
         },
         {
           "deliver": "minecraft:redstone"
@@ -104,8 +103,7 @@
       "value": 0.05,
       "objectives": [
         {
-          "mine": "#minecraft:lapis_ores",
-          "factor": 0.2
+          "mine": "#minecraft:lapis_ores"
         },
         {
           "deliver": "minecraft:lapis_lazuli"
@@ -146,8 +144,7 @@
       "value": 0.1,
       "objectives": [
         {
-          "mine": "minecraft:glowstone",
-          "factor": 0.33
+          "mine": "minecraft:glowstone"
         },
         {
           "deliver": "minecraft:glowstone_dust"

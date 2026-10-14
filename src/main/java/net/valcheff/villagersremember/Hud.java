@@ -238,7 +238,7 @@ public final class Hud {
 				int done = ErrandService.progress(player, a, k);
 				boolean finished = done >= o.needed();
 				MutableComponent text = Component.literal("  ").append(Icons.of(ErrandText.icon(o).getItem()))
-					.append(ErrandText.shortName(player, o).withStyle(finished ? ChatFormatting.GRAY : ChatFormatting.WHITE));
+					.append(ErrandText.shortName(player, a.errand, o).withStyle(finished ? ChatFormatting.GRAY : ChatFormatting.WHITE));
 				lines.add(new Line(text, ErrandText.bar(done, o.needed(), 5)));
 			}
 		}

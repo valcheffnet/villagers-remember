@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.CartographyTableMenu;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
@@ -70,14 +68,23 @@ public final class ActionHooks {
 		collecting++;
 	}
 
-	/** The break is done and its items dropped: a fully grown crop is a harvest of what it gave. */
+	/**
+	 * The break is done and its items dropped: a fully grown crop is a harvest of what it gave, and a block mined
+	 * without Silk Touch counts what it dropped ("mine 15 coal" is 15 coal, Fortune helps).
+	 */
 	public static void broken(ServerPlayer player, BlockPos pos, boolean destroyed) {
 		BlockState state = BREAKING.isEmpty() ? null : BREAKING.pop();
 		collecting = Math.max(0, collecting - 1);
 		java.util.List<ItemStack> drops = DROPS.remove(pos);
-		if (state == null || !destroyed || !mature(state)) return;
-		int n = produce(state, drops);
-		if (n > 0) Actions.record(player, Objective.Type.HARVEST, n, o -> o.matchesBlock(state));
+		if (state == null || !destroyed) return;
+		if (mature(state)) {
+			int n = produce(state, drops);
+			if (n > 0) Actions.record(player, Objective.Type.HARVEST, n, o -> o.matchesBlock(state));
+		}
+		if (!silkTouch(player.level(), player.getMainHandItem())) {
+			int n = drops == null ? 1 : drops.stream().mapToInt(ItemStack::getCount).sum();
+			if (n > 0) Actions.record(player, Objective.Type.MINE, n, o -> o.matchesBlock(state));
+		}
 	}
 
 	/** What the crop is grown for; its seeds are left out unless they are the produce (carrots, potatoes). */
@@ -149,12 +156,6 @@ public final class ActionHooks {
 		}
 		CLICKED.clear();
 		DROPS.clear();
-	}
-
-	/** Breaking a block: any block mined without Silk Touch counts as mined (a harvest is counted in {@link #broken}). */
-	public static void blockBroken(Level level, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-		if (!(player instanceof ServerPlayer sp)) return;
-		if (!silkTouch(level, sp.getMainHandItem())) Actions.record(sp, Objective.Type.MINE, 1, o -> o.matchesBlock(state));
 	}
 
 	private static boolean mature(BlockState state) {

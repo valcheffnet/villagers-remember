@@ -886,6 +886,7 @@
 	"villagersremember.config.choice.off": "Off",
 	"config.saved": "Villagers Remember settings saved.",
 	"pair.harvest": "Harvest and bring %s× %s",
+	"pair.mine": "Mine and bring %s× %s",
 	"greet.tasks": "Tasks (%s)",
 	"villagersremember.config.waystoneNames": "Name village waystones",
 	"villagersremember.config.waystoneNames.tooltip": "Waystones in a village (Waystones mod or KawaMood's Waystones datapack) get its English name. Waystones a player named keep their name.",

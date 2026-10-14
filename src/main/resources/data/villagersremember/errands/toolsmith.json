@@ -6,8 +6,7 @@
       "value": 0.3571,
       "objectives": [
         {
-          "mine": "#minecraft:coal_ores",
-          "factor": 1.0
+          "mine": "#minecraft:coal_ores"
         },
         {
           "deliver": "minecraft:coal"
@@ -62,8 +61,7 @@
       "value": 0.15,
       "objectives": [
         {
-          "mine": "#minecraft:redstone_ores",
-          "factor": 0.25
+          "mine": "#minecraft:redstone_ores"
         },
         {
           "deliver": "minecraft:redstone"
@@ -292,8 +290,7 @@
       "value": 0.3,
       "objectives": [
         {
-          "mine": "minecraft:amethyst_cluster",
-          "factor": 0.25
+          "mine": "minecraft:amethyst_cluster"
         },
         {
           "deliver": "minecraft:amethyst_shard"
@@ -443,8 +440,7 @@
       "value": 3.0,
       "objectives": [
         {
-          "mine": "#minecraft:diamond_ores",
-          "factor": 1.0
+          "mine": "#minecraft:diamond_ores"
         },
         {
           "deliver": "minecraft:diamond"
@@ -495,8 +491,7 @@
       "value": 0.1374,
       "objectives": [
         {
-          "mine": "minecraft:nether_quartz_ore",
-          "factor": 1.0
+          "mine": "minecraft:nether_quartz_ore"
         },
         {
           "deliver": "minecraft:quartz"

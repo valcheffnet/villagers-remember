@@ -173,8 +173,7 @@
       "value": 0.1,
       "objectives": [
         {
-          "mine": "minecraft:melon",
-          "factor": 0.2
+          "mine": "minecraft:melon"
         },
         {
           "deliver": "minecraft:melon_slice"
