@@ -55,7 +55,8 @@ public class SettingsScreen extends Screen {
 		"villagerNames", List.of("always", "look", "off"));
 
 	static {
-		SECTIONS.put("general", List.of("language", "talkMenu", "bellOpensBoard", "villageRadius", "maxActiveErrands",
+		SECTIONS.put("general", List.of("language", "talkMenu", "bellOpensBoard", "villageRadius", "gradualTrust",
+			"trustVillageBonus", "maxActiveErrands",
 			"errandsPerLevel", "respectedBonusErrand"));
 		SECTIONS.put("rewards", List.of("emeraldRewards", "xpMultiplier", "tierEmeraldsPerMinute", "marketPremium",
 			"xpPerEmerald", "maxEmeraldsPerErrand", "trialCountFactor", "trialRewardMultiplier"));

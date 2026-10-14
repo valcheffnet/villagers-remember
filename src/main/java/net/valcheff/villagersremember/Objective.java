@@ -26,6 +26,8 @@ public record Objective(Type type, String target, boolean tag, int count, int mi
 
 	public enum Type {
 		DELIVER(Target.ITEM),
+		/** Have it in the inventory at hand-in; it is not taken (the first trial: an ender chest). */
+		HAVE(Target.ITEM),
 		KILL(Target.ENTITY),
 		CATCH(Target.ITEM),
 		CRAFT(Target.ITEM),
@@ -67,8 +69,14 @@ public record Objective(Type type, String target, boolean tag, int count, int mi
 		}
 	}
 
+	/** Brought and given to the villager at hand-in. */
 	public boolean isDelivery() {
 		return type == Type.DELIVER;
+	}
+
+	/** Counted from the inventory: deliveries, and things to have (which are kept). */
+	public boolean isCarried() {
+		return type == Type.DELIVER || type == Type.HAVE;
 	}
 
 	/** Visits count once: being there is enough. */

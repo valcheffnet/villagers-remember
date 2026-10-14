@@ -118,6 +118,8 @@ public final class ErrandGenerator {
 	 * player's pack, as many as the villager's level gives (and one more at Respected).
 	 */
 	public static List<Errand> shown(ServerLevel level, Giver giver, ErrandsData.PlayerState state) {
+		// Gradual trust: villagers outside the player's circle offer nothing yet.
+		if (!Trust.trusts(level.getServer(), state, giver)) return List.of();
 		List<Errand> out = new ArrayList<>();
 		trial(level, giver, state).ifPresent(out::add);
 		contract(level, giver, state).ifPresent(out::add);
@@ -158,8 +160,13 @@ public final class ErrandGenerator {
 		} else if (!state.flags.contains(trialItemFlag(prof, earn))) {
 			item = milestoneItem(pool, pack, random);
 		}
+		// The very first trial a player ever gets (user, 2026-10-14): an ender chest to have, bought or found is fine, and
+		// kept. The village will leave a little something in it every day: it is where the treasury goes.
+		List<Objective> objectives = earn == 1 && !state.flags.contains("trial")
+			? List.of(new Objective(Objective.Type.HAVE, "minecraft:ender_chest", false, 1, 0))
+			: e.objectives();
 		return Optional.of(new Errand(giver.id() + "/" + day + "/trial" + earn, e.villager(), e.profession(), e.villagerType(),
-			e.villagerLevel(), e.tier(), e.village(), Optional.of("trial." + earn), e.objectives(), e.value(), e.emeralds(), e.xp(),
+			e.villagerLevel(), e.tier(), e.village(), Optional.of("trial." + earn), objectives, e.value(), e.emeralds(), e.xp(),
 			item, e.reputation()));
 	}
 

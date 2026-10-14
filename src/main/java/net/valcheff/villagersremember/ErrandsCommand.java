@@ -91,8 +91,8 @@ public final class ErrandsCommand {
 				.executes(ctx -> {
 					boolean on = ErrandsConfig.INSTANCE.emeraldRewards;
 					ctx.getSource().sendSuccess(() -> Component.literal(on
-						? "Emerald rewards are on: errands, contracts, village orders and the treasury pay emeralds"
-						: "Emerald rewards are off: no emeralds from errands, contracts or village orders, and the treasury is closed"), false);
+						? "Emerald rewards are on: errands, contracts and village orders pay emeralds"
+						: "Emerald rewards are off: no emeralds from errands, contracts or village orders (the treasury still pays)"), false);
 					return on ? 1 : 0;
 				})
 				.then(Commands.literal("on").executes(ctx -> emeralds(ctx.getSource(), true)))
@@ -146,7 +146,7 @@ public final class ErrandsCommand {
 		ErrandsConfig.save();
 		source.sendSuccess(() -> Component.literal(on
 			? "Emerald rewards on. Errands offered before keep their listed pay."
-			: "Emerald rewards off. Errands, contracts and village orders pay no emeralds, and the treasury is closed."), true);
+			: "Emerald rewards off. Errands, contracts and village orders pay no emeralds; the treasury still pays."), true);
 		return 1;
 	}
 }

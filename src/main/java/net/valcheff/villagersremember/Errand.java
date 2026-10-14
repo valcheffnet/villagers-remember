@@ -139,12 +139,12 @@ public record Errand(
 
 	/** The objective shown first (the main action, or the first item to bring). */
 	public Objective main() {
-		for (Objective o : objectives) if (!o.isDelivery()) return o;
+		for (Objective o : objectives) if (!o.isCarried()) return o;
 		return objectives.getFirst();
 	}
 
 	public boolean hasActions() {
-		return objectives.stream().anyMatch(o -> !o.isDelivery());
+		return objectives.stream().anyMatch(o -> !o.isCarried());
 	}
 
 	public long day() {

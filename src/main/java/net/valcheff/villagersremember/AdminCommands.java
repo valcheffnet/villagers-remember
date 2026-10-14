@@ -140,7 +140,43 @@ public final class AdminCommands {
 				.then(Commands.argument("player", EntityArgument.player())
 					.then(Commands.argument("profession", StringArgumentType.word())
 						.suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Legends.professions(), builder))
-						.executes(ctx -> legend(ctx.getSource(), player(ctx), StringArgumentType.getString(ctx, "profession")))))));
+						.executes(ctx -> legend(ctx.getSource(), player(ctx), StringArgumentType.getString(ctx, "profession"))))))
+			.then(Commands.literal("trust")
+				.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
+				.then(Commands.argument("player", EntityArgument.player())
+					.then(Commands.argument("village", StringArgumentType.string()).suggests(VILLAGES)
+						.executes(ctx -> trust(ctx.getSource(), player(ctx), village(ctx), null, false))
+						.then(Commands.literal("reset").executes(ctx -> trust(ctx.getSource(), player(ctx), village(ctx), null, true)))
+						.then(Commands.literal("add")
+							.then(Commands.argument("villager", StringArgumentType.string()).suggests(VILLAGERS)
+								.executes(ctx -> trust(ctx.getSource(), player(ctx), village(ctx),
+									villager(ctx, player(ctx), village(ctx)), false))))))));
+	}
+
+	/** The player's circle of trust in a village; add a villager to it, or start it over. */
+	private static int trust(CommandSourceStack source, ServerPlayer target, VillageRegistry.Village village,
+	                         VillageRegistry.Resident add, boolean reset) {
+		MinecraftServer server = source.getServer();
+		ErrandsData data = ErrandsData.get(server);
+		ErrandsData.PlayerState state = data.player(target.getUUID());
+		String key = ErrandsData.villageKey(village.center);
+		if (reset) state.circles.remove(key);
+		Trust.Circle circle = Trust.refresh(server, state, village);
+		if (add != null && !circle.members.contains(add.id)) {
+			circle.members.add(add.id);
+			circle.bonus++;
+		}
+		data.setDirty();
+		MutableComponent out = Component.literal("Trust of " + target.getScoreboardName() + " in #" + village.id + ": "
+			+ circle.members.size() + " in the circle, room for " + Math.min(Trust.earned(state, village, circle), 999)
+			+ (Trust.enabled() ? "" : " (gradual trust is off)"));
+		for (java.util.UUID id : circle.members) {
+			String name = ErrandText.villagerName(target, id, Villages.loaded(server.overworld(), id));
+			String how = circle.lost.containsKey(id) ? " (died)" : circle.zombies.containsKey(id) ? " (zombie)" : "";
+			out.append("\n - " + name + ", " + Reputation.villager(state, id) + " points" + how);
+		}
+		source.sendSuccess(() -> out, reset || add != null);
+		return circle.members.size();
 	}
 
 	// ---- end game ----
@@ -553,7 +589,7 @@ public final class AdminCommands {
 		for (ErrandsData.Active a : state.active) {
 			for (int i = 0; i < a.errand.objectives().size(); i++) {
 				Objective o = a.errand.objectives().get(i);
-				if (!o.isDelivery()) {
+				if (!o.isCarried()) {
 					a.progress[i] = o.needed();
 				} else if (items) {
 					int missing = o.needed() - ErrandService.countItems(target, o);

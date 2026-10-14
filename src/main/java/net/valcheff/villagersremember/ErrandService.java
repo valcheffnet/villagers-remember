@@ -55,7 +55,8 @@ public final class ErrandService {
 	 */
 	public static int progress(ServerPlayer player, ErrandsData.Active active, int index) {
 		Objective o = active.errand.objectives().get(index);
-		int done = o.isDelivery() ? active.progress[index] + countItems(player, o) : active.progress[index];
+		int done = o.isDelivery() ? active.progress[index] + countItems(player, o)
+			: o.isCarried() ? countItems(player, o) : active.progress[index];
 		return Math.min(done, o.needed());
 	}
 
@@ -282,6 +283,8 @@ public final class ErrandService {
 		if (villageTierAfter >= Reputation.MAX_TIER && villageTierBefore < Reputation.MAX_TIER) fame += Fame.HERO;
 		Fame.add(player, fame);
 		Patron.check(level.getServer(), errand.village());
+		errand.village().flatMap(v -> VillageRegistry.get(level.getServer()).byCenter(v))
+			.ifPresent(v -> Trust.refresh(level.getServer(), state, v));
 		Milestones.check(player);
 		return true;
 	}

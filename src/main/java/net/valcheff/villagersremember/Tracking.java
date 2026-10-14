@@ -16,7 +16,11 @@ import java.util.List;
 public final class Tracking {
 	public static void onDeath(LivingEntity entity, DamageSource source) {
 		if (entity instanceof Villager dead && entity.level().getServer() != null) {
+			Trust.lost(entity.level().getServer(), dead.getUUID());
 			VillageRegistry.get(entity.level().getServer()).removeResident(dead.getUUID());
+		}
+		if (entity instanceof net.minecraft.world.entity.monster.zombie.ZombieVillager zombie && entity.level().getServer() != null) {
+			Trust.lost(entity.level().getServer(), zombie.getUUID());
 		}
 		if (!(source.getEntity() instanceof ServerPlayer player)) return;
 		if (entity instanceof Villager villager) {
@@ -41,6 +45,7 @@ public final class Tracking {
 		if ((!zombified && !cured) || server == null || previous.getUUID().equals(converted.getUUID())) return;
 		ErrandsData.get(server).renameVillager(previous.getUUID(), converted.getUUID());
 		VillageRegistry.get(server).renameResident(previous.getUUID(), converted.getUUID());
+		Trust.converted(server, converted.getUUID(), zombified);
 		VillagersRemember.LOG.debug("Villager {} is now {} ({})", previous.getUUID(), converted.getUUID(), zombified ? "zombified" : "cured");
 	}
 

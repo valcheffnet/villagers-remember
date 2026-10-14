@@ -20,7 +20,7 @@ The journal and the villager screens open from the game too: right-click a villa
 
 | Command | What it does |
 |---|---|
-| `/errands emeralds [on\|off]` | Shows or switches emerald rewards (off by default). Off: errands, contracts and village orders pay no emeralds, and villages stop filling the treasury (what is already there can still be sent). Experience and standing are paid as usual. Saved in the config. |
+| `/errands emeralds [on\|off]` | Shows or switches emerald rewards (off by default). Off: errands, contracts and village orders pay no emeralds. Experience, standing and the treasury are not affected. Saved in the config. |
 | `/errands xp [multiplier]` | Shows or sets the experience from errands, contracts and village orders, times the usual amount (0 to 10, default 1). Saved in the config. |
 | `/errands reload` | Reloads the config and the errand pools (datapacks under `data/<namespace>/errands/`). |
 | `/errands reset <player>` | Wipes a player's errands and all of their standing, everywhere. |
@@ -72,6 +72,9 @@ Tiers and the points they start at:
 | `/errands patron <village>` | Works out the patron again and shows who it is. |
 | `/errands patron <village> clear` | Removes the patron; the best qualifying player (if any) takes the place. |
 | `/errands legend <player> <profession>` | Gives the profession's legendary item and records it, as the third contract would. |
+| `/errands trust <player> <village>` | The player's circle of trust there: who offers them errands, points, who died or is a zombie, and how many may. |
+| `/errands trust <player> <village> add <villager>` | Puts a villager into the circle. |
+| `/errands trust <player> <village> reset` | Starts the circle over (villagers the player already has points with come back in). |
 
 ### Naming villages and villagers
 

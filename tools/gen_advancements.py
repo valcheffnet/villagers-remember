@@ -71,8 +71,8 @@ A = [
 
     ("treasury/first", "root", "ender_chest", "task", ("First Wages", "Send treasury emeralds to your Ender Chest"),
      ("Първа заплата", "Прати изумруди от хазната в Ender Chest-а")),
-    ("treasury/income", "treasury/first", "emerald_block", "goal", ("Steady Income", "Earn 10 emeralds a day from your treasuries"),
-     ("Стабилен доход", "Изкарвай по 10 изумруда на ден от хазната")),
+    ("treasury/income", "treasury/first", "emerald_block", "goal", ("Steady Income", "Earn 1 emerald a game day from your treasuries"),
+     ("Стабилен доход", "Изкарвай по 1 изумруд на игрови ден от хазната")),
     ("treasury/network", "treasury/income", "lodestone", "challenge", ("Village Network", "Be a Friend of 5 villages for the full network bonus"),
      ("Мрежа от села", "Стани приятел на 5 села за пълния бонус")),
 

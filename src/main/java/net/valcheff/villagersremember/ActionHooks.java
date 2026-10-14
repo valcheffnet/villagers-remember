@@ -128,6 +128,10 @@ public final class ActionHooks {
 		for (ServerPlayer player : server.getPlayerList().getPlayers()) {
 			ErrandsData.PlayerState state = ErrandService.state(player);
 			discover(server, player, state);
+			if (Trust.enabled()) {
+				VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition())
+					.ifPresent(v -> Trust.circle(server, state, v));
+			}
 			boolean wants = state.active.stream().anyMatch(a -> a.errand.objectives().stream()
 				.anyMatch(o -> o.type() == Objective.Type.VISIT_STRUCTURE || o.type() == Objective.Type.VISIT_BIOME));
 			if (!wants) continue;

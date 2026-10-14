@@ -271,6 +271,12 @@ public final class GroupOrder {
 			state.mail += emeralds;
 			state.mailXp += xp;
 			if (done) state.weeklyDone++;
+			// Gradual trust: the village talks about who helped, and one more villager opens up to them.
+			if (done && Trust.enabled()) village.ifPresent(v -> {
+				ServerPlayer helper = server.getPlayerList().getPlayer(e.getKey());
+				if (helper != null) helper.sendSystemMessage(Lang.tr(helper, "trust.order").withStyle(ChatFormatting.YELLOW));
+				Trust.orderHelped(server, state, v);
+			});
 			village.ifPresent(v -> Reputation.addVillage(state, Optional.of(v.center), Math.max(1, (int) Math.round(STANDING_POOL * share * pay))));
 			ServerPlayer player = server.getPlayerList().getPlayer(e.getKey());
 			if (player != null) {

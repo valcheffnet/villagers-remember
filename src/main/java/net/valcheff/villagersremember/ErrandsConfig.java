@@ -25,10 +25,18 @@ public final class ErrandsConfig {
 	public int[] errandsPerLevel = {1, 2, 2, 3, 3};
 	/** Extra errand per villager once the player is at least "Respected" in that village. */
 	public boolean respectedBonusErrand = true;
+	/**
+	 * Gradual trust: in a village only a circle of villagers offers a player errands. One villager starts it; each tier
+	 * reached with anyone in the circle adds one, so does a finished village order the player helped with, and the
+	 * village's tier adds trustVillageBonus (Stranger, Known, Friend, Respected, Hero; -1 = everyone). Villagers outside
+	 * the circle still trade.
+	 */
+	public boolean gradualTrust = true;
+	public int[] trustVillageBonus = {0, 1, 3, 6, -1};
 	/** How many errands one player may have accepted at the same time. */
 	public int maxActiveErrands = 5;
 	/** Settings changed meaning in version 2 (effort-based rewards); older files get the new defaults for those. */
-	public int configVersion = 4;
+	public int configVersion = 5;
 	/**
 	 * Errands are sized in minutes of work (TIERS.md section 4); the pay is minutes x this, in emeralds' worth (split
 	 * into emeralds and experience), by pack T1..T5. T1 pays emeralds or experience. Repeatable errands give no items.
@@ -37,12 +45,12 @@ public final class ErrandsConfig {
 	/** An errand's emeralds are at least this many times what villagers would pay for the goods it asks for. */
 	public double marketPremium = 1.5;
 	/** Treasury: emeralds a day one working resident sets aside, by the player's tier with them (Stranger..Best friend). */
-	public double[] treasuryShare = {0.0, 0.25, 0.5, 0.8, 1.2};
+	public double[] treasuryShare = {0.0, 0.0104, 0.0208, 0.0333, 0.05};
 	/** Treasury: multiplier by the player's village tier (Stranger..Hero). */
 	public double[] treasuryVillageMultiplier = {0.5, 0.75, 1.0, 1.25, 1.5};
 	/** Treasury: most emeralds one village pays a day, and how many days of income it keeps. */
 	public double treasuryDailyCap = 64;
-	public int treasuryKeepDays = 3;
+	public int treasuryKeepDays = 504;
 	/** Network bonus on the whole income for every village where the player is at least Friend, and its maximum. */
 	public double networkBonusPerVillage = 0.05;
 	public double networkBonusMax = 0.25;
@@ -84,8 +92,8 @@ public final class ErrandsConfig {
 	/** Waystones of KawaMood's Waystones datapack in a village are named after it (English name). */
 	public boolean waystoneNames = true;
 	/**
-	 * False: errands, contracts and village orders pay no emeralds, and villages stop putting emeralds into the
-	 * treasury; what is already there can still be sent. Experience and standing are paid as usual. /errands emeralds on|off.
+	 * False: errands, contracts and village orders pay no emeralds. Experience and standing are paid as usual, and the
+	 * treasury keeps paying (it is not a reward for an errand). /errands emeralds on|off.
 	 */
 	public boolean emeraldRewards = false;
 	/** Experience from errands, contracts and village orders, times their usual amount. /errands xp <multiplier>. */
@@ -167,6 +175,7 @@ public final class ErrandsConfig {
 		if (errandsPerLevel == null || errandsPerLevel.length != 5) errandsPerLevel = new ErrandsConfig().errandsPerLevel;
 		for (int i = 0; i < 5; i++) errandsPerLevel[i] = Math.clamp(errandsPerLevel[i], 0, 6);
 		maxActiveErrands = Math.clamp(maxActiveErrands, 1, 27);
+		if (trustVillageBonus == null || trustVillageBonus.length != 5) trustVillageBonus = new ErrandsConfig().trustVillageBonus;
 		ErrandsConfig defaults = new ErrandsConfig();
 		if (configVersion < 2) {
 			// Version 1 sized rewards by the value of goods; these keys now mean something else.
@@ -181,12 +190,17 @@ public final class ErrandsConfig {
 			// Version 4: emerald rewards are off unless the server turns them on.
 			emeraldRewards = defaults.emeraldRewards;
 		}
+		if (configVersion < 5) {
+			// Version 5 (user, 2026-10-14): the treasury gives a 24th of before and keeps a real week (504 game days).
+			treasuryShare = defaults.treasuryShare;
+			treasuryKeepDays = defaults.treasuryKeepDays;
+		}
 		configVersion = defaults.configVersion;
 		if (tierEmeraldsPerMinute == null || tierEmeraldsPerMinute.length != 5) tierEmeraldsPerMinute = defaults.tierEmeraldsPerMinute;
 		if (treasuryShare == null || treasuryShare.length != 5) treasuryShare = defaults.treasuryShare;
 		if (treasuryVillageMultiplier == null || treasuryVillageMultiplier.length != 5) treasuryVillageMultiplier = defaults.treasuryVillageMultiplier;
 		treasuryDailyCap = Math.clamp(treasuryDailyCap, 0.0, 10000.0);
-		treasuryKeepDays = Math.clamp(treasuryKeepDays, 1, 365);
+		treasuryKeepDays = Math.clamp(treasuryKeepDays, 1, 10000);
 		networkBonusPerVillage = Math.clamp(networkBonusPerVillage, 0.0, 10.0);
 		networkBonusMax = Math.clamp(networkBonusMax, 0.0, 10.0);
 		for (int i = 0; i < 5; i++) {

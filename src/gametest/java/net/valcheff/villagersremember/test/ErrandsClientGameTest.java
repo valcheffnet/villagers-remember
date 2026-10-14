@@ -89,6 +89,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			// Emerald rewards are off unless the server turns them on; most checks below count emeralds.
 			check(!new ErrandsConfig().emeraldRewards, "emerald rewards on by default");
 			sp.getServer().runCommand("errands emeralds on");
+			check(new ErrandsConfig().gradualTrust, "gradual trust off by default");
+			sp.getServer().runOnServer(server -> ErrandsConfig.INSTANCE.gradualTrust = false);
 
 			BlockPos base = sp.getServer().computeOnServer(ErrandsClientGameTest::setUpVillage);
 			context.waitTicks(40);
@@ -501,6 +503,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			tradeFromGreeting(context, sp, villagers);
 			prices(context, sp, villagers);
 			endGame(context, sp, villagers, bell);
+			gradualTrust(sp, villagers, bell);
 		}
 	}
 
@@ -1207,7 +1210,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			state.paidUntil.put(key, today - 10);
 			net.valcheff.villagersremember.Treasury.settle(server, state, today);
 			double waiting = state.treasury.getOrDefault(key, 0.0);
-			if (Math.abs(waiting - daily * 3) > 0.01) return "after 10 days " + waiting + ", expected 3 days of " + daily;
+			int kept = Math.min(10, ErrandsConfig.INSTANCE.treasuryKeepDays);
+			if (Math.abs(waiting - daily * kept) > 0.01) return "after 10 days " + waiting + ", expected " + kept + " days of " + daily;
 			player.getEnderChestInventory().clearContent();
 			int sent = net.valcheff.villagersremember.Treasury.sendToEnderChest(player, state);
 			int inChest = player.getEnderChestInventory().countItem(Items.EMERALD);
@@ -1254,7 +1258,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				if (cfg.emeraldRewards || cfg.xpMultiplier != 2.0) return "commands did not set " + cfg.emeraldRewards + " x" + cfg.xpMultiplier;
 				if (errand.paidEmeralds() != 0 || errand.paidXp() != Math.round(errand.xp() * 2.0)) return "paid " + errand.paidEmeralds() + "/" + errand.paidXp();
 				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
-				if (village.isPresent() && net.valcheff.villagersremember.Treasury.perDay(state, village.get()) != 0) return "treasury still pays";
+				// The treasury is not an errand reward: it pays the same with emerald rewards off.
+				if (village.isPresent()) {
+					double off = net.valcheff.villagersremember.Treasury.perDay(state, village.get());
+					cfg.emeraldRewards = true;
+					double on = net.valcheff.villagersremember.Treasury.perDay(state, village.get());
+					cfg.emeraldRewards = false;
+					if (off != on) return "treasury pays " + off + " with emeralds off, " + on + " with them on";
+				}
 				if (!ErrandService.accept(player, errand)) return "accept";
 				ErrandsData.Active a = state.find(errand.id());
 				for (Objective o : errand.objectives()) {
@@ -1435,6 +1446,106 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		check(result.equals("ok"), "RightClickHarvest: " + result);
 	}
 
+	/**
+	 * Gradual trust, for a new player (no history here): one villager offers errands; every tier reached with anyone in
+	 * the circle opens one more, so does the village's tier and a finished village order; a dead member leaves a gap,
+	 * and only when everyone in the circle is gone does someone new dare, the next day; a zombified member comes back
+	 * when cured; off = everyone; older saves keep who they know.
+	 */
+	private static void gradualTrust(TestSingleplayerContext sp, List<UUID> villagers, BlockPos bell) {
+		String result = sp.getServer().computeOnServer(server -> {
+			ErrandsConfig.INSTANCE.gradualTrust = true;
+			try {
+				ServerLevel level = server.overworld();
+				var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
+				var village = registry.villageAt(level.dimension(), bell).orElse(null);
+				if (village == null) return "no village";
+				ErrandsData data = ErrandsData.get(server);
+				ErrandsData.PlayerState fresh = data.player(new UUID(99, 1));
+				List<UUID> everyone = new java.util.ArrayList<>(villagers);
+				java.util.function.Supplier<List<Villager>> open = () -> {
+					net.valcheff.villagersremember.Trust.refresh(server, fresh, village);
+					List<Villager> out = new java.util.ArrayList<>();
+					for (UUID id : everyone) {
+						if (level.getEntity(id) instanceof Villager v && v.isAlive()
+							&& !ErrandGenerator.shown(level, ErrandGenerator.Giver.of(v), fresh).isEmpty()) out.add(v);
+					}
+					return out;
+				};
+				java.util.function.Consumer<Villager> acquaint = v -> {
+					fresh.villagerRep.put(v.getUUID(), 20);
+					fresh.trialsPassed.put(v.getUUID(), 1);
+				};
+				Runnable nextDay = () -> server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput(), "time add 24000");
+
+				List<Villager> first = open.get();
+				if (first.size() != 1) return "a new player meets " + first.size() + " villagers, expected 1";
+				Villager anchor = first.getFirst();
+				// Every tier with anyone in the circle opens one more.
+				acquaint.accept(anchor);
+				List<Villager> two = open.get();
+				if (two.size() != 2) return "after Acquaintance with the first " + two.size() + " open, expected 2";
+				Villager second = two.stream().filter(v -> v != anchor).findFirst().orElseThrow();
+				if (ErrandGenerator.professionId(second.getVillagerData()).equals(ErrandGenerator.professionId(anchor.getVillagerData())))
+					return "the second villager has the same trade as the first";
+				acquaint.accept(second);
+				if (open.get().size() != 3) return "after Acquaintance with the second " + open.get().size() + " open, expected 3";
+				// Village tier Known (60 points, 2 residents at Acquaintance): one more.
+				fresh.villageRep.put(ErrandsData.villageKey(village.center), 60);
+				if (open.get().size() != 4) return "with village Known " + open.get().size() + " open, expected 4";
+				// A finished village order the player helped with: one more.
+				net.valcheff.villagersremember.Trust.orderHelped(server, fresh, village);
+				if (open.get().size() != 5) return "after a village order " + open.get().size() + " open, expected 5";
+
+				// A member dies: the gap stays, today and tomorrow.
+				anchor.kill(level);
+				if (open.get().size() != 4) return "the day a member died " + open.get().size() + " open, expected 4";
+				nextDay.run();
+				if (open.get().size() != 4) return "the day after a member died " + open.get().size() + " open, expected 4 (no new one)";
+
+				// A member becomes a zombie villager: no new one; cured, they are back with their points.
+				var circle = net.valcheff.villagersremember.Trust.circle(server, fresh, village);
+				Villager victim = second;
+				int points = Reputation.villager(fresh, victim.getUUID());
+				var villagerData = victim.getVillagerData();
+				var zombie = victim.convertTo(EntityTypes.ZOMBIE_VILLAGER, net.minecraft.world.entity.ConversionParams.single(victim, true, true), z -> {});
+				if (zombie == null || !circle.zombies.containsKey(zombie.getUUID())) return "the zombie isn't known as a zombified member";
+				if (open.get().size() != 3) return "with a zombified member " + open.get().size() + " open, expected 3";
+				Villager cured = zombie.convertTo(EntityTypes.VILLAGER, net.minecraft.world.entity.ConversionParams.single(zombie, true, true), v -> {});
+				if (cured == null) return "no cure";
+				// A real cure gives the villager back their trade (ZombieVillager.finishConversion); a bare conversion doesn't.
+				cured.setVillagerData(villagerData);
+				everyone.add(cured.getUUID());
+				if (Reputation.villager(fresh, cured.getUUID()) != points || !circle.members.contains(cured.getUUID())) return "the cure lost the member";
+				if (open.get().size() != 4) return "after the cure " + open.get().size() + " open, expected 4";
+
+				// Everyone in the circle dies: nobody that day, someone new dares the next.
+				for (Villager v : open.get()) v.kill(level);
+				if (!open.get().isEmpty()) return "after the whole circle died " + open.get().size() + " still open";
+				nextDay.run();
+				if (open.get().size() != 1) return "the day after the whole circle died " + open.get().size() + " open, expected 1";
+
+				// Gradual trust off: everyone offers errands again.
+				ErrandsConfig.INSTANCE.gradualTrust = false;
+				int all = 0;
+				for (UUID id : everyone) if (level.getEntity(id) instanceof Villager v && v.isAlive() && ErrandGenerator.givesErrands(v)) all++;
+				if (open.get().size() != all) return "with gradual trust off " + open.get().size() + " of " + all + " open";
+				ErrandsConfig.INSTANCE.gradualTrust = true;
+
+				// A save from before gradual trust: the villagers the player worked with stay open.
+				ErrandsData.PlayerState old = data.player(new UUID(99, 2));
+				List<UUID> worked = new java.util.ArrayList<>();
+				for (UUID id : everyone) if (level.getEntity(id) instanceof Villager v && v.isAlive() && worked.size() < 3) worked.add(id);
+				for (UUID id : worked) old.villagerRep.put(id, 5);
+				if (!net.valcheff.villagersremember.Trust.refresh(server, old, village).members.containsAll(worked)) return "an older save lost villagers it knew";
+				return "ok";
+			} finally {
+				ErrandsConfig.INSTANCE.gradualTrust = false;
+			}
+		});
+		check(result.equals("ok"), "gradual trust: " + result);
+	}
+
 	/** Harvest plus bringing the same crop reads as one short task: "Harvest and bring 28× Beetroot". */
 	private static void harvestTitle(TestSingleplayerContext sp) {
 		String result = sp.getServer().computeOnServer(server -> {
@@ -1577,6 +1688,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			state.active.clear();
 			state.villagerRep.remove(id);
 			state.trialsPassed.remove(id);
+			// The first trial a player ever gets.
+			state.flags.remove("trial");
 			Villager v = villager(server, id);
 			Reputation.addVillager(state, player, id, v, 30);
 			if (Reputation.villager(state, id) != Reputation.VILLAGER_TIERS[1]) return "points not held at the threshold: " + Reputation.villager(state, id);
@@ -1586,6 +1699,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			Errand trial = shown.getFirst();
 			if (!ErrandGenerator.isTrial(trial) || trial.tier() != 2 || trial.item().isEmpty()) return "trial offered: " + trial.id() + " tier " + trial.tier();
 			if (!ErrandText.task(player, trial).getString().equals("Trial of trust: Acquaintance")) return "trial name " + ErrandText.task(player, trial).getString();
+			if (trial.objectives().size() != 1 || trial.main().type() != Objective.Type.HAVE || !trial.main().target().equals("minecraft:ender_chest"))
+				return "the first trial ever is not the ender chest: " + trial.objectives();
 			return "ok";
 		});
 		check(result.equals("ok"), "trials: " + result);
@@ -1601,7 +1716,16 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			ServerPlayer player = player(server);
 			ErrandsData.PlayerState state = state(server);
 			Errand trial = state.active.getFirst().errand;
+			if (ErrandService.countItems(player, trial.main()) < 1) return "finish gave no ender chest";
 			if (!ErrandService.handIn(player, trial.id())) return "trial hand in";
+			if (ErrandService.countItems(player, trial.main()) < 1) return "the ender chest was taken";
+			// Only the very first trial is the ender chest.
+			UUID other = villagers.get(5);
+			state.villagerRep.put(other, Reputation.VILLAGER_TIERS[1]);
+			state.trialsPassed.remove(other);
+			Errand next = ErrandGenerator.trial(server.overworld(), ErrandGenerator.Giver.of(villager(server, other)), state).orElse(null);
+			state.villagerRep.remove(other);
+			if (next == null || next.main().type() == Objective.Type.HAVE) return "the second first-tier trial is " + (next == null ? "missing" : next.objectives());
 			if (Reputation.trialsPassed(state, id) != 1 || Reputation.villagerTier(state, id) != 1) return "after the trial tier " + Reputation.villagerTier(state, id);
 			if (Reputation.villager(state, id) <= Reputation.VILLAGER_TIERS[1]) return "points did not carry on: " + Reputation.villager(state, id);
 			ErrandGenerator.Giver giver = ErrandGenerator.Giver.of(villager(server, id));

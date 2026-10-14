@@ -49,7 +49,7 @@ public final class Milestones {
 		ALL.put("explore/fifteen", (p, s) -> s.discovered.size() >= 15);
 		ALL.put("explore/thirty", (p, s) -> s.discovered.size() >= 30);
 		ALL.put("treasury/first", (p, s) -> s.treasurySent >= 1);
-		ALL.put("treasury/income", (p, s) -> Treasury.entries(p, s).stream().mapToDouble(Treasury.Entry::perDay).sum() >= 10);
+		ALL.put("treasury/income", (p, s) -> Treasury.entries(p, s).stream().mapToDouble(Treasury.Entry::perDay).sum() >= 1);
 		ALL.put("treasury/network", (p, s) -> Treasury.friendlyVillages(p.level().getServer(), s) >= 5);
 		ALL.put("fame/helper", (p, s) -> Fame.title(s) >= 1);
 		ALL.put("fame/benefactor", (p, s) -> Fame.title(s) >= 2);

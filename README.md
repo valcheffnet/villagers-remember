@@ -24,6 +24,8 @@ Right-click the village bell for the board: all of the village's errands, its re
 
 ## Standing and trust
 
+A village doesn't open up to a stranger all at once, and every player earns it on their own. When you first come, one villager dares to talk to you (the one with the "!"); the others trade with you and tell you to ask them. Every tier you reach with someone who trusts you makes one more villager willing to give you work. Helping to finish a village order does too, and the village's own tier adds more: one at Known, two at Friend, three at Respected, and everyone once you are its Hero. If someone who trusts you dies, their place stays empty; only when nobody who trusted you is left does someone new dare, the next day. A friend turned zombie villager is back, with everything, once cured. Server owners can turn this off (`gradualTrust`).
+
 You earn standing with every villager and with the village as a whole. Villager tiers go Stranger, Acquaintance, Friend, Good friend, Best friend. A villager won't move you up a tier on points alone: when you have the points, they give you a trial of trust, a harder errand that pays double. Pass it and they hand you the next pack of errands.
 
 Village tiers (Known, Friend, Respected, Hero of the Village) need points and enough residents who trust you that much. Each tier makes rewards 5% bigger and enchanted rewards stronger.
@@ -42,7 +44,7 @@ Your standing sets your prices. A Best friend in a Hero village trades 40% cheap
 
 ## Treasury
 
-With emerald rewards on, villagers who trust you put a share of their work aside for you every day. The treasury lists every village you have found with what it pays a day; one button sends the emeralds to your ender chest. Each village keeps three days of income at most, and helping five villages at Friend or better raises all of it by 25%.
+Villagers who trust you put a share of their work aside for you every day. The treasury lists every village you have found with what it pays a game day; one button sends the emeralds to your ender chest. It is a small, slow income: a Hero village where ten villagers are your best friends puts aside about 0.6 emeralds a game day, some 40 in a real day of play. Each village keeps up to 504 game days of income (a real week of play), so nothing is lost if you collect once a day, and helping five villages at Friend or better raises all of it by 25%. The treasury pays whether errands pay emeralds or not. Your very first trial of trust is the way in: the villager asks you to get an ender chest (made, bought or found, it stays yours), because that is where the village will leave its share.
 
 ## End game
 
@@ -83,7 +85,7 @@ The same settings live in `config/villagersremember.json`, created on first star
 | `fameTitles` | `true` | Titles in chat and TAB. Turn off if another plugin or mod manages teams. |
 | `tierEmeraldsPerMinute` | `0.6 ... 1.6` | Pay per minute of work, by pack. |
 | `groupOrders` | `true` | `groupOrderDays` 30; per regular player (online on `groupRegularDays` 3 days of the month): `groupOrderScale` 1.0 of the size, `groupRewardEmeralds` 80. |
-| `emeraldRewards` | `false` | `false` stops emeralds from errands, contracts, village orders and the treasury. Same as `/errands emeralds off`. |
+| `emeraldRewards` | `false` | `false` stops emeralds from errands, contracts and village orders; the treasury still pays. Same as `/errands emeralds off`. |
 | `xpMultiplier` | `1.0` | Experience from errands, contracts and village orders. Same as `/errands xp`. |
 | `contracts` | `true` | `contractMinutes` 90, `contractMaxEmeralds` 160, `contractsForLegend` 3. |
 | `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |

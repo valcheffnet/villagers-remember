@@ -42,7 +42,7 @@ public final class ErrandsData extends SavedData {
 		public boolean actionsDone() {
 			for (int i = 0; i < progress.length; i++) {
 				Objective o = errand.objectives().get(i);
-				if (!o.isDelivery() && progress[i] < o.needed()) return false;
+				if (!o.isCarried() && progress[i] < o.needed()) return false;
 			}
 			return true;
 		}
@@ -100,6 +100,8 @@ public final class ErrandsData extends SavedData {
 		/** Emeralds and experience owed to the player (village order shares while offline, or a full ender chest). */
 		public int mail;
 		public int mailXp;
+		/** Gradual trust: village key -> the villagers there who offer this player errands (see {@link Trust}). */
+		public final Map<String, Trust.Circle> circles = new HashMap<>();
 
 		public Active find(String errandId) {
 			for (Active a : active) if (a.errand.id().equals(errandId)) return a;
@@ -186,6 +188,7 @@ public final class ErrandsData extends SavedData {
 			if (gossip != null) p.gossipToClean.merge(to, gossip, Math::max);
 			Integer trials = p.trialsPassed.remove(from);
 			if (trials != null) p.trialsPassed.merge(to, trials, Math::max);
+			Trust.rename(p, from, to);
 			for (int i = 0; i < p.active.size(); i++) {
 				Active a = p.active.get(i);
 				if (!a.errand.villager().equals(from)) continue;
@@ -205,6 +208,8 @@ public final class ErrandsData extends SavedData {
 			Integer old = p.villageRep.remove(goneKey);
 			if (old != null) p.villageRep.merge(keepKey, old, Math::max);
 			if (p.trackedVillages.remove(goneKey)) p.trackedVillages.add(keepKey);
+			Trust.Circle goneCircle = p.circles.remove(goneKey);
+			if (goneCircle != null && !p.circles.containsKey(keepKey)) p.circles.put(keepKey, goneCircle);
 			Long found = p.discovered.remove(goneKey);
 			if (found != null) p.discovered.merge(keepKey, found, Math::min);
 			Double waiting = p.treasury.remove(goneKey);
@@ -254,7 +259,7 @@ public final class ErrandsData extends SavedData {
 			// Saved with a single counter (kill errands only).
 			progress = new int[errand.objectives().size()];
 			int old = a.getIntOr("progress", 0);
-			for (int i = 0; i < progress.length; i++) if (!errand.objectives().get(i).isDelivery()) progress[i] = old;
+			for (int i = 0; i < progress.length; i++) if (!errand.objectives().get(i).isCarried()) progress[i] = old;
 		}
 		return new Active(errand, progress);
 	}
@@ -299,6 +304,8 @@ public final class ErrandsData extends SavedData {
 			p.getListOrEmpty("tracked").forEach(t -> t.asString().ifPresent(state.tracked::add));
 			p.getListOrEmpty("tracked_villages").forEach(t -> t.asString().ifPresent(state.trackedVillages::add));
 			p.getListOrEmpty("tracked_orders").forEach(t -> t.asString().ifPresent(state.trackedOrders::add));
+			CompoundTag circles = p.getCompoundOrEmpty("trust_circles");
+			for (String k : circles.keySet()) state.circles.put(k, Trust.load(circles.getCompoundOrEmpty(k)));
 			state.tracked.retainAll(state.active.stream().map(a -> a.errand.id()).toList());
 			CompoundTag found = p.getCompoundOrEmpty("discovered");
 			for (String k : found.keySet()) state.discovered.put(k, found.getLongOr(k, 0L));
@@ -392,6 +399,9 @@ public final class ErrandsData extends SavedData {
 			ListTag trackedOrders = new ListTag();
 			state.trackedOrders.forEach(k -> trackedOrders.add(StringTag.valueOf(k)));
 			p.put("tracked_orders", trackedOrders);
+			CompoundTag circles = new CompoundTag();
+			state.circles.forEach((k, c) -> circles.put(k, Trust.save(c)));
+			p.put("trust_circles", circles);
 			p.putInt("completed", state.completed);
 			CompoundTag found = new CompoundTag();
 			state.discovered.forEach(found::putLong);

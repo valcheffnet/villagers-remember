@@ -39,7 +39,6 @@ public final class Treasury {
 	/** Emeralds a day from one village, capped. */
 	public static double perDay(ErrandsData.PlayerState state, VillageRegistry.Village village) {
 		ErrandsConfig cfg = ErrandsConfig.INSTANCE;
-		if (!cfg.emeraldRewards) return 0;
 		List<Double> shares = new ArrayList<>();
 		for (VillageRegistry.Resident r : village.workers()) shares.add(cfg.treasuryShare[Reputation.villagerTier(state, r.id)]);
 		double income = formula(shares, Reputation.villageTier(state, Optional.of(village.center)));

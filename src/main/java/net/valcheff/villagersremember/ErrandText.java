@@ -129,6 +129,11 @@ public final class ErrandText {
 			if (!text.equals(key)) return Optional.of(quoted(text));
 		}
 		Objective main = errand.main();
+		if (main.type() == Objective.Type.HAVE) {
+			String key = "lore.have." + path(main.target());
+			String text = Lang.raw(lang, key);
+			if (!text.equals(key)) return Optional.of(quoted(text));
+		}
 		// Reforge: the reward is the same thing that is made.
 		if (errand.item().map(i -> i.kind() != ErrandPools.RewardKind.ITEM && i.kind() != ErrandPools.RewardKind.LOOT
 			&& i.id().equals(main.target())).orElse(false)) {
@@ -190,7 +195,7 @@ public final class ErrandText {
 
 	/** The item shown for an errand: what to bring, or what the main action is about. */
 	public static ItemStack icon(Errand errand) {
-		for (Objective o : errand.objectives()) if (o.isDelivery()) return icon(o);
+		for (Objective o : errand.objectives()) if (o.isCarried()) return icon(o);
 		return icon(errand.main());
 	}
 

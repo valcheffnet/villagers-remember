@@ -30,6 +30,8 @@ import net.valcheff.villagersremember.ErrandService;
 import net.valcheff.villagersremember.ErrandText;
 import net.valcheff.villagersremember.TopRewards;
 import net.valcheff.villagersremember.Treasury;
+import java.util.UUID;
+import net.valcheff.villagersremember.Trust;
 import net.valcheff.villagersremember.ErrandsConfig;
 import net.valcheff.villagersremember.ErrandsData;
 import net.valcheff.villagersremember.Lang;
@@ -84,6 +86,8 @@ public final class ErrandDialogs {
 		int points = Reputation.villager(state, villager.getUUID());
 		int tier = Reputation.villagerTier(state, villager.getUUID());
 		boolean errands = ErrandGenerator.givesErrands(villager);
+		// Gradual trust: outside the player's circle a villager only trades and points to someone who knows the player.
+		boolean locked = errands && !Trust.trusts(level.getServer(), state, giver);
 
 		Component title = Component.empty().append(VillagerHeads.face(ErrandText.path(giver.profession()), ErrandText.path(giver.type())))
 			.append(" ").append(ErrandText.villagerName(player, villager.getUUID(), villager));
@@ -91,14 +95,22 @@ public final class ErrandDialogs {
 		long day = ErrandGenerator.day(level);
 		int variant = (int) Math.floorMod(villager.getUUID().getLeastSignificantBits() + day, 2L) + 1;
 		String key = points < 0 ? "greet.cold." + variant : "greet." + tier + "." + variant;
-		MutableComponent text = Component.empty().append(ErrandText.quotedLine(Lang.raw(Lang.language(player), key)));
-		if (errands && Reputation.trialPending(state, villager.getUUID()) > 0) {
+		String line = Lang.raw(Lang.language(player), key);
+		if (locked) {
+			Optional<UUID> trusted = giver.village().flatMap(c -> VillageRegistry.get(level.getServer()).byCenter(c))
+				.flatMap(v -> Trust.trusted(level.getServer(), state, v));
+			line = trusted.map(id -> Lang.raw(Lang.language(player), "greet.locked." + variant)
+					.replace("%s", ErrandText.villagerName(player, id, Villages.loaded(level, id))))
+				.orElse(Lang.raw(Lang.language(player), "greet.locked.none"));
+		}
+		MutableComponent text = Component.empty().append(ErrandText.quotedLine(line));
+		if (errands && !locked && Reputation.trialPending(state, villager.getUUID()) > 0) {
 			text.append("\n").append(ErrandText.quotedLine(Lang.raw(Lang.language(player), "greet.trial")));
 		}
 		text.append("\n\n").append(Component.empty().append(ErrandText.profession(giver.profession()).copy())
 			.append(" (").append(Component.translatable("merchant.level." + Math.clamp(giver.level(), 1, 5))).append(")")
 			.withStyle(ChatFormatting.GRAY));
-		if (errands) text.append("\n").append(villagerStanding(player, state, villager.getUUID()));
+		if (errands && !locked) text.append("\n").append(villagerStanding(player, state, villager.getUUID()));
 		if (canTrade(villager)) {
 			double factor = Reputation.priceFactor(state, villager.getUUID(), giver.village());
 			int percent = (int) Math.round((factor - 1) * 100);
@@ -116,7 +128,7 @@ public final class ErrandDialogs {
 			p -> greet(p, villager));
 		// The first screen has only two small buttons side by side: Tasks, then Trade. Trials and contracts are in the list.
 		List<ActionButton> buttons = new ArrayList<>();
-		if (errands) {
+		if (errands && !locked) {
 			int open = 0;
 			boolean ready = false;
 			for (Errand e : ErrandGenerator.shown(level, giver, state)) {
@@ -509,6 +521,9 @@ public final class ErrandDialogs {
 			if (Reputation.trialPending(state, r.id) > 0) tip.append("\n").append(Lang.tr(player, "residents.trial").withStyle(ChatFormatting.GOLD));
 			if (!r.working()) tip.append("\n").append(Lang.tr(player, "residents.not_counted").withStyle(ChatFormatting.GRAY));
 			if (entity == null) tip.append("\n").append(Lang.tr(player, "residents.away").withStyle(ChatFormatting.DARK_GRAY));
+			if (ErrandGenerator.Giver.of(village, r).givesErrands() && !Trust.trusts(level.getServer(), state, ErrandGenerator.Giver.of(village, r))) {
+				tip.append("\n").append(Lang.tr(player, "residents.locked").withStyle(ChatFormatting.GRAY));
+			}
 			tips.add(tip);
 			ErrandGenerator.Giver giver = ErrandGenerator.Giver.of(village, r);
 			actions.add(giver.givesErrands()
@@ -775,12 +790,10 @@ public final class ErrandDialogs {
 		if (button != null) buttons.add(button);
 	}
 
-	/** Null when the server pays no emeralds and nothing is left to send. */
 	private static ActionButton treasuryButton(ServerPlayer player, Consumer<ServerPlayer> back, int width) {
 		ErrandsData.PlayerState state = ErrandService.state(player);
 		Treasury.settle(player.level().getServer(), state, ErrandGenerator.day((ServerLevel) player.level()));
 		int waiting = (int) Math.floor(Treasury.waiting(state));
-		if (waiting <= 0 && !ErrandsConfig.INSTANCE.emeraldRewards) return null;
 		Component label = Component.empty().append(Icons.of(Items.EMERALD))
 			.append(Lang.tr(player, "board.treasury", waiting).withStyle(waiting > 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY));
 		return button(player, label, null, width, p -> treasury(p, back));
@@ -800,9 +813,7 @@ public final class ErrandDialogs {
 		Component title = Component.empty().append(Icons.of(Items.EMERALD)).append(Lang.tr(player, "treasury.title"));
 		List<DialogBody> body = new ArrayList<>();
 		MutableComponent head = Component.empty()
-			.append(ErrandsConfig.INSTANCE.emeraldRewards
-				? Lang.tr(player, "treasury.income", money(perDay)).withStyle(ChatFormatting.GREEN)
-				: Lang.tr(player, "treasury.closed").withStyle(ChatFormatting.GRAY))
+			.append(Lang.tr(player, "treasury.income", money(perDay)).withStyle(ChatFormatting.GREEN))
 			.append("\n").append(Lang.tr(player, "treasury.waiting", (int) Math.floor(waiting)).withStyle(ChatFormatting.YELLOW));
 		if (friendly > 0) {
 			head.append("\n").append(Lang.tr(player, friendly == 1 ? "treasury.network.one" : "treasury.network",
@@ -865,7 +876,8 @@ public final class ErrandDialogs {
 
 	/** "1.5" with one decimal, "12" from ten up. */
 	private static String money(double amount) {
-		return amount >= 10 ? String.valueOf(Math.round(amount)) : String.format(java.util.Locale.ROOT, "%.1f", amount);
+		if (amount >= 10) return String.valueOf(Math.round(amount));
+		return String.format(java.util.Locale.ROOT, amount >= 1 ? "%.1f" : "%.2f", amount);
 	}
 
 	/** "340 m NE" from the player, or the dimension when the village is in another one. */
