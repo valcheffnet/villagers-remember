@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.15,
       "objectives": [
         {
           "craft": "minecraft:paper"
@@ -24,7 +24,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.4,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -36,8 +36,8 @@
       ],
       "market": 0.0417,
       "count": [
-        27,
-        53
+        10,
+        20
       ],
       "tiers": [
         1,
@@ -69,10 +69,10 @@
     {
       "deliver": "minecraft:sugar_cane",
       "weight": 10,
-      "value": 0.02,
+      "value": 0.15,
       "count": [
-        200,
-        256
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -81,7 +81,7 @@
     },
     {
       "weight": 10,
-      "value": 0.6696,
+      "value": 0.9118,
       "objectives": [
         {
           "craft": "minecraft:book"
@@ -92,8 +92,8 @@
       ],
       "market": 0.25,
       "count": [
-        12,
-        17
+        9,
+        13
       ],
       "tiers": [
         2,
@@ -102,7 +102,7 @@
     },
     {
       "weight": 10,
-      "value": 1.5,
+      "value": 2.0331,
       "objectives": [
         {
           "craft": "minecraft:candle"
@@ -113,8 +113,8 @@
       ],
       "market": 0.0714,
       "count": [
-        6,
-        8
+        4,
+        5
       ],
       "tiers": [
         2,
@@ -161,7 +161,7 @@
     },
     {
       "weight": 10,
-      "value": 1.6071,
+      "value": 2.2517,
       "objectives": [
         {
           "craft": "minecraft:bookshelf"
@@ -172,8 +172,8 @@
       ],
       "market": 0.75,
       "count": [
-        8,
-        11
+        6,
+        7
       ],
       "tiers": [
         3,
@@ -182,7 +182,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0714,
+      "value": 1.4142,
       "objectives": [
         {
           "craft": "minecraft:writable_book"
@@ -193,8 +193,8 @@
       ],
       "market": 0.5,
       "count": [
-        12,
-        16
+        9,
+        12
       ],
       "tiers": [
         3,
@@ -207,43 +207,43 @@
         {
           "craft": "minecraft:bookshelf",
           "count": [
-            7,
-            7
+            4,
+            4
           ]
         },
         {
           "deliver": "minecraft:bookshelf",
           "count": [
-            7,
-            7
+            4,
+            4
           ]
         },
         {
           "craft": "minecraft:lectern",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         },
         {
           "deliver": "minecraft:lectern",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         },
         {
           "craft": "minecraft:lantern",
           "count": [
-            4,
-            4
+            2,
+            2
           ]
         },
         {
           "deliver": "minecraft:lantern",
           "count": [
-            4,
-            4
+            2,
+            2
           ]
         }
       ],
@@ -251,8 +251,8 @@
         1,
         1
       ],
-      "value": 15.25,
-      "market": 6.75,
+      "value": 13.83,
+      "market": 3.75,
       "weight": 6,
       "tiers": [
         3,
@@ -274,7 +274,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 1.1892,
       "objectives": [
         {
           "kill": "minecraft:enderman",
@@ -285,8 +285,8 @@
         }
       ],
       "count": [
-        18,
-        25
+        16,
+        21
       ],
       "tiers": [
         4,
@@ -316,7 +316,7 @@
     },
     {
       "weight": 10,
-      "value": 4.0,
+      "value": 4.7568,
       "objectives": [
         {
           "craft": "minecraft:clock"
@@ -327,8 +327,8 @@
       ],
       "market": 1.3333,
       "count": [
-        5,
-        6
+        4,
+        5
       ],
       "tiers": [
         4,

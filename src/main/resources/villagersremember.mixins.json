@@ -18,7 +18,8 @@
 		"VillagerInvoker",
 		"EntityNameAccessor",
 		"VillagerPricesMixin",
-		"UseItemOnMixin"
+		"UseItemOnMixin",
+		"VillagerLevelUpMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

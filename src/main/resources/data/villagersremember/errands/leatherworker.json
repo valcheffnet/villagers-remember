@@ -26,11 +26,11 @@
     {
       "deliver": "minecraft:flint",
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.25,
       "market": 0.0417,
       "count": [
-        27,
-        53
+        16,
+        32
       ],
       "tiers": [
         1,
@@ -39,7 +39,7 @@
     },
     {
       "weight": 10,
-      "value": 0.3,
+      "value": 0.4,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -51,8 +51,8 @@
       ],
       "market": 0.0714,
       "count": [
-        14,
-        26
+        10,
+        20
       ],
       "tiers": [
         1,
@@ -66,10 +66,10 @@
         }
       ],
       "weight": 10,
-      "value": 0.3,
+      "value": 1.0,
       "count": [
-        14,
-        26
+        4,
+        8
       ],
       "tiers": [
         1,
@@ -302,7 +302,7 @@
         1,
         1
       ],
-      "value": 13.0,
+      "value": 13.63,
       "market": 2.024,
       "weight": 6,
       "tiers": [

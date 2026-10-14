@@ -25,7 +25,7 @@
     },
     {
       "weight": 10,
-      "value": 0.05,
+      "value": 0.2,
       "objectives": [
         {
           "smelt": "minecraft:copper_ingot"
@@ -35,8 +35,8 @@
         }
       ],
       "count": [
-        80,
-        160
+        20,
+        40
       ],
       "tiers": [
         1,
@@ -67,7 +67,7 @@
     },
     {
       "weight": 10,
-      "value": 0.6696,
+      "value": 0.6839,
       "objectives": [
         {
           "smelt": "minecraft:iron_ingot"
@@ -254,29 +254,29 @@
         {
           "craft": "minecraft:iron_helmet",
           "count": [
-            3,
-            3
+            2,
+            2
           ]
         },
         {
           "deliver": "minecraft:iron_helmet",
           "count": [
-            3,
-            3
+            2,
+            2
           ]
         },
         {
           "craft": "minecraft:iron_boots",
           "count": [
-            3,
-            3
+            2,
+            2
           ]
         },
         {
           "deliver": "minecraft:iron_boots",
           "count": [
-            3,
-            3
+            2,
+            2
           ]
         }
       ],
@@ -284,8 +284,8 @@
         1,
         1
       ],
-      "value": 17.14,
-      "market": 8.0,
+      "value": 13.18,
+      "market": 5.75,
       "weight": 6,
       "tiers": [
         3,

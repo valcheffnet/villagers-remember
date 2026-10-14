@@ -1525,6 +1525,22 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				nextDay.run();
 				if (open.get().size() != 1) return "the day after the whole circle died " + open.get().size() + " open, expected 1";
 
+				// Trading a villager up a level wins them over (on top of the places earned); a member stays as it is.
+				Villager trader = null;
+				for (UUID id : everyone) {
+					if (level.getEntity(id) instanceof Villager v && v.isAlive() && ErrandGenerator.givesErrands(v)
+						&& ErrandGenerator.shown(level, ErrandGenerator.Giver.of(v), fresh).isEmpty()) trader = v;
+				}
+				if (trader == null) return "no villager outside the circle";
+				int before = open.get().size();
+				ErrandsData.PlayerState real = ErrandService.state(player(server));
+				// tradedUp works on the trading player's state; use the test player with the fresh player's circle.
+				real.circles.put(ErrandsData.villageKey(village.center), net.valcheff.villagersremember.Trust.circle(server, fresh, village));
+				net.valcheff.villagersremember.Trust.tradedUp(player(server), trader);
+				if (!net.valcheff.villagersremember.Trust.circle(server, fresh, village).members.contains(trader.getUUID())) return "trading up didn't win the villager over";
+				if (open.get().size() != before + 1) return "after trading up " + open.get().size() + " open, expected " + (before + 1);
+				real.circles.remove(ErrandsData.villageKey(village.center));
+
 				// Gradual trust off: everyone offers errands again.
 				ErrandsConfig.INSTANCE.gradualTrust = false;
 				int all = 0;

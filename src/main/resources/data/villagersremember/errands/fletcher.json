@@ -25,11 +25,11 @@
     {
       "deliver": "minecraft:flint",
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.25,
       "market": 0.0417,
       "count": [
-        27,
-        53
+        16,
+        32
       ],
       "tiers": [
         1,
@@ -38,7 +38,7 @@
     },
     {
       "weight": 10,
-      "value": 0.15,
+      "value": 0.4,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -50,8 +50,8 @@
       ],
       "market": 0.0417,
       "count": [
-        27,
-        53
+        10,
+        20
       ],
       "tiers": [
         1,
@@ -68,11 +68,11 @@
         }
       ],
       "weight": 10,
-      "value": 0.1023,
+      "value": 0.15,
       "market": 0.0286,
       "count": [
-        40,
-        78
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -117,7 +117,7 @@
     },
     {
       "weight": 10,
-      "value": 0.3,
+      "value": 0.3652,
       "objectives": [
         {
           "kill": "minecraft:spider",
@@ -129,8 +129,8 @@
       ],
       "market": 0.0714,
       "count": [
-        27,
-        40
+        22,
+        32
       ],
       "tiers": [
         2,
@@ -160,7 +160,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0,
+      "value": 1.2175,
       "objectives": [
         {
           "craft": "minecraft:bow"
@@ -171,8 +171,8 @@
       ],
       "market": 0.2143,
       "count": [
-        8,
-        12
+        7,
+        9
       ],
       "tiers": [
         2,
@@ -194,7 +194,7 @@
     },
     {
       "weight": 10,
-      "value": 1.2,
+      "value": 1.3682,
       "objectives": [
         {
           "craft": "minecraft:crossbow"
@@ -205,8 +205,8 @@
       ],
       "market": 0.5179,
       "count": [
-        10,
-        15
+        9,
+        13
       ],
       "tiers": [
         3,
@@ -245,43 +245,43 @@
         {
           "craft": "minecraft:bow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:bow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:crossbow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:crossbow",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "craft": "minecraft:arrow",
           "count": [
-            115,
-            115
+            107,
+            107
           ]
         },
         {
           "deliver": "minecraft:arrow",
           "count": [
-            115,
-            115
+            107,
+            107
           ]
         }
       ],
@@ -289,8 +289,8 @@
         1,
         1
       ],
-      "value": 15.86,
-      "market": 6.223,
+      "value": 14.09,
+      "market": 5.262,
       "weight": 6,
       "tiers": [
         3,

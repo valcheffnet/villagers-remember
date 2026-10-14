@@ -902,5 +902,6 @@
 	"trust.order": "The village is talking about how you helped with the order.",
 	"obj.have": "Have %s× %s",
 	"side.have": "Have %s",
-	"lore.have.ender_chest": "You've been good to us. Get yourself an ender chest: now and then we'll leave a little something in it for you."
+	"lore.have.ender_chest": "You've been good to us. Get yourself an ender chest: now and then we'll leave a little something in it for you.",
+	"trust.traded": "%s liked trading with you and wants to talk."
 }

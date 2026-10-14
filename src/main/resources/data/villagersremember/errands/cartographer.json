@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.15,
       "objectives": [
         {
           "craft": "minecraft:paper"
@@ -24,7 +24,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.08,
       "objectives": [
         {
           "smelt": "minecraft:glass"
@@ -34,8 +34,8 @@
         }
       ],
       "count": [
-        134,
-        256
+        50,
+        100
       ],
       "tiers": [
         1,
@@ -45,10 +45,10 @@
     {
       "deliver": "minecraft:sugar_cane",
       "weight": 10,
-      "value": 0.02,
+      "value": 0.15,
       "count": [
-        200,
-        256
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -129,7 +129,7 @@
     },
     {
       "weight": 10,
-      "value": 3.5714,
+      "value": 4.2426,
       "objectives": [
         {
           "craft": "minecraft:map"
@@ -140,8 +140,8 @@
       ],
       "market": 1.3333,
       "count": [
-        3,
-        3
+        2,
+        2
       ],
       "tiers": [
         2,
@@ -303,7 +303,7 @@
     },
     {
       "weight": 10,
-      "value": 0.9,
+      "value": 1.1023,
       "objectives": [
         {
           "craft": "minecraft:spyglass"
@@ -313,7 +313,7 @@
         }
       ],
       "count": [
-        14,
+        11,
         16
       ],
       "tiers": [
@@ -348,15 +348,15 @@
         {
           "craft": "minecraft:map",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
           "deliver": "minecraft:map",
           "count": [
-            4,
-            4
+            3,
+            3
           ]
         },
         {
@@ -392,8 +392,8 @@
         1,
         1
       ],
-      "value": 16.61,
-      "market": 7.333,
+      "value": 14.39,
+      "market": 6.0,
       "weight": 6,
       "tiers": [
         3,
@@ -432,7 +432,7 @@
     },
     {
       "weight": 10,
-      "value": 4.0,
+      "value": 4.7568,
       "objectives": [
         {
           "craft": "minecraft:clock"
@@ -443,8 +443,8 @@
       ],
       "market": 1.3333,
       "count": [
-        5,
-        6
+        4,
+        5
       ],
       "tiers": [
         4,

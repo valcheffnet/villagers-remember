@@ -46,7 +46,7 @@
     },
     {
       "weight": 10,
-      "value": 0.02,
+      "value": 0.08,
       "objectives": [
         {
           "smelt": "minecraft:deepslate"
@@ -56,8 +56,8 @@
         }
       ],
       "count": [
-        200,
-        256
+        50,
+        100
       ],
       "tiers": [
         1,

@@ -192,6 +192,24 @@ public final class Trust {
 		ErrandsData.get(server).setDirty();
 	}
 
+	/**
+	 * A villager went up a trade level after trading with this player (user, 2026-10-14): it wants to talk to them too.
+	 * It joins the circle on top of the places earned.
+	 */
+	public static void tradedUp(ServerPlayer player, net.minecraft.world.entity.npc.villager.Villager villager) {
+		if (!enabled() || !ErrandGenerator.givesErrands(villager)) return;
+		MinecraftServer server = player.level().getServer();
+		Optional<VillageRegistry.Village> village = VillageRegistry.get(server).villageOf(villager.getUUID());
+		if (village.isEmpty()) return;
+		ErrandsData.PlayerState state = ErrandService.state(player);
+		Circle circle = circle(server, state, village.get());
+		if (circle.members.contains(villager.getUUID())) return;
+		circle.members.add(villager.getUUID());
+		circle.lost.remove(villager.getUUID());
+		tell(server, state, villager.getUUID(), "trust.traded");
+		ErrandsData.get(server).setDirty();
+	}
+
 	// ---- deaths and zombies ----
 
 	/** A villager or zombie villager died: if they were in a circle, their place stays empty. */

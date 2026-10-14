@@ -102,6 +102,47 @@ STACK1 = {"cake", "rabbit_stew", "mushroom_stew", "beetroot_soup", "suspicious_s
 STACK16 = {"egg", "ender_pearl", "#minecraft:banners", "painting", "honey_bottle", "wind_charge"}
 
 
+# ---- farms come gradually (user, 2026-10-14) ----
+# T1 tasks are sized for hand gathering (their minutes are written that way), T5 assumes the usual farms. In between,
+# a task made from farmable things takes its farm minutes x FARM ** ((5 - tier) / 4): 3/4 of the hand-gathering slowdown
+# at T2, half at T3, a quarter at T4. FARM = how many times slower it is without the farm.
+FARM = {
+    "bread": 30, "hay_block": 30, "baked_potato": 40, "cake": 8, "pumpkin": 20, "pumpkin_pie": 6, "melon": 15,
+    "egg": 2, "beetroot_soup": 10, "rabbit_stew": 1.5, "golden_carrot": 1.3, "glistering_melon_slice": 1.3,
+    "cooked_beef": 3.5, "cooked_chicken": 3.5, "cooked_mutton": 3.5, "cooked_porkchop": 3.5,
+    "#minecraft:banners": 6, "#minecraft:beds": 4, "#minecraft:wool_carpets": 8, "painting": 3, "lead": 1.3,
+    "string": 1.3, "bow": 1.3, "crossbow": 1.3, "arrow": 2, "leather_chestplate": 1.3, "leather_horse_armor": 1.3,
+    "book": 3, "bookshelf": 3, "writable_book": 2, "lectern": 2, "map": 4, "compass": 2, "clock": 2, "spyglass": 1.5,
+    "candle": 1.5, "honey_bottle": 1.5, "honeycomb": 1.5, "gunpowder": 1.5, "spider_eye": 1.3,
+    "iron_ingot": 3, "iron_block": 3, "gold_ingot": 3, "coal_block": 1.6, "ender_pearl": 2, "blaze_rod": 1.5,
+    "blaze_powder": 1.5, "nether_wart": 3, "glass_pane": 2.7, "glass_bottle": 2.7, "brick": 1.5, "bricks": 1.5,
+    "shield": 2, "iron_sword": 3, "iron_helmet": 3, "iron_boots": 3, "iron_pickaxe": 3, "iron_shovel": 3, "iron_axe": 3,
+    "breed:chicken": 3, "breed:rabbit": 3, "breed:bee": 2, "breed:goat": 1.5, "breed:llama": 1.5,
+}
+
+
+def farm_factor(key, tier):
+    """How much longer a task of this tier takes than with farms (1 at T1, whose minutes already assume none, and T5)."""
+    if not tier or tier <= 1 or tier >= 5 or not key:
+        return 1.0
+    name = key if key.startswith("#") or key.startswith("breed:") else key.split(":")[-1]
+    f = FARM.get(name, 8 if name.endswith("_wool") else 1.0)
+    return f ** ((5 - tier) / 4)
+
+
+def farm_key(entry):
+    """The farmable thing a pack entry is about: what is brought, or the animal bred."""
+    if entry.get("deliver"):
+        return entry["deliver"] if entry["deliver"].startswith("#") else entry["deliver"].split(":")[-1]
+    for o in entry.get("objectives", []):
+        if "breed" in o:
+            return "breed:" + o["breed"].split(":")[-1]
+        for k in ("deliver", "craft", "smelt"):
+            if k in o:
+                return o[k].split(":")[-1]
+    return None
+
+
 def mc(i):
     return i if ":" in i else "minecraft:" + i
 
@@ -185,10 +226,13 @@ REWARDS = {
 # Counts that a market price would make larger are raised by the market floor (MARKET_PREMIUM), so crops and other
 # cheap goods stay small enough that the errand pays clearly more than selling them.
 
+# T1 assumes no farms yet (user, 2026-10-14): crops from village fields, wild cane and seeds from grass, animals
+# hunted, sheared or bred with hand-picked food, coal, copper and redstone mined, gravel, sand and clay dug.
+# The minutes below T1 are with farms; FARM / farm_factor slow them down less with every tier, T5 has the farms.
 PACKS = {
     "farmer": {
-        1: [D("wheat", 0.01), D("potato", 0.01), D("carrot", 0.01), D("beetroot", 0.01), D("sugar_cane", 0.02),
-            K("rabbit", 0.7, 6), A([{"plant": "minecraft:wheat_seeds"}], 0.02, 6), A([{"bonemeal": ""}], 0.03, 6)],
+        1: [D("wheat", 0.3), D("potato", 0.4), D("carrot", 0.4), D("beetroot", 0.4), D("sugar_cane", 0.15),
+            K("rabbit", 0.7, 6), A([{"plant": "minecraft:wheat_seeds"}], 0.15, 6), A([{"bonemeal": ""}], 0.2, 6)],
         2: [D("bread", 0.03), D("pumpkin", 0.02), D("melon", 0.03), D("egg", 0.3), D("hay_block", 0.05), D("cake", 0.3),
             K("zombie", 0.5), A([{"breed": "minecraft:chicken"}], 0.3, 6)],
         3: [O("winter_stock"), D("pumpkin_pie", 0.15), D("golden_carrot", 1.0), K("spider", 0.5), K("husk", 0.6)],
@@ -198,8 +242,8 @@ PACKS = {
             D("golden_apple", 8.0, 8)],
     },
     "butcher": {
-        1: [D("chicken", 0.1), D("porkchop", 0.1), D("beef", 0.1), D("mutton", 0.1),
-            A([{"breed": "minecraft:cow"}], 0.3, 6), A([{"breed": "minecraft:pig"}], 0.3, 6)],
+        1: [D("chicken", 0.35), D("porkchop", 0.35), D("beef", 0.35), D("mutton", 0.35),
+            A([{"breed": "minecraft:cow"}], 1.0, 6), A([{"breed": "minecraft:pig"}], 1.0, 6)],
         2: [D("cooked_chicken", 0.15), D("cooked_beef", 0.15), D("cooked_porkchop", 0.15), D("cooked_mutton", 0.15),
             D("mushroom_stew", 0.6), D("beetroot_soup", 0.6), K("spider", 0.5), A([{"breed": "minecraft:rabbit"}], 1.0, 6)],
         3: [D("rabbit_stew", 1.7), O("smiths_lunch"), K("zombie", 0.5), K("husk", 0.6)],
@@ -208,7 +252,7 @@ PACKS = {
             A([{"visit_structure": "minecraft:bastion_remnant"}], 30.0, 8, (1, 1))],
     },
     "fisherman": {
-        1: [D("cod", 0.6), D("salmon", 0.7), D("kelp", 0.02), D("string", 0.3)],
+        1: [D("cod", 0.6), D("salmon", 0.7), D("kelp", 0.05), D("string", 0.4)],
         2: [D("cooked_cod", 0.7), D("cooked_salmon", 0.8), D("tropical_fish", 1.0), D("lily_pad", 0.3), K("drowned", 0.6),
             O("fish_market"), A([{"fill_bucket": "minecraft:tropical_fish_bucket"}, {"deliver": "minecraft:tropical_fish_bucket"}], 1.0, 6)],
         3: [D("pufferfish", 2.0), D("sea_pickle", 0.2), D("prismarine_shard", 0.5), D("ink_sac", 0.5), K("guardian", 1.0),
@@ -219,14 +263,14 @@ PACKS = {
             D("wet_sponge", 8.0)],
     },
     "shepherd": {
-        1: [D("#minecraft:wool", 0.03), D("white_dye", 0.1), D("wheat", 0.01), A([{"breed": "minecraft:sheep"}], 0.3, 8)],
+        1: [D("#minecraft:wool", 0.25), D("white_dye", 0.25), D("wheat", 0.3), A([{"breed": "minecraft:sheep"}], 1.0, 8)],
         2: [D("#minecraft:wool_carpets", 0.05), D("#minecraft:beds", 0.6), O("color_set"), D("lead", 1.5), K("spider", 0.5)],
         3: [D("#minecraft:banners", 0.9), D("painting", 0.25), O("new_home"), A([{"tame": "minecraft:wolf"}], 3.0, 6)],
         4: [K("phantom", 1.5), A([{"breed": "minecraft:llama"}], 2.5, 6), A([{"shear": "minecraft:mooshroom"}], 9.0, 6, (2, 2))],
         5: [O("rainbow"), D("piglin_banner_pattern", 30.0, 8, (1, 1)), A([{"breed": "minecraft:llama"}], 2.5, 6)],
     },
     "librarian": {
-        1: [D("paper", 0.02), D("feather", 0.15), D("ink_sac", 0.5), D("sugar_cane", 0.02)],
+        1: [D("paper", 0.15), D("feather", 0.4), D("ink_sac", 0.5), D("sugar_cane", 0.15)],
         2: [D("book", 0.4), D("candle", 1.5), D("lantern", 0.1), A([{"enchant": "", "min_level": 10}], 3.0, 6)],
         3: [D("bookshelf", 1.3), D("writable_book", 1.0), O("reading_room"), K("witch", 3.0)],
         4: [D("ender_pearl", 1.0), D("glow_ink_sac", 1.0), D("clock", 4.0), A([{"enchant": "", "min_level": 30}], 8.0, 6)],
@@ -234,7 +278,7 @@ PACKS = {
             A([{"visit_structure": "minecraft:ancient_city"}], 30.0, 6, (1, 1))],
     },
     "cartographer": {
-        1: [D("paper", 0.02), D("glass", 0.03), D("sugar_cane", 0.02),
+        1: [D("paper", 0.15), D("glass", 0.08), D("sugar_cane", 0.15),
             A([{"visit_structure": "#minecraft:ruined_portal"}], 6.0, 6, (1, 1)),
             A([{"visit_structure": "#minecraft:abandoned_camp"}], 6.0, 6, (1, 1)),
             A([{"visit_biome": "minecraft:cherry_grove"}], 6.0, 5, (1, 1))],
@@ -256,7 +300,7 @@ PACKS = {
             A([{"visit_structure": "minecraft:end_city"}], 35.0, 6, (1, 1))],
     },
     "cleric": {
-        1: [D("rotten_flesh", 0.2), D("bone", 0.3), D("redstone", 0.03), K("zombie", 0.5)],
+        1: [D("rotten_flesh", 0.3), D("bone", 0.35), D("redstone", 0.15), K("zombie", 0.5)],
         2: [D("spider_eye", 0.8), D("lapis_lazuli", 0.05), D("gold_ingot", 1.0), D("glowstone_dust", 0.1),
             K("skeleton", 0.5), K("drowned", 0.6)],
         3: [D("gunpowder", 0.7), D("rabbit_foot", 3.0), K("witch", 3.0), K("phantom", 1.5),
@@ -266,7 +310,7 @@ PACKS = {
             A([{"brew": "minecraft:strong_strength"}], 3.0, 6)],
     },
     "armorer": {
-        1: [D("coal", 0.05), D("copper_ingot", 0.05), D("leather", 0.3)],
+        1: [D("coal", 0.08), D("copper_ingot", 0.2), D("leather", 0.4)],
         2: [D("iron_ingot", 0.3), D("lava_bucket", 0.5), K("skeleton", 0.5), R("copper_helmet", 2, (8, 11)),
             R("copper_boots", 2, (8, 11))],
         3: [D("iron_block", 2.7), D("obsidian", 0.5), O("guard_gear"), K("pillager", 1.0),
@@ -277,7 +321,7 @@ PACKS = {
             R("netherite_chestplate", 2, (18, 21))],
     },
     "weaponsmith": {
-        1: [D("coal", 0.05), D("flint", 0.1), D("stick", 0.02), D("bone", 0.3), R("stone_sword", 3, (5, 8))],
+        1: [D("coal", 0.08), D("flint", 0.25), D("stick", 0.02), D("bone", 0.35), R("stone_sword", 3, (5, 8))],
         2: [D("iron_ingot", 0.3), K("skeleton", 0.5), K("zombie", 0.5), R("copper_sword", 3, (8, 11))],
         3: [D("iron_block", 2.7), K("creeper", 0.6), K("witch", 3.0), O("armory"), R("iron_sword", 3, (10, 13)),
             R("iron_axe", 2, (10, 13)), A([{"enchant": "", "min_level": 15}], 4.0, 5)],
@@ -286,7 +330,7 @@ PACKS = {
             R("netherite_sword", 2, (18, 21))],
     },
     "toolsmith": {
-        1: [D("coal", 0.05), D("flint", 0.1), D("copper_ingot", 0.05), D("redstone", 0.03), R("stone_pickaxe", 3, (5, 8))],
+        1: [D("coal", 0.08), D("flint", 0.25), D("copper_ingot", 0.2), D("redstone", 0.15), R("stone_pickaxe", 3, (5, 8))],
         2: [D("iron_ingot", 0.3), K("spider", 0.5),
             A([{"mine": "#minecraft:iron_ores"}, {"deliver": "minecraft:raw_iron"}], 0.3, 6),
             R("copper_pickaxe", 3, (8, 11)), R("copper_shovel", 3, (8, 11))],
@@ -298,7 +342,7 @@ PACKS = {
             R("netherite_pickaxe", 2, (18, 21))],
     },
     "leatherworker": {
-        1: [D("leather", 0.3), D("flint", 0.1), D("string", 0.3), A([{"breed": "minecraft:cow"}], 0.3)],
+        1: [D("leather", 0.4), D("flint", 0.25), D("string", 0.4), A([{"breed": "minecraft:cow"}], 1.0)],
         2: [D("rabbit_hide", 0.8), D("leather_chestplate", 2.4), K("spider", 0.5),
             A([{"tame": "minecraft:horse"}], 4.0, 5, (2, 3)), A([{"tame": "minecraft:donkey"}], 4.0, 5, (2, 3)),
             A([{"tame": "minecraft:llama"}], 4.0, 5, (2, 3))],
@@ -307,7 +351,7 @@ PACKS = {
         5: [O("armored_stable"), D("wolf_armor", 12.0), K("ravager", 13.0, 8, (2, 2))],
     },
     "mason": {
-        1: [D("stone", 0.02), D("clay_ball", 0.1), D("deepslate", 0.02)],
+        1: [D("stone", 0.02), D("clay_ball", 0.15), D("deepslate", 0.08)],
         2: [D("brick", 0.05), D("polished_granite", 0.02), D("polished_andesite", 0.02), D("polished_diorite", 0.02),
             K("silverfish", 0.5), O("town_hall"), A([{"station": "minecraft:stone_bricks"}, {"deliver": "minecraft:stone_bricks"}], 0.03, 6)],
         3: [D("calcite", 0.1), D("tuff_bricks", 0.07), D("quartz_block", 0.4), K("creeper", 0.6)],
@@ -316,7 +360,7 @@ PACKS = {
             A([{"visit_structure": "minecraft:end_city"}], 35.0, 6, (1, 1))],
     },
     "fletcher": {
-        1: [D("stick", 0.02), D("flint", 0.1), D("feather", 0.15), A([{"craft": "minecraft:arrow"}, {"deliver": "minecraft:arrow"}], 0.03),
+        1: [D("stick", 0.02), D("flint", 0.25), D("feather", 0.4), A([{"craft": "minecraft:arrow"}, {"deliver": "minecraft:arrow"}], 0.15),
             R("bow", 3, (8, 12))],
         2: [D("string", 0.3), D("tripwire_hook", 0.3), D("bow", 1.0), K("skeleton", 0.5)],
         3: [D("crossbow", 1.2), K("bogged", 1.0), K("stray", 1.0), O("hunters_pack"), R("crossbow", 2, (8, 12))],
@@ -592,7 +636,7 @@ def order_task(name, tier):
     lo, hi = WINDOW[tier] if tier else NITWIT_WINDOW
     def eff(it, m, action):
         p = price_of(mc(it)) if action != "brew" else 0.0
-        return priced_minutes(m, p, tier)
+        return priced_minutes(m * farm_factor(it, tier), p, tier)
     total = sum(count * eff(it, m, action) for action, it, count, m in ORDERS[name])
     k = ((lo + hi) / 2) / total
     objectives = []
@@ -670,7 +714,7 @@ def build(entry, tiers, report):
         else:
             task_objs = task.get("objectives", [])
         market = market_of({"objectives": task_objs})
-        minutes = priced_minutes(entry["minutes"], market, tier)
+        minutes = priced_minutes(entry["minutes"] * farm_factor(farm_key(entry), tier), market, tier)
         if market > 0:
             task["market"] = round(market, 4)
         lo, hi = WINDOW[tier] if tier else NITWIT_WINDOW

@@ -24,13 +24,13 @@ Right-click the village bell for the board: all of the village's errands, its re
 
 ## Standing and trust
 
-A village doesn't open up to a stranger all at once, and every player earns it on their own. When you first come, one villager dares to talk to you (the one with the "!"); the others trade with you and tell you to ask them. Every tier you reach with someone who trusts you makes one more villager willing to give you work. Helping to finish a village order does too, and the village's own tier adds more: one at Known, two at Friend, three at Respected, and everyone once you are its Hero. If someone who trusts you dies, their place stays empty; only when nobody who trusted you is left does someone new dare, the next day. A friend turned zombie villager is back, with everything, once cured. Server owners can turn this off (`gradualTrust`).
+A village doesn't open up to a stranger all at once, and every player earns it on their own. When you first come, one villager dares to talk to you (the one with the "!"); the others trade with you and tell you to ask them. Every tier you reach with someone who trusts you makes one more villager willing to give you work. Helping to finish a village order does too, and so does trading with a villager until they reach a new trade level (they liked dealing with you). The village's own tier adds more: one at Known, two at Friend, three at Respected, and everyone once you are its Hero. If someone who trusts you dies, their place stays empty; only when nobody who trusted you is left does someone new dare, the next day. A friend turned zombie villager is back, with everything, once cured. Server owners can turn this off (`gradualTrust`).
 
 You earn standing with every villager and with the village as a whole. Villager tiers go Stranger, Acquaintance, Friend, Good friend, Best friend. A villager won't move you up a tier on points alone: when you have the points, they give you a trial of trust, a harder errand that pays double. Pass it and they hand you the next pack of errands.
 
 Village tiers (Known, Friend, Respected, Hero of the Village) need points and enough residents who trust you that much. Each tier makes rewards 5% bigger and enchanted rewards stronger.
 
-Each pack asks for more work. A first errand takes about five minutes: a stack of wheat, a few rabbits. A top-pack errand takes half an hour and can't be pulled out of a chest: an elder guardian, a woodland mansion, a pair of zombie villagers to cure, a trident. The game assumes you have the usual farms, so farmable goods stay in the low packs.
+Each pack asks for more work. A first errand takes about five minutes for a player who has no farms yet: twenty wheat from a field, a few rabbits, a handful of coal. A top-pack errand takes half an hour and can't be pulled out of a chest: an elder guardian, a woodland mansion, a pair of zombie villagers to cure, a trident. Each pack after that expects a bit more of a farm, and the top pack assumes the usual farms, so farmable goods stay in the low packs.
 
 ## Rewards
 

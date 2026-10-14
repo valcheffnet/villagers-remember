@@ -26,11 +26,11 @@
     {
       "deliver": "minecraft:flint",
       "weight": 10,
-      "value": 0.1488,
+      "value": 0.25,
       "market": 0.0417,
       "count": [
-        27,
-        53
+        16,
+        32
       ],
       "tiers": [
         1,
@@ -39,7 +39,7 @@
     },
     {
       "weight": 10,
-      "value": 0.05,
+      "value": 0.2,
       "objectives": [
         {
           "smelt": "minecraft:copper_ingot"
@@ -49,8 +49,8 @@
         }
       ],
       "count": [
-        80,
-        160
+        20,
+        40
       ],
       "tiers": [
         1,
@@ -59,7 +59,7 @@
     },
     {
       "weight": 10,
-      "value": 0.03,
+      "value": 0.15,
       "objectives": [
         {
           "mine": "#minecraft:redstone_ores",
@@ -70,8 +70,8 @@
         }
       ],
       "count": [
-        134,
-        256
+        27,
+        53
       ],
       "tiers": [
         1,
@@ -116,7 +116,7 @@
     },
     {
       "weight": 10,
-      "value": 0.6696,
+      "value": 0.6839,
       "objectives": [
         {
           "smelt": "minecraft:iron_ingot"

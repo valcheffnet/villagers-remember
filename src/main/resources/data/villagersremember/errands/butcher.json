@@ -3,7 +3,7 @@
   "tasks": [
     {
       "weight": 10,
-      "value": 0.2551,
+      "value": 0.35,
       "objectives": [
         {
           "kill": "minecraft:chicken",
@@ -15,8 +15,8 @@
       ],
       "market": 0.0714,
       "count": [
-        16,
-        31
+        12,
+        22
       ],
       "tiers": [
         1,
@@ -96,10 +96,10 @@
         }
       ],
       "weight": 6,
-      "value": 0.3,
+      "value": 1.0,
       "count": [
-        14,
-        26
+        4,
+        8
       ],
       "tiers": [
         1,
@@ -113,10 +113,10 @@
         }
       ],
       "weight": 6,
-      "value": 0.3,
+      "value": 1.0,
       "count": [
-        14,
-        26
+        4,
+        8
       ],
       "tiers": [
         1,
@@ -125,7 +125,7 @@
     },
     {
       "weight": 10,
-      "value": 0.1913,
+      "value": 0.3838,
       "objectives": [
         {
           "smelt": "minecraft:cooked_chicken"
@@ -136,8 +136,8 @@
       ],
       "market": 0.0714,
       "count": [
-        42,
-        62
+        21,
+        31
       ],
       "tiers": [
         2,
@@ -146,7 +146,7 @@
     },
     {
       "weight": 10,
-      "value": 0.2679,
+      "value": 0.3838,
       "objectives": [
         {
           "smelt": "minecraft:cooked_beef"
@@ -157,8 +157,8 @@
       ],
       "market": 0.1,
       "count": [
-        30,
-        44
+        21,
+        31
       ],
       "tiers": [
         2,
@@ -167,7 +167,7 @@
     },
     {
       "weight": 10,
-      "value": 0.3827,
+      "value": 0.3838,
       "objectives": [
         {
           "smelt": "minecraft:cooked_porkchop"
@@ -188,7 +188,7 @@
     },
     {
       "weight": 10,
-      "value": 0.3827,
+      "value": 0.3838,
       "objectives": [
         {
           "smelt": "minecraft:cooked_mutton"
@@ -229,7 +229,7 @@
     },
     {
       "weight": 10,
-      "value": 1.0714,
+      "value": 3.374,
       "objectives": [
         {
           "craft": "minecraft:beetroot_soup"
@@ -240,8 +240,8 @@
       ],
       "market": 0.4,
       "count": [
-        8,
-        11
+        3,
+        3
       ],
       "tiers": [
         2,
@@ -268,10 +268,10 @@
         }
       ],
       "weight": 6,
-      "value": 1.0,
+      "value": 2.2795,
       "count": [
-        8,
-        12
+        4,
+        5
       ],
       "tiers": [
         2,
@@ -280,7 +280,7 @@
     },
     {
       "weight": 10,
-      "value": 1.7,
+      "value": 2.0821,
       "objectives": [
         {
           "craft": "minecraft:rabbit_stew"
@@ -291,8 +291,8 @@
       ],
       "market": 0.3339,
       "count": [
-        8,
-        10
+        6,
+        8
       ],
       "tiers": [
         3,
@@ -305,43 +305,43 @@
         {
           "smelt": "minecraft:cooked_beef",
           "count": [
-            21,
-            21
+            15,
+            15
           ]
         },
         {
           "deliver": "minecraft:cooked_beef",
           "count": [
-            21,
-            21
+            15,
+            15
           ]
         },
         {
           "smelt": "minecraft:baked_potato",
           "count": [
-            21,
-            21
+            15,
+            15
           ]
         },
         {
           "deliver": "minecraft:baked_potato",
           "count": [
-            21,
-            21
+            15,
+            15
           ]
         },
         {
           "craft": "minecraft:bread",
           "count": [
-            21,
-            21
+            15,
+            15
           ]
         },
         {
           "deliver": "minecraft:bread",
           "count": [
-            21,
-            21
+            15,
+            15
           ]
         }
       ],
@@ -349,8 +349,8 @@
         1,
         1
       ],
-      "value": 14.78,
-      "market": 6.058,
+      "value": 15.14,
+      "market": 4.327,
       "weight": 6,
       "tiers": [
         3,
@@ -389,29 +389,29 @@
         {
           "smelt": "minecraft:cooked_porkchop",
           "count": [
-            52,
-            52
+            40,
+            40
           ]
         },
         {
           "deliver": "minecraft:cooked_porkchop",
           "count": [
-            52,
-            52
+            40,
+            40
           ]
         },
         {
           "craft": "minecraft:pumpkin_pie",
           "count": [
-            13,
-            13
+            10,
+            10
           ]
         },
         {
           "deliver": "minecraft:pumpkin_pie",
           "count": [
-            13,
-            13
+            10,
+            10
           ]
         },
         {
@@ -433,8 +433,8 @@
         1,
         1
       ],
-      "value": 21.48,
-      "market": 10.995,
+      "value": 21.5,
+      "market": 8.631,
       "weight": 6,
       "tiers": [
         4,
@@ -447,15 +447,15 @@
         {
           "craft": "minecraft:cake",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         },
         {
           "deliver": "minecraft:cake",
           "count": [
-            2,
-            2
+            1,
+            1
           ]
         },
         {
@@ -475,15 +475,15 @@
         {
           "craft": "minecraft:golden_carrot",
           "count": [
-            12,
-            12
+            11,
+            11
           ]
         },
         {
           "deliver": "minecraft:golden_carrot",
           "count": [
-            12,
-            12
+            11,
+            11
           ]
         },
         {
@@ -505,8 +505,8 @@
         1,
         1
       ],
-      "value": 21.52,
-      "market": 6.575,
+      "value": 21.74,
+      "market": 5.983,
       "weight": 6,
       "tiers": [
         4,
@@ -533,10 +533,10 @@
         }
       ],
       "weight": 6,
-      "value": 3.0,
+      "value": 3.32,
       "count": [
         6,
-        8
+        7
       ],
       "tiers": [
         4,
