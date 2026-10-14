@@ -10,7 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * A right-click on a block, on the server thread, before anything (vanilla or a mod like RightClickHarvest) handles
- * it: the mature crops around the spot are remembered, to see at the end of the tick whether they were harvested.
+ * it: the mature crops around the spot are remembered, to see at the end of the tick whether they were harvested,
+ * and the items dropped while it is handled are kept to count what the harvest gave.
  */
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class UseItemOnMixin {
@@ -20,5 +21,10 @@ public abstract class UseItemOnMixin {
 	private void villagersremember$beforeUse(ServerboundUseItemOnPacket packet, CallbackInfo ci) {
 		ServerGamePacketListenerImpl self = (ServerGamePacketListenerImpl) (Object) this;
 		ActionHooks.beforeUse(self.player, packet.hitResult().getBlockPos());
+	}
+
+	@Inject(method = "handleUseItemOn", at = @At("RETURN"))
+	private void villagersremember$afterUse(ServerboundUseItemOnPacket packet, CallbackInfo ci) {
+		ActionHooks.used();
 	}
 }

@@ -50,15 +50,69 @@ public final class ActionHooks {
 	}
 
 	/**
-	 * Mods like RightClickHarvest pick a crop with a right-click and replant it without breaking the block, so
-	 * {@link #blockBroken} never sees it. A right-click remembers the mature crops around the spot (radius 2, for
-	 * harvesting with a hoe's reach); at the end of the tick each one that is the same crop but young again counts
-	 * as a harvest. A broken crop is gone by then and was counted by the break.
+	 * A harvest counts what it gave: "harvest 18 carrots" means 18 carrots, not 18 plants that drop two or three each.
+	 * While a block is broken or a right-click is handled, the items dropped are kept by position ({@link #dropped}),
+	 * and the crop's produce among them is counted (wheat, not its seeds). Nothing seen dropped counts as one.
+	 */
+	private static final java.util.Map<BlockPos, java.util.List<ItemStack>> DROPS = new java.util.HashMap<>();
+	private static int collecting;
+	private static final java.util.ArrayDeque<BlockState> BREAKING = new java.util.ArrayDeque<>();
+
+	/** {@code Block.popResource}: an item dropped at a block, kept while a break or a right-click is handled. */
+	public static void dropped(Level level, BlockPos pos, ItemStack stack) {
+		if (collecting <= 0 || level.isClientSide() || stack.isEmpty()) return;
+		DROPS.computeIfAbsent(pos.immutable(), p -> new java.util.ArrayList<>()).add(stack.copy());
+	}
+
+	/** {@code ServerPlayerGameMode.destroyBlock} starts: the block before it is gone. */
+	public static void breaking(BlockState state) {
+		BREAKING.push(state);
+		collecting++;
+	}
+
+	/** The break is done and its items dropped: a fully grown crop is a harvest of what it gave. */
+	public static void broken(ServerPlayer player, BlockPos pos, boolean destroyed) {
+		BlockState state = BREAKING.isEmpty() ? null : BREAKING.pop();
+		collecting = Math.max(0, collecting - 1);
+		java.util.List<ItemStack> drops = DROPS.remove(pos);
+		if (state == null || !destroyed || !mature(state)) return;
+		int n = produce(state, drops);
+		if (n > 0) Actions.record(player, Objective.Type.HARVEST, n, o -> o.matchesBlock(state));
+	}
+
+	/** What the crop is grown for; its seeds are left out unless they are the produce (carrots, potatoes). */
+	private static int produce(BlockState state, java.util.List<ItemStack> drops) {
+		if (drops == null) return 1;
+		net.minecraft.world.item.Item crop = PRODUCE.get(state.getBlock());
+		int n = 0;
+		for (ItemStack stack : drops) {
+			boolean counts = crop != null ? stack.is(crop)
+				: !net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath().endsWith("_seeds");
+			if (counts) n += stack.getCount();
+		}
+		return n;
+	}
+
+	private static final java.util.Map<net.minecraft.world.level.block.Block, net.minecraft.world.item.Item> PRODUCE = java.util.Map.of(
+		net.minecraft.world.level.block.Blocks.WHEAT, net.minecraft.world.item.Items.WHEAT,
+		net.minecraft.world.level.block.Blocks.CARROTS, net.minecraft.world.item.Items.CARROT,
+		net.minecraft.world.level.block.Blocks.POTATOES, net.minecraft.world.item.Items.POTATO,
+		net.minecraft.world.level.block.Blocks.BEETROOTS, net.minecraft.world.item.Items.BEETROOT,
+		net.minecraft.world.level.block.Blocks.NETHER_WART, net.minecraft.world.item.Items.NETHER_WART,
+		net.minecraft.world.level.block.Blocks.COCOA, net.minecraft.world.item.Items.COCOA_BEANS,
+		net.minecraft.world.level.block.Blocks.TORCHFLOWER_CROP, net.minecraft.world.item.Items.TORCHFLOWER);
+
+	/**
+	 * Mods like RightClickHarvest pick a crop with a right-click and replant it without breaking the block. A
+	 * right-click remembers the mature crops around the spot (radius 2, for harvesting with a hoe's reach) and keeps
+	 * what drops while it is handled; at the end of the tick each one that is the same crop but young again counts
+	 * as a harvest of what it dropped (less the seed replanted). A broken crop is gone by then and was counted by the break.
 	 */
 	private static final java.util.Map<ServerPlayer, java.util.Map<BlockPos, BlockState>> CLICKED = new java.util.HashMap<>();
 	private static final int CLICK_RADIUS = 2;
 
 	public static void beforeUse(ServerPlayer player, BlockPos pos) {
+		collecting++;
 		Level level = player.level();
 		java.util.Map<BlockPos, BlockState> crops = null;
 		for (BlockPos at : BlockPos.betweenClosed(pos.offset(-CLICK_RADIUS, -1, -CLICK_RADIUS), pos.offset(CLICK_RADIUS, 1, CLICK_RADIUS))) {
@@ -69,9 +123,19 @@ public final class ActionHooks {
 		}
 	}
 
+	/** The right-click is handled. */
+	public static void used() {
+		collecting = Math.max(0, collecting - 1);
+	}
+
 	/** End of the server tick: crops right-clicked this tick that are young again were harvested. */
 	public static void afterUse(MinecraftServer server) {
-		if (CLICKED.isEmpty()) return;
+		collecting = 0;
+		BREAKING.clear();
+		if (CLICKED.isEmpty()) {
+			DROPS.clear();
+			return;
+		}
 		for (java.util.Map.Entry<ServerPlayer, java.util.Map<BlockPos, BlockState>> e : CLICKED.entrySet()) {
 			ServerPlayer player = e.getKey();
 			if (player.isRemoved()) continue;
@@ -79,16 +143,17 @@ public final class ActionHooks {
 				BlockState now = player.level().getBlockState(crop.getKey());
 				if (now.getBlock() != crop.getValue().getBlock() || mature(now)) continue;
 				BlockState before = crop.getValue();
-				Actions.record(player, Objective.Type.HARVEST, 1, o -> o.matchesBlock(before));
+				int n = produce(before, DROPS.get(crop.getKey()));
+				if (n > 0) Actions.record(player, Objective.Type.HARVEST, n, o -> o.matchesBlock(before));
 			}
 		}
 		CLICKED.clear();
+		DROPS.clear();
 	}
 
-	/** Breaking a block: a fully grown crop is a harvest; any block mined without Silk Touch counts as mined. */
+	/** Breaking a block: any block mined without Silk Touch counts as mined (a harvest is counted in {@link #broken}). */
 	public static void blockBroken(Level level, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
 		if (!(player instanceof ServerPlayer sp)) return;
-		if (mature(state)) Actions.record(sp, Objective.Type.HARVEST, 1, o -> o.matchesBlock(state));
 		if (!silkTouch(level, sp.getMainHandItem())) Actions.record(sp, Objective.Type.MINE, 1, o -> o.matchesBlock(state));
 	}
 

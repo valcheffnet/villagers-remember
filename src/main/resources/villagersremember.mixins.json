@@ -19,7 +19,9 @@
 		"EntityNameAccessor",
 		"VillagerPricesMixin",
 		"UseItemOnMixin",
-		"VillagerLevelUpMixin"
+		"VillagerLevelUpMixin",
+		"BlockDropsMixin",
+		"DestroyBlockMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
