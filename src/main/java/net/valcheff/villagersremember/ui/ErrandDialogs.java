@@ -496,7 +496,19 @@ public final class ErrandDialogs {
 
 		List<VillageRegistry.Resident> list = new ArrayList<>(village.residents.values());
 		list.removeIf(r -> r.baby);
+		// Errands each one has for the player now (with gradual trust, only the ones who talk to the player have any).
+		java.util.Map<UUID, Integer> offers = new java.util.HashMap<>();
+		for (VillageRegistry.Resident r : list) {
+			ErrandGenerator.Giver g = ErrandGenerator.Giver.of(village, r);
+			int n = 0;
+			if (g.givesErrands()) {
+				for (Errand e : ErrandGenerator.shown(level, g, state)) if (ErrandService.status(player, e) == ErrandService.Status.AVAILABLE) n++;
+			}
+			offers.put(r.id, n);
+		}
+		// Standing first, then who has the most work for the player: at the start, the one who talks to you is on top.
 		list.sort(java.util.Comparator.comparingInt((VillageRegistry.Resident r) -> -Reputation.villager(state, r.id))
+			.thenComparingInt(r -> -offers.get(r.id))
 			.thenComparing(r -> r.profession));
 		// Name and trade on the left; stars (one per tier, in the tier's colour) and the bar on the right, lined up.
 		List<Component> left = new ArrayList<>();
@@ -507,7 +519,10 @@ public final class ErrandDialogs {
 			Villager entity = Villages.loaded(level, r.id);
 			int points = Reputation.villager(state, r.id);
 			int tier = Reputation.villagerTier(state, r.id);
-			left.add(Component.empty()
+			// A yellow "!" (as over their heads) for those with errands for the player now.
+			MutableComponent mark = offers.get(r.id) > 0
+				? Component.literal("! ").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD) : Component.empty();
+			left.add(Component.empty().append(mark)
 				.append(VillagerHeads.face(ErrandText.path(r.profession), ErrandText.path(r.type))).append(" ")
 				.append(Component.literal(ErrandText.villagerName(player, r.id, entity)).withColor(ErrandText.tierColor(tier)))
 				.append(Component.literal(", ").withStyle(ChatFormatting.DARK_GRAY))
