@@ -4,6 +4,8 @@
 
 **Server-side. Vanilla clients welcome.**
 
+**Questions, bugs or ideas? Come to [Discord](https://discord.com/invite/X6yxJpk9Fz).**
+
 Villagers in vanilla Minecraft trade and that's it. With this mod they ask you for help. The farmer needs 20 bread baked, the cleric wants zombies cleared off the road, the cartographer sends you to find a shipwreck. Do the job, bring what was asked, and get paid. Keep helping and every villager remembers it: they greet you by how well they know you, give you better work, sell to you cheaper and one day make you the patron of their village.
 
 The whole mod runs on the server. Players join with a normal vanilla client and install nothing. The screens are vanilla dialogs, the markers are vanilla text displays, and the names come in each player's own language.
@@ -95,6 +97,10 @@ Run `/errands reload` after editing.
 ## Commands
 
 Players have `/errands` (journal), `/errands book` and `/errands village`, which only show their own progress. Everything else needs permission level 3: standing, testing and end game commands, and two switches for the economy (`/errands emeralds on|off`, `/errands xp <multiplier>`). All of them are listed in [COMMANDS.md](COMMANDS.md).
+
+## Feedback
+
+Everything goes to the `#villagers-remember` channel on [Discord](https://discord.com/invite/X6yxJpk9Fz): bugs, balance, suggestions, questions and screenshots. Write what happened in your own words and someone will answer. For a bug, the mod version and your other mods help. If you use GitHub, [issues](https://github.com/valcheffnet/villagers-remember/issues) are welcome too.
 
 ## Credits
 

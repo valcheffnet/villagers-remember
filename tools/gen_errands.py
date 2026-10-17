@@ -3,7 +3,7 @@
 Each profession has five packs (tiers T1-T5, TIERS.md section 4). A villager offers errands only from the pack of the
 player's tier with that villager.
 
-Effort model (user, 2026-10-13): a task's "value" is MINUTES OF WORK per unit for a player who has automatic plant
+Effort model: a task's "value" is MINUTES OF WORK per unit for a player who has automatic plant
 farms and a trading hall, but no farms for mobs, iron, gold, XP, raids or fish. Farmable things are cheap and live in the low packs; the top packs are actions that can't be taken
 out of a chest (rare hunts, fishing, exploring, curing, brewing) and truly rare items. Counts are sized so that one
 errand takes the minutes of its tier window (WINDOW); a task that can't fit its window fails the build. Daily errands
@@ -102,7 +102,7 @@ STACK1 = {"cake", "rabbit_stew", "mushroom_stew", "beetroot_soup", "suspicious_s
 STACK16 = {"egg", "ender_pearl", "#minecraft:banners", "painting", "honey_bottle", "wind_charge"}
 
 
-# ---- farms come gradually (user, 2026-10-14) ----
+# ---- farms come gradually ----
 # T1 tasks are sized for hand gathering (their minutes are written that way), T5 assumes the usual farms. In between,
 # a task made from farmable things takes its farm minutes x FARM ** ((5 - tier) / 4): 3/4 of the hand-gathering slowdown
 # at T2, half at T3, a quarter at T4. FARM = how many times slower it is without the farm.
@@ -218,7 +218,7 @@ REWARDS = {
 
 
 # ---- the packs (TIERS.md section 4): minutes per unit ----
-# Assumed player (user, 2026-10-13 09:38): automatic farms for plants (crops, sugar cane, pumpkins, melons, trees,
+# Assumed player: automatic farms for plants (crops, sugar cane, pumpkins, melons, trees,
 # bamboo, kelp) and a trading hall. NO farms for mobs, iron, gold, XP, raids or fish. So mob drops are killed by
 # hand at night, iron and gold are mined, raids need a Bad Omen each, bees and sniffers breed slowly.
 # T1 overworld basics, T2 iron age, T3 diamonds / enchanting / first raids, T4 the Nether, monuments, rare mobs,
@@ -226,7 +226,7 @@ REWARDS = {
 # Counts that a market price would make larger are raised by the market floor (MARKET_PREMIUM), so crops and other
 # cheap goods stay small enough that the errand pays clearly more than selling them.
 
-# T1 assumes no farms yet (user, 2026-10-14): crops from village fields, wild cane and seeds from grass, animals
+# T1 assumes no farms yet: crops from village fields, wild cane and seeds from grass, animals
 # hunted, sheared or bred with hand-picked food, coal, copper and redstone mined, gravel, sand and clay dug.
 # The minutes below T1 are with farms; FARM / farm_factor slow them down less with every tier, T5 has the farms.
 PACKS = {
@@ -517,7 +517,7 @@ ORDERS = {
     "picnic": [("craft", "cookie", 8, 0.05), ("deliver", "apple", 4, 0.3), ("craft", "cake", 1, 0.3)],
 }
 
-# ---- what a task takes, for the audit table (docs/TASK_AUDIT.md, Bulgarian, for the user) ----
+# ---- what a task takes, for the audit table (docs/TASK_AUDIT.md, in Bulgarian) ----
 NEED = {
     "wheat": "от фермата", "potato": "от фермата", "carrot": "от фермата", "beetroot": "от фермата",
     "sugar_cane": "ферма за тръстика", "pumpkin": "от фермата", "melon": "от фермата", "kelp": "ферма за водорасли",
@@ -672,7 +672,7 @@ def reforge_task(name, count, levels):
     target = mc(name)
     return {"objectives": [{action: target, "count": [count, count]}, {"deliver": target, "count": [count, count]}],
             "count": [1, 1], "value": round(count * REFORGE_MINUTES[material], 2), "weight": 8,
-            # Every enchantment it gets is at its highest level (user, 2026-10-13); how many it gets still depends on
+            # Every enchantment it gets is at its highest level; how many it gets still depends on
             # the enchanting levels.
             "reward": {"enchant": target, "levels": list(levels), "max_levels": True}}
 
@@ -791,7 +791,7 @@ def check(prof, task, items, entities):
         raise SystemExit(f"{prof}: unknown ids {bad}")
 
 
-# ---- the audit table for the user: every task, what it takes, minutes, pay ----
+# ---- the audit table: every task, what it takes, minutes, pay ----
 AUDIT = os.path.join(os.path.dirname(__file__), "..", "docs", "TASK_AUDIT.md")
 BG_NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villagersremember", "vanilla_names", "bg_bg.json")
 VERB = {"deliver": "донеси", "craft": "направи", "smelt": "изпечи", "station": "изсечи", "kill": "убий", "catch": "хвани",

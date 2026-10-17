@@ -6,8 +6,19 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.ItemCost;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Fame across all villages (TIERS.md section 7): points from errands (by pack), trust trials, contracts, weekly
@@ -94,14 +105,14 @@ public final class Fame {
 
 	/** What a wandering trader brings for a Legend: rare things, one of each, for emeralds. */
 	private static final Object[][] LEGEND_GOODS = {
-		{net.minecraft.world.item.Items.ENCHANTED_GOLDEN_APPLE, 1, 48},
-		{net.minecraft.world.item.Items.TOTEM_OF_UNDYING, 1, 40},
-		{net.minecraft.world.item.Items.HEART_OF_THE_SEA, 1, 32},
-		{net.minecraft.world.item.Items.SNIFFER_EGG, 1, 24},
-		{net.minecraft.world.item.Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1, 36},
-		{net.minecraft.world.item.Items.TRIDENT, 1, 40},
-		{net.minecraft.world.item.Items.ECHO_SHARD, 4, 24},
-		{net.minecraft.world.item.Items.DRAGON_BREATH, 4, 20},
+		{Items.ENCHANTED_GOLDEN_APPLE, 1, 48},
+		{Items.TOTEM_OF_UNDYING, 1, 40},
+		{Items.HEART_OF_THE_SEA, 1, 32},
+		{Items.SNIFFER_EGG, 1, 24},
+		{Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1, 36},
+		{Items.TRIDENT, 1, 40},
+		{Items.ECHO_SHARD, 4, 24},
+		{Items.DRAGON_BREATH, 4, 20},
 	};
 	public static final String LEGEND_TAG = "villagersremember_legend_goods";
 	private static final int LEGEND_OFFERS = 3;
@@ -110,16 +121,16 @@ public final class Fame {
 	 * A Legend who talks to a wandering trader finds three rare offers added (once per trader; everyone can buy
 	 * them, the trader keeps them until it leaves).
 	 */
-	public static void legendGoods(ServerPlayer player, net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader trader) {
+	public static void legendGoods(ServerPlayer player, WanderingTrader trader) {
 		if (title(ErrandService.state(player)) < MAX_TITLE || trader.entityTags().contains(LEGEND_TAG)) return;
 		trader.addTag(LEGEND_TAG);
-		java.util.List<Object[]> goods = new java.util.ArrayList<>(java.util.List.of(LEGEND_GOODS));
-		java.util.Collections.shuffle(goods, new java.util.Random(trader.getUUID().getLeastSignificantBits()));
+		List<Object[]> goods = new ArrayList<>(List.of(LEGEND_GOODS));
+		Collections.shuffle(goods, new Random(trader.getUUID().getLeastSignificantBits()));
 		for (Object[] g : goods.subList(0, LEGEND_OFFERS)) {
-			net.minecraft.world.item.Item item = (net.minecraft.world.item.Item) g[0];
-			trader.getOffers().add(new net.minecraft.world.item.trading.MerchantOffer(
-				new net.minecraft.world.item.trading.ItemCost(net.minecraft.world.item.Items.EMERALD, (Integer) g[2]),
-				new net.minecraft.world.item.ItemStack(item, (Integer) g[1]), 1, 1, 0.0f));
+			Item item = (Item) g[0];
+			trader.getOffers().add(new MerchantOffer(
+				new ItemCost(Items.EMERALD, (Integer) g[2]),
+				new ItemStack(item, (Integer) g[1]), 1, 1, 0.0f));
 		}
 		player.sendSystemMessage(Lang.tr(player, "fame.legend_goods").withColor(COLORS[MAX_TITLE]));
 	}

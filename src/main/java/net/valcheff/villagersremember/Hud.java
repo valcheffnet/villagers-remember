@@ -8,11 +8,14 @@ import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.numbers.BlankFormat;
+import net.minecraft.network.chat.numbers.FixedFormat;
+import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
@@ -39,6 +42,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -46,6 +50,7 @@ import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.valcheff.villagersremember.mixin.EntityNameAccessor;
 import net.valcheff.villagersremember.ui.Icons;
 
 import java.util.ArrayList;
@@ -54,6 +59,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -189,11 +195,11 @@ public final class Hud {
 		// Tracked villages: tier, points towards the next tier and residents still needed.
 		for (String key : state.trackedVillages) {
 			if (lines.size() + 3 > MAX_LINES) break;
-			java.util.Optional<VillageRegistry.Village> village = registry.all().stream()
+			Optional<VillageRegistry.Village> village = registry.all().stream()
 				.filter(v -> ErrandsData.villageKey(v.center).equals(key)).findFirst();
 			if (village.isEmpty()) continue;
-			Reputation.Standing s = Reputation.standing(state, java.util.Optional.of(village.get().center));
-			lines.add(Line.of(Component.empty().append(Icons.of(net.minecraft.world.item.Items.BELL))
+			Reputation.Standing s = Reputation.standing(state, Optional.of(village.get().center));
+			lines.add(Line.of(Component.empty().append(Icons.of(Items.BELL))
 				.append(Component.literal(ErrandText.villageName(player, village.get().center)).withStyle(ChatFormatting.WHITE))
 				.append(Component.literal(" · ").withStyle(ChatFormatting.DARK_GRAY))
 				.append(Lang.tr(player, "rep.village." + s.tier()).withColor(ErrandText.tierColor(s.tier())))));
@@ -208,10 +214,10 @@ public final class Hud {
 		// Tracked village orders: what is wanted, how far the village is, and the player's own part.
 		for (String key : state.trackedOrders) {
 			if (lines.size() + 2 > MAX_LINES) break;
-			java.util.Optional<VillageRegistry.Village> village = registry.all().stream()
+			Optional<VillageRegistry.Village> village = registry.all().stream()
 				.filter(v -> ErrandsData.villageKey(v.center).equals(key)).findFirst();
 			if (village.isEmpty()) continue;
-			java.util.Optional<GroupOrder.View> view = GroupOrder.current(level.getServer(), village.get());
+			Optional<GroupOrder.View> view = GroupOrder.current(level.getServer(), village.get());
 			if (view.isEmpty()) continue;
 			GroupOrder.View v = view.get();
 			int progress = Math.min(v.order().progress, v.target());
@@ -252,7 +258,7 @@ public final class Hud {
 			}
 			return;
 		}
-		Component title = Component.empty().append(Icons.of(net.minecraft.world.item.Items.WRITABLE_BOOK))
+		Component title = Component.empty().append(Icons.of(Items.WRITABLE_BOOK))
 			.append(Lang.tr(player, "tracker.title").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 		if (!hud.sidebar) {
 			Objective objective = objective(title);
@@ -267,10 +273,10 @@ public final class Hud {
 		for (int i = 0; i < lines.size(); i++) {
 			if (i < hud.lines.size() && lines.get(i).equals(hud.lines.get(i))) continue;
 			Line line = lines.get(i);
-			net.minecraft.network.chat.numbers.NumberFormat right = line.right() == null ? BlankFormat.INSTANCE
-				: new net.minecraft.network.chat.numbers.FixedFormat(line.right());
+			NumberFormat right = line.right() == null ? BlankFormat.INSTANCE
+				: new FixedFormat(line.right());
 			player.connection.send(new ClientboundSetScorePacket("line" + i, OBJECTIVE, MAX_LINES - i,
-				java.util.Optional.of(line.left()), java.util.Optional.of(right)));
+				Optional.of(line.left()), Optional.of(right)));
 		}
 		for (int i = lines.size(); i < hud.lines.size(); i++) {
 			player.connection.send(new ClientboundResetScorePacket("line" + i, OBJECTIVE));
@@ -321,8 +327,8 @@ public final class Hud {
 				// For Jade and similar mods: the villager's name, never drawn by vanilla (that is our nameplate's job:
 				// vanilla hides the name of a mob that carries a passenger, like our "!").
 				player.connection.send(new ClientboundSetEntityDataPacket(v.getId(), List.of(
-					SynchedEntityData.DataValue.create(net.valcheff.villagersremember.mixin.EntityNameAccessor.villagersremember$customName(), java.util.Optional.of(name)),
-					SynchedEntityData.DataValue.create(net.valcheff.villagersremember.mixin.EntityNameAccessor.villagersremember$customNameVisible(), false))));
+					SynchedEntityData.DataValue.create(EntityNameAccessor.villagersremember$customName(), Optional.of(name)),
+					SynchedEntityData.DataValue.create(EntityNameAccessor.villagersremember$customNameVisible(), false))));
 			}
 			if (!always) continue;
 			Integer plate = hud.nameplates.get(v.getId());
@@ -346,20 +352,8 @@ public final class Hud {
 	/** A text display that looks like a name tag: white name on the usual dark background, just above the head. */
 	private static List<SynchedEntityData.DataValue<?>> nameplateData(ServerLevel level, Component name) {
 		CompoundTag tag = new CompoundTag();
-		tag.put("Pos", list(DoubleTag.valueOf(0), DoubleTag.valueOf(0), DoubleTag.valueOf(0)));
-		tag.put("text", ComponentSerialization.CODEC.encodeStart(level.registryAccess().createSerializationContext(NbtOps.INSTANCE), name).getOrThrow());
-		tag.putString("billboard", "center");
 		tag.putBoolean("see_through", false);
-		CompoundTag transformation = new CompoundTag();
-		transformation.put("translation", list(FloatTag.valueOf(0), FloatTag.valueOf(0.3f), FloatTag.valueOf(0)));
-		transformation.put("left_rotation", list(FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(1)));
-		transformation.put("scale", list(FloatTag.valueOf(1f), FloatTag.valueOf(1f), FloatTag.valueOf(1f)));
-		transformation.put("right_rotation", list(FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(1)));
-		tag.put("transformation", transformation);
-		Display.TextDisplay display = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
-		display.load(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
-		List<SynchedEntityData.DataValue<?>> values = display.getEntityData().getNonDefaultValues();
-		return values != null ? values : List.of();
+		return textDisplayData(level, name, tag, 0.3f, 1f);
 	}
 
 	// ---- "!" and "?" above villagers ----
@@ -429,21 +423,30 @@ public final class Hud {
 		return mark(player, (ServerLevel) player.level(), ErrandService.state(player), villager).name();
 	}
 
-	/** Entity data for a floating "!" or "?": built by loading a throwaway text display from NBT. */
+	/** Entity data for a floating "!" or "?". */
 	private static List<SynchedEntityData.DataValue<?>> markData(ServerLevel level, Mark mark) {
 		Component text = Component.literal(mark == Mark.OFFER ? "!" : "?")
 			.withStyle(mark == Mark.WAITING ? ChatFormatting.GRAY : ChatFormatting.YELLOW, ChatFormatting.BOLD);
 		CompoundTag tag = new CompoundTag();
+		tag.putInt("background", 0);
+		tag.putBoolean("shadow", true);
+		// High enough to sit above the villager's name.
+		return textDisplayData(level, text, tag, 0.6f, 2.2f);
+	}
+
+	/**
+	 * Entity data for a text display facing the player, raised by {@code height} and scaled: built by loading a
+	 * throwaway display from NBT, with the caller's own tags (background, shadow...) in {@code tag}.
+	 */
+	private static List<SynchedEntityData.DataValue<?>> textDisplayData(ServerLevel level, Component text, CompoundTag tag,
+		float height, float scale) {
 		tag.put("Pos", list(DoubleTag.valueOf(0), DoubleTag.valueOf(0), DoubleTag.valueOf(0)));
 		tag.put("text", ComponentSerialization.CODEC.encodeStart(level.registryAccess().createSerializationContext(NbtOps.INSTANCE), text).getOrThrow());
 		tag.putString("billboard", "center");
-		tag.putInt("background", 0);
-		tag.putBoolean("shadow", true);
 		CompoundTag transformation = new CompoundTag();
-		// High enough to sit above the villager's name.
-		transformation.put("translation", list(FloatTag.valueOf(0), FloatTag.valueOf(0.6f), FloatTag.valueOf(0)));
+		transformation.put("translation", list(FloatTag.valueOf(0), FloatTag.valueOf(height), FloatTag.valueOf(0)));
 		transformation.put("left_rotation", list(FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(1)));
-		transformation.put("scale", list(FloatTag.valueOf(2.2f), FloatTag.valueOf(2.2f), FloatTag.valueOf(2.2f)));
+		transformation.put("scale", list(FloatTag.valueOf(scale), FloatTag.valueOf(scale), FloatTag.valueOf(scale)));
 		transformation.put("right_rotation", list(FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(1)));
 		tag.put("transformation", transformation);
 		Display.TextDisplay display = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
@@ -452,9 +455,9 @@ public final class Hud {
 		return values != null ? values : List.of();
 	}
 
-	private static ListTag list(net.minecraft.nbt.Tag... tags) {
+	private static ListTag list(Tag... tags) {
 		ListTag list = new ListTag();
-		for (net.minecraft.nbt.Tag t : tags) list.add(t);
+		for (Tag t : tags) list.add(t);
 		return list;
 	}
 

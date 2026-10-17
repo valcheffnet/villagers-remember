@@ -1,13 +1,16 @@
 package net.valcheff.villagersremember;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -22,9 +26,11 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The top reward of each profession (TIERS.md section 4), given by T5 errands. The player chooses one of its
@@ -62,7 +68,7 @@ public final class TopRewards {
 		return options.get(Math.clamp(choice, 0, options.size() - 1));
 	}
 
-	public static boolean hasChoice(net.minecraft.server.level.ServerPlayer player, Errand errand) {
+	public static boolean hasChoice(ServerPlayer player, Errand errand) {
 		return errand.item().map(i -> i.kind() == ErrandPools.RewardKind.TOP
 			&& options(i.id(), (ServerLevel) player.level(), i.seed(), null).size() > 1).orElse(false);
 	}
@@ -71,35 +77,35 @@ public final class TopRewards {
 	 * What sets option {@code k} apart from the others of the same item: its enchantments the others do not have,
 	 * with a short word on what they do ("Fortune III: more drops"). Null when nothing does.
 	 */
-	public static Component distinction(net.minecraft.server.level.ServerPlayer player, List<List<ItemStack>> options, int k) {
+	public static Component distinction(ServerPlayer player, List<List<ItemStack>> options, int k) {
 		ItemStack mine = options.get(k).getFirst();
 		if (!mine.isEnchanted() && !mine.has(DataComponents.STORED_ENCHANTMENTS)) return null;
 		var own = enchantmentsOf(mine);
-		java.util.Set<Holder<Enchantment>> common = null;
+		Set<Holder<Enchantment>> common = null;
 		for (int i = 0; i < options.size(); i++) {
 			ItemStack other = options.get(i).getFirst();
 			if (i == k || !other.is(mine.getItem())) continue;
-			java.util.Set<Holder<Enchantment>> keys = new java.util.HashSet<>(enchantmentsOf(other).keySet());
+			Set<Holder<Enchantment>> keys = new HashSet<>(enchantmentsOf(other).keySet());
 			if (common == null) common = keys;
 			else common.retainAll(keys);
 		}
-		net.minecraft.network.chat.MutableComponent out = Component.empty();
+		MutableComponent out = Component.empty();
 		boolean any = false;
 		for (var e : own.entrySet()) {
 			if (common != null && common.contains(e.getKey())) continue;
-			if (any) out.append(Component.literal(", ").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+			if (any) out.append(Component.literal(", ").withStyle(ChatFormatting.DARK_GRAY));
 			any = true;
-			out.append(Enchantment.getFullname(e.getKey(), e.getValue()).copy().withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+			out.append(Enchantment.getFullname(e.getKey(), e.getValue()).copy().withStyle(ChatFormatting.LIGHT_PURPLE));
 			String key = "ench.desc." + e.getKey().unwrapKey().map(r -> r.identifier().getPath()).orElse("");
 			String desc = Lang.raw(Lang.language(player), key);
-			if (!desc.equals(key)) out.append(Component.literal(": " + desc).withStyle(net.minecraft.ChatFormatting.GRAY));
+			if (!desc.equals(key)) out.append(Component.literal(": " + desc).withStyle(ChatFormatting.GRAY));
 		}
 		return any ? out : null;
 	}
 
 	private static Map<Holder<Enchantment>, Integer> enchantmentsOf(ItemStack stack) {
-		var list = stack.getOrDefault(DataComponents.ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
-		if (list.isEmpty()) list = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+		var list = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+		if (list.isEmpty()) list = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
 		Map<Holder<Enchantment>, Integer> out = new LinkedHashMap<>();
 		for (var e : list.entrySet()) out.put(e.getKey(), e.getIntValue());
 		return out;

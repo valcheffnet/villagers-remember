@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 
 /** {@code config/villagersremember.json}. Missing keys keep their defaults; the file is rewritten with all keys. */
 public final class ErrandsConfig {
@@ -171,7 +172,7 @@ public final class ErrandsConfig {
 
 	private ErrandsConfig sanitized() {
 		if (language == null || language.isBlank()) language = "auto";
-		if (chartLook == null || !List.of("auto", "globe", "dnt").contains(chartLook.toLowerCase(java.util.Locale.ROOT))) chartLook = "auto";
+		if (chartLook == null || !List.of("auto", "globe", "dnt").contains(chartLook.toLowerCase(Locale.ROOT))) chartLook = "auto";
 		if (errandsPerLevel == null || errandsPerLevel.length != 5) errandsPerLevel = new ErrandsConfig().errandsPerLevel;
 		for (int i = 0; i < 5; i++) errandsPerLevel[i] = Math.clamp(errandsPerLevel[i], 0, 6);
 		maxActiveErrands = Math.clamp(maxActiveErrands, 1, 27);
@@ -191,7 +192,7 @@ public final class ErrandsConfig {
 			emeraldRewards = defaults.emeraldRewards;
 		}
 		if (configVersion < 5) {
-			// Version 5 (user, 2026-10-14): the treasury gives a 24th of before and keeps a real week (504 game days).
+			// Version 5: the treasury gives a 24th of before and keeps a real week (504 game days).
 			treasuryShare = defaults.treasuryShare;
 			treasuryKeepDays = defaults.treasuryKeepDays;
 		}

@@ -8,14 +8,21 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.storage.LevelResource;
 import net.valcheff.villagersremember.ui.DialogActions;
 import net.valcheff.villagersremember.ui.Icons;
 import net.valcheff.villagersremember.ui.TextWidth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Villagers hand out errands (bring items, hunt monsters) and remember who helped them.
@@ -39,12 +46,12 @@ public final class VillagersRemember implements ModInitializer {
 
 	/** Worlds played while the mod was called Village Errands keep their data in data/villageerrands/. */
 	private static void moveOldData(MinecraftServer s) {
-		java.nio.file.Path data = s.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("data");
-		java.nio.file.Path old = data.resolve("villageerrands");
-		java.nio.file.Path now = data.resolve(MOD_ID);
-		if (!java.nio.file.Files.isDirectory(old) || java.nio.file.Files.exists(now)) return;
+		Path data = s.getWorldPath(LevelResource.ROOT).resolve("data");
+		Path old = data.resolve("villageerrands");
+		Path now = data.resolve(MOD_ID);
+		if (!Files.isDirectory(old) || Files.exists(now)) return;
 		try {
-			java.nio.file.Files.move(old, now);
+			Files.move(old, now);
 			LOG.info("Moved {} to {}", old, now);
 		} catch (Exception e) {
 			LOG.warn("Could not move {}: {}", old, e.toString());
@@ -76,9 +83,9 @@ public final class VillagersRemember implements ModInitializer {
 
 		UseEntityCallback.EVENT.register(Interactions::onUseEntity);
 		// Folded charts from errands unfold when used.
-		net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) ->
-			!level.isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer sp ? Maps.use(sp, hand)
-				: net.minecraft.world.InteractionResult.PASS);
+		UseItemCallback.EVENT.register((player, level, hand) ->
+			!level.isClientSide() && player instanceof ServerPlayer sp ? Maps.use(sp, hand)
+				: InteractionResult.PASS);
 		UseBlockCallback.EVENT.register(Interactions::onUseBlock);
 		ServerLivingEntityEvents.AFTER_DEATH.register(Tracking::onDeath);
 		ServerLivingEntityEvents.AFTER_DAMAGE.register(Tracking::onDamage);

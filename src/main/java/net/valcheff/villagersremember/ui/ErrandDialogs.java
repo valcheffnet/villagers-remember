@@ -1,49 +1,69 @@
 package net.valcheff.villagersremember.ui;
 
+import com.mojang.serialization.JavaOps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.common.ClientboundClearDialogPacket;
 import net.minecraft.server.dialog.ActionButton;
 import net.minecraft.server.dialog.CommonButtonData;
 import net.minecraft.server.dialog.CommonDialogData;
 import net.minecraft.server.dialog.Dialog;
 import net.minecraft.server.dialog.DialogAction;
+import net.minecraft.server.dialog.Input;
 import net.minecraft.server.dialog.MultiActionDialog;
+import net.minecraft.server.dialog.action.CommandTemplate;
+import net.minecraft.server.dialog.action.ParsedTemplate;
 import net.minecraft.server.dialog.action.StaticAction;
 import net.minecraft.server.dialog.body.DialogBody;
 import net.minecraft.server.dialog.body.ItemBody;
 import net.minecraft.server.dialog.body.PlainMessage;
+import net.minecraft.server.dialog.input.TextInput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.Vec3;
 import net.valcheff.villagersremember.Errand;
 import net.valcheff.villagersremember.ErrandGenerator;
 import net.valcheff.villagersremember.ErrandPools;
 import net.valcheff.villagersremember.ErrandService;
 import net.valcheff.villagersremember.ErrandText;
-import net.valcheff.villagersremember.TopRewards;
-import net.valcheff.villagersremember.Treasury;
-import java.util.UUID;
-import net.valcheff.villagersremember.Trust;
 import net.valcheff.villagersremember.ErrandsConfig;
 import net.valcheff.villagersremember.ErrandsData;
+import net.valcheff.villagersremember.GroupOrder;
+import net.valcheff.villagersremember.Hud;
 import net.valcheff.villagersremember.Lang;
+import net.valcheff.villagersremember.Milestones;
 import net.valcheff.villagersremember.Objective;
+import net.valcheff.villagersremember.Patron;
 import net.valcheff.villagersremember.Reputation;
-import net.valcheff.villagersremember.VillagerHeads;
+import net.valcheff.villagersremember.TopRewards;
+import net.valcheff.villagersremember.Treasury;
+import net.valcheff.villagersremember.Trust;
 import net.valcheff.villagersremember.VillageRegistry;
+import net.valcheff.villagersremember.VillagerHeads;
 import net.valcheff.villagersremember.Villages;
+import net.valcheff.villagersremember.mixin.VillagerInvoker;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -153,13 +173,13 @@ public final class ErrandDialogs {
 
 	/** Opens vanilla's trading screen with this villager, unless someone else is trading with them. */
 	private static void trade(ServerPlayer player, Villager villager) {
-		player.connection.send(net.minecraft.network.protocol.common.ClientboundClearDialogPacket.INSTANCE);
+		player.connection.send(ClientboundClearDialogPacket.INSTANCE);
 		if (!villager.isAlive() || villager.distanceToSqr(player) > REACH * REACH) return;
 		if (villager.isTrading()) {
 			player.sendSystemMessage(Lang.tr(player, "trade.busy").withStyle(ChatFormatting.GRAY));
 			return;
 		}
-		((net.valcheff.villagersremember.mixin.VillagerInvoker) villager).villagersremember$startTrading(player);
+		((VillagerInvoker) villager).villagersremember$startTrading(player);
 	}
 
 	public static void villager(ServerPlayer player, Villager villager) {
@@ -216,7 +236,7 @@ public final class ErrandDialogs {
 	}
 
 	/** "Friend ■■■□□ 34/60" towards the next tier with this villager. */
-	private static Component villagerStanding(ServerPlayer player, ErrandsData.PlayerState state, java.util.UUID villager) {
+	private static Component villagerStanding(ServerPlayer player, ErrandsData.PlayerState state, UUID villager) {
 		int points = Reputation.villager(state, villager);
 		int tier = Reputation.villagerTier(state, villager);
 		MutableComponent line = Component.empty().append(Lang.tr(player, "standing.villager").withStyle(ChatFormatting.GRAY))
@@ -238,7 +258,7 @@ public final class ErrandDialogs {
 		ServerLevel level = (ServerLevel) player.level();
 		Optional<VillageRegistry.Village> found = VillageRegistry.get(level.getServer()).byCenter(center);
 		if (found.isEmpty()) {
-			player.connection.send(net.minecraft.network.protocol.common.ClientboundClearDialogPacket.INSTANCE);
+			player.connection.send(ClientboundClearDialogPacket.INSTANCE);
 			return;
 		}
 		VillageRegistry.Village village = found.get();
@@ -248,7 +268,7 @@ public final class ErrandDialogs {
 			.append(Lang.tr(player, "menu.board", ErrandText.villageName(player, village.center)));
 		List<DialogBody> body = new ArrayList<>();
 		body.add(new PlainMessage(villageStanding(player, state, village), TEXT_WIDTH));
-		net.valcheff.villagersremember.Patron.check(level.getServer(), Optional.of(village.center));
+		Patron.check(level.getServer(), Optional.of(village.center));
 		body.add(patronBody(player, state, village));
 
 		// Errands: how many are open, with a green tick when one can be handed in here.
@@ -268,7 +288,7 @@ public final class ErrandDialogs {
 		buttons.add(button(player, Component.empty().append(Icons.of(Items.PLAYER_HEAD))
 				.append(Lang.tr(player, "board.residents", village.workers().size()).withStyle(ChatFormatting.AQUA)),
 			null, MENU_WIDTH, p -> residents(p, bell, village.center)));
-		net.valcheff.villagersremember.GroupOrder.current(level.getServer(), village).ifPresent(view -> {
+		GroupOrder.current(level.getServer(), village).ifPresent(view -> {
 			MutableComponent label = Component.empty().append(Icons.of(view.kind().icon))
 				.append(Lang.tr(player, "group.button", Math.min(view.order().progress, view.target()), view.target())
 					.withStyle(view.done() ? ChatFormatting.GREEN : ChatFormatting.GOLD));
@@ -286,7 +306,7 @@ public final class ErrandDialogs {
 				ErrandsData.PlayerState st = ErrandService.state(p);
 				if (!st.trackedVillages.remove(key)) st.trackedVillages.add(key);
 				ErrandsData.get(p.level().getServer()).setDirty();
-				net.valcheff.villagersremember.Hud.refresh(p);
+				Hud.refresh(p);
 				board(p, bell, village.center);
 			}));
 		if (player.getUUID().equals(village.patron)) {
@@ -302,23 +322,23 @@ public final class ErrandDialogs {
 		if (village.patron == null) {
 			MutableComponent text = Lang.tr(player, "patron.none").withStyle(ChatFormatting.GRAY);
 			if (Reputation.villageTier(state, Optional.of(village.center)) >= Reputation.MAX_TIER) {
-				text.append("\n").append(Lang.tr(player, "patron.how", net.valcheff.villagersremember.Patron.bestFriends(state, village),
-					net.valcheff.villagersremember.Patron.BEST_FRIENDS).withStyle(ChatFormatting.YELLOW));
+				text.append("\n").append(Lang.tr(player, "patron.how", Patron.bestFriends(state, village),
+					Patron.BEST_FRIENDS).withStyle(ChatFormatting.YELLOW));
 			}
 			return new PlainMessage(text, TEXT_WIDTH);
 		}
 		ItemStack head = new ItemStack(Items.PLAYER_HEAD);
 		ServerPlayer online = player.level().getServer().getPlayerList().getPlayer(village.patron);
-		head.set(net.minecraft.core.component.DataComponents.PROFILE, online != null
-			? net.minecraft.world.item.component.ResolvableProfile.createResolved(online.getGameProfile())
-			: net.minecraft.world.item.component.ResolvableProfile.createUnresolved(village.patron));
+		head.set(DataComponents.PROFILE, online != null
+			? ResolvableProfile.createResolved(online.getGameProfile())
+			: ResolvableProfile.createUnresolved(village.patron));
 		String name = village.patronName != null ? village.patronName : "?";
 		MutableComponent text = Component.empty().append(Lang.tr(player, "patron.label").withStyle(ChatFormatting.GRAY))
 			.append(Component.literal(name).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 		if (player.getUUID().equals(village.patron)) {
 			text.append("\n").append(Lang.tr(player, "patron.you", Math.round(ErrandsConfig.INSTANCE.patronDiscount * 100))
 				.withStyle(ChatFormatting.GREEN));
-		} else if (net.valcheff.villagersremember.Patron.qualifies(state, village)) {
+		} else if (Patron.qualifies(state, village)) {
 			text.append("\n").append(Lang.tr(player, "patron.challenge").withStyle(ChatFormatting.YELLOW));
 		}
 		return new ItemBody(ItemStackTemplate.fromNonEmptyStack(head), Optional.of(new PlainMessage(text, 220)), false, false, 16, 16);
@@ -330,21 +350,21 @@ public final class ErrandDialogs {
 		Component title = Component.empty().append(Icons.of(Items.NAME_TAG)).append(Lang.tr(player, "patron.rename_title"));
 		String current = ErrandText.villageName(player, center);
 		List<DialogBody> body = List.of(new PlainMessage(Lang.tr(player, "patron.rename_text").withStyle(ChatFormatting.GRAY), TEXT_WIDTH));
-		List<net.minecraft.server.dialog.Input> inputs = List.of(new net.minecraft.server.dialog.Input("name",
-			new net.minecraft.server.dialog.input.TextInput(200, Lang.tr(player, "patron.rename_label"), true, current, 32, Optional.empty())));
+		List<Input> inputs = List.of(new Input("name",
+			new TextInput(200, Lang.tr(player, "patron.rename_label"), true, current, 32, Optional.empty())));
 		String template = DialogActions.inputCommand(player, "name", (p, text) -> {
-			if (net.valcheff.villagersremember.Patron.rename(p, center, text)) {
+			if (Patron.rename(p, center, text)) {
 				p.sendSystemMessage(Lang.tr(p, "patron.renamed", text.strip()).withStyle(ChatFormatting.GREEN));
-				net.valcheff.villagersremember.Hud.refresh(p);
+				Hud.refresh(p);
 			} else {
 				p.sendSystemMessage(Lang.tr(p, "patron.rename_bad").withStyle(ChatFormatting.RED));
 			}
 			board(p, bell, center);
 		});
-		net.minecraft.server.dialog.action.ParsedTemplate parsed = net.minecraft.server.dialog.action.ParsedTemplate.CODEC
-			.parse(com.mojang.serialization.JavaOps.INSTANCE, template).getOrThrow();
+		ParsedTemplate parsed = ParsedTemplate.CODEC
+			.parse(JavaOps.INSTANCE, template).getOrThrow();
 		ActionButton save = new ActionButton(new CommonButtonData(Lang.tr(player, "patron.rename_save").withStyle(ChatFormatting.GREEN),
-			Optional.empty(), 150), Optional.of(new net.minecraft.server.dialog.action.CommandTemplate(parsed)));
+			Optional.empty(), 150), Optional.of(new CommandTemplate(parsed)));
 		ActionButton back = button(player, Lang.tr(player, "menu.back"), null, 150, p -> board(p, bell, center));
 		CommonDialogData common = new CommonDialogData(title, Optional.empty(), true, false, DialogAction.NONE, body, inputs);
 		player.openDialog(Holder.direct(new MultiActionDialog(common, List.of(save), Optional.of(back), 1)));
@@ -355,13 +375,13 @@ public final class ErrandDialogs {
 		DialogActions.begin(player);
 		ServerLevel level = (ServerLevel) player.level();
 		Optional<VillageRegistry.Village> found = VillageRegistry.get(level.getServer()).byCenter(center);
-		Optional<net.valcheff.villagersremember.GroupOrder.View> current = found.flatMap(v -> net.valcheff.villagersremember.GroupOrder.current(level.getServer(), v));
+		Optional<GroupOrder.View> current = found.flatMap(v -> GroupOrder.current(level.getServer(), v));
 		if (current.isEmpty()) {
-			player.connection.send(net.minecraft.network.protocol.common.ClientboundClearDialogPacket.INSTANCE);
+			player.connection.send(ClientboundClearDialogPacket.INSTANCE);
 			return;
 		}
 		VillageRegistry.Village village = found.get();
-		net.valcheff.villagersremember.GroupOrder.View view = current.get();
+		GroupOrder.View view = current.get();
 		String kind = view.kind().key();
 		ErrandsConfig cfg = ErrandsConfig.INSTANCE;
 		Component title = Component.empty().append(Icons.of(view.kind().icon))
@@ -371,12 +391,12 @@ public final class ErrandDialogs {
 		MutableComponent text = Component.empty()
 			.append(ErrandText.quotedLine(Lang.raw(Lang.language(player), "group." + kind + ".desc")))
 			.append("\n\n").append(Lang.tr(player, "group." + kind + ".want", view.target()).withStyle(ChatFormatting.WHITE))
-			.append("\n").append(Component.literal(net.valcheff.villagersremember.GroupOrder.examples(player, view.kind())).withStyle(ChatFormatting.DARK_GRAY))
+			.append("\n").append(Component.literal(GroupOrder.examples(player, view.kind())).withStyle(ChatFormatting.DARK_GRAY))
 			.append("\n\n").append(ErrandText.bar(progress, view.target(), 20))
 			.append("\n").append(view.done() ? Lang.tr(player, "group.done").withStyle(ChatFormatting.GREEN)
 				: Lang.tr(player, "group.days_left", view.daysLeft()).withStyle(ChatFormatting.GRAY))
 			.append("\n").append(Lang.tr(player, "group.mine", mine, Math.round(100.0 * mine / view.target())).withStyle(ChatFormatting.AQUA));
-		List<java.util.Map.Entry<java.util.UUID, Integer>> top = net.valcheff.villagersremember.GroupOrder.top(view.order(), 5);
+		List<Map.Entry<UUID, Integer>> top = GroupOrder.top(view.order(), 5);
 		if (!top.isEmpty()) {
 			text.append("\n\n").append(Lang.tr(player, "group.helpers").withStyle(ChatFormatting.GOLD));
 			for (var e : top) {
@@ -387,7 +407,7 @@ public final class ErrandDialogs {
 			}
 		}
 		text.append("\n").append(Lang.tr(player, "group.players", Math.max(1, view.order().players)).withStyle(ChatFormatting.DARK_GRAY));
-		text.append("\n\n").append(Lang.tr(player, "group.reward", Math.round(net.valcheff.villagersremember.GroupOrder.pool(view.order().players)),
+		text.append("\n\n").append(Lang.tr(player, "group.reward", Math.round(GroupOrder.pool(view.order().players)),
 			Math.round(cfg.groupMinShare * 100))
 			.withStyle(ChatFormatting.DARK_GREEN));
 		List<DialogBody> body = List.of(new PlainMessage(text, TEXT_WIDTH));
@@ -400,21 +420,21 @@ public final class ErrandDialogs {
 				ErrandsData.PlayerState st = ErrandService.state(p);
 				if (!st.trackedOrders.remove(orderKey)) st.trackedOrders.add(orderKey);
 				ErrandsData.get(p.level().getServer()).setDirty();
-				net.valcheff.villagersremember.Hud.refresh(p);
+				Hud.refresh(p);
 				villageOrder(p, bell, center);
 			}));
 		if (!view.done()) {
-			if (view.kind() == net.valcheff.villagersremember.GroupOrder.Kind.DEFEND) {
+			if (view.kind() == GroupOrder.Kind.DEFEND) {
 				buttons.add(button(player, Lang.tr(player, "group.defend_hint").withStyle(ChatFormatting.GRAY), null, 300,
 					p -> villageOrder(p, bell, center)));
 			} else {
-				int have = net.valcheff.villagersremember.GroupOrder.available(player, view);
+				int have = GroupOrder.available(player, view);
 				buttons.add(button(player, have > 0 ? Lang.tr(player, "group.give", have).withStyle(ChatFormatting.GREEN)
 						: Lang.tr(player, "group.nothing").withStyle(ChatFormatting.GRAY), null, 300, p -> {
-					int given = net.valcheff.villagersremember.GroupOrder.contribute(p, village);
+					int given = GroupOrder.contribute(p, village);
 					if (given > 0) {
 						p.sendSystemMessage(Lang.tr(p, "group.given", given).withStyle(ChatFormatting.GREEN));
-						ErrandService.sound(p, net.minecraft.sounds.SoundEvents.VILLAGER_YES);
+						ErrandService.sound(p, SoundEvents.VILLAGER_YES);
 					}
 					villageOrder(p, bell, center);
 				}));
@@ -429,7 +449,7 @@ public final class ErrandDialogs {
 		ServerLevel level = (ServerLevel) player.level();
 		Optional<VillageRegistry.Village> found = VillageRegistry.get(level.getServer()).byCenter(center);
 		if (found.isEmpty()) {
-			player.connection.send(net.minecraft.network.protocol.common.ClientboundClearDialogPacket.INSTANCE);
+			player.connection.send(ClientboundClearDialogPacket.INSTANCE);
 			return;
 		}
 		VillageRegistry.Village village = found.get();
@@ -497,7 +517,7 @@ public final class ErrandDialogs {
 		List<VillageRegistry.Resident> list = new ArrayList<>(village.residents.values());
 		list.removeIf(r -> r.baby);
 		// Errands each one has for the player now (with gradual trust, only the ones who talk to the player have any).
-		java.util.Map<UUID, Integer> offers = new java.util.HashMap<>();
+		Map<UUID, Integer> offers = new HashMap<>();
 		for (VillageRegistry.Resident r : list) {
 			ErrandGenerator.Giver g = ErrandGenerator.Giver.of(village, r);
 			int n = 0;
@@ -507,7 +527,7 @@ public final class ErrandDialogs {
 			offers.put(r.id, n);
 		}
 		// Standing first, then who has the most work for the player: at the start, the one who talks to you is on top.
-		list.sort(java.util.Comparator.comparingInt((VillageRegistry.Resident r) -> -Reputation.villager(state, r.id))
+		list.sort(Comparator.comparingInt((VillageRegistry.Resident r) -> -Reputation.villager(state, r.id))
 			.thenComparingInt(r -> -offers.get(r.id))
 			.thenComparing(r -> r.profession));
 		// Name and trade on the left; stars (one per tier, in the tier's colour) and the bar on the right, lined up.
@@ -618,7 +638,7 @@ public final class ErrandDialogs {
 		// One line per objective, with its own bar once accepted. The client centres every line, so TextWidth pads
 		// them to one width: the texts start in one column and the bars end in another.
 		// Where to cook or smelt is said once, below them.
-		java.util.Set<String> stations = new java.util.LinkedHashSet<>();
+		Set<String> stations = new LinkedHashSet<>();
 		List<Component> left = new ArrayList<>();
 		List<Component> right = new ArrayList<>();
 		for (int k = 0; k < errand.objectives().size(); k++) {
@@ -877,10 +897,10 @@ public final class ErrandDialogs {
 				int before = (int) Math.floor(Treasury.waiting(st));
 				int sent = Treasury.sendToEnderChest(p, st);
 				st.treasurySent += sent;
-				net.valcheff.villagersremember.Milestones.check(p);
+				Milestones.check(p);
 				if (sent > 0) {
 					p.sendSystemMessage(Lang.tr(p, "treasury.sent", sent).withStyle(ChatFormatting.GREEN));
-					ErrandService.sound(p, net.minecraft.sounds.SoundEvents.ENDER_CHEST_OPEN);
+					ErrandService.sound(p, SoundEvents.ENDER_CHEST_OPEN);
 				}
 				if (sent < before) p.sendSystemMessage(Lang.tr(p, "treasury.full", before - sent).withStyle(ChatFormatting.YELLOW));
 				treasury(p, back);
@@ -892,7 +912,7 @@ public final class ErrandDialogs {
 	/** "1.5" with one decimal, "12" from ten up. */
 	private static String money(double amount) {
 		if (amount >= 10) return String.valueOf(Math.round(amount));
-		return String.format(java.util.Locale.ROOT, amount >= 1 ? "%.1f" : "%.2f", amount);
+		return String.format(Locale.ROOT, amount >= 1 ? "%.1f" : "%.2f", amount);
 	}
 
 	/** "340 m NE" from the player, or the dimension when the village is in another one. */
@@ -923,7 +943,7 @@ public final class ErrandDialogs {
 	/** With after-action NONE a button without an action does nothing, so the server closes the dialog itself. */
 	private static ActionButton closeButton(ServerPlayer player) {
 		return button(player, Lang.tr(player, "menu.close"), null, 150,
-			p -> p.connection.send(net.minecraft.network.protocol.common.ClientboundClearDialogPacket.INSTANCE));
+			p -> p.connection.send(ClientboundClearDialogPacket.INSTANCE));
 	}
 
 	private static ActionButton button(ServerPlayer player, Component label, Component tooltip, int width, Consumer<ServerPlayer> action) {
@@ -970,7 +990,7 @@ public final class ErrandDialogs {
 					// The magic stays a surprise until the errand is handed in: only what can be chosen is named.
 					out.append("\n ").append(Lang.tr(player, "reward.top", ErrandText.profession(errand.profession())).withStyle(ChatFormatting.GOLD));
 					List<List<ItemStack>> options = TopRewards.options(errand.profession(), level, item.seed(), null);
-					java.util.Set<String> named = new java.util.LinkedHashSet<>();
+					Set<String> named = new LinkedHashSet<>();
 					MutableComponent names = Component.empty();
 					for (List<ItemStack> option : options) {
 						ItemStack first = option.getFirst();

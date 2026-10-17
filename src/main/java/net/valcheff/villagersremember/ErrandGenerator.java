@@ -2,6 +2,7 @@ package net.valcheff.villagersremember;
 
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -160,7 +162,7 @@ public final class ErrandGenerator {
 		} else if (!state.flags.contains(trialItemFlag(prof, earn))) {
 			item = milestoneItem(pool, pack, random);
 		}
-		// The very first trial a player ever gets (user, 2026-10-14): an ender chest to have, bought or found is fine, and
+		// The very first trial a player ever gets: an ender chest to have, bought or found is fine, and
 		// kept. The village will leave a little something in it every day: it is where the treasury goes.
 		List<Objective> objectives = earn == 1 && !state.flags.contains("trial")
 			? List.of(new Objective(Objective.Type.HAVE, "minecraft:ender_chest", false, 1, 0))
@@ -188,7 +190,7 @@ public final class ErrandGenerator {
 		if (top.isEmpty()) return Optional.empty();
 		RandomSource random = RandomSource.create(seed(giver.id(), week, 20, 0));
 		List<ErrandPools.Task> actions = top.stream().filter(ErrandGenerator::isAction).toList();
-		Set<String> used = new java.util.HashSet<>();
+		Set<String> used = new HashSet<>();
 		List<ErrandPools.Task> parts = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
 			List<ErrandPools.Task> from = i < 2 && !actions.isEmpty() ? actions : top;
@@ -249,7 +251,7 @@ public final class ErrandGenerator {
 	 * empty when the pools changed and no task matches.
 	 */
 	public static Optional<String> taskNameOf(Errand errand) {
-		for (java.util.Map.Entry<String, ErrandPools.Task> e : taskNames(errand.profession()).entrySet()) {
+		for (Map.Entry<String, ErrandPools.Task> e : taskNames(errand.profession()).entrySet()) {
 			ErrandPools.Task t = e.getValue();
 			if (errand.tier() < t.minTier() || errand.tier() > t.maxTier()) continue;
 			boolean titled = errand.title().isPresent() && !isTrial(errand) && !isContract(errand);
@@ -357,11 +359,11 @@ public final class ErrandGenerator {
 	 * Short names for the tasks of a profession, for commands: "reforge.iron_sword", "order.winter_stock",
 	 * "craft.bread", "kill.zombie"; a name used twice gets the tier added, ".t4".
 	 */
-	public static java.util.Map<String, ErrandPools.Task> taskNames(String profession) {
+	public static Map<String, ErrandPools.Task> taskNames(String profession) {
 		ErrandPools.Pool pool = ErrandPools.get(profession);
-		java.util.Map<String, ErrandPools.Task> out = new LinkedHashMap<>();
+		Map<String, ErrandPools.Task> out = new LinkedHashMap<>();
 		if (pool == null) return out;
-		java.util.Map<String, Integer> seen = new java.util.HashMap<>();
+		Map<String, Integer> seen = new HashMap<>();
 		List<String> names = new ArrayList<>();
 		for (ErrandPools.Task t : pool.tasks()) {
 			String name = taskName(t);
@@ -439,7 +441,7 @@ public final class ErrandGenerator {
 			return new Errand(id, villager, profession, type, level, tier, village, task.title(),
 				List.copyOf(objectives), value, 0, (int) Math.max(1, Math.round(budget * 0.25 * cfg.xpPerEmerald)), item, reputation);
 		}
-		// Repeatable errands pay emeralds, experience and reputation only (user, 2026-10-13).
+		// Repeatable errands pay emeralds, experience and reputation only.
 		Optional<Errand.ItemReward> item = Optional.empty();
 		double rest = budget;
 		int emeralds;
@@ -481,7 +483,7 @@ public final class ErrandGenerator {
 	}
 
 	private static int itemCap(String id) {
-		int stack = BuiltInRegistries.ITEM.getOptional(net.minecraft.resources.Identifier.parse(id))
+		int stack = BuiltInRegistries.ITEM.getOptional(Identifier.parse(id))
 			.map(i -> i.getDefaultMaxStackSize()).orElse(64);
 		return stack == 1 ? 16 : stack * 4;
 	}

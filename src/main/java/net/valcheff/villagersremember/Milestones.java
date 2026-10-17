@@ -6,9 +6,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.BiPredicate;
 
 /**
@@ -19,7 +22,7 @@ import java.util.function.BiPredicate;
  */
 public final class Milestones {
 	/** Professions with a collection advancement (every profession that gives errands). */
-	public static final java.util.List<String> COLLECTION = java.util.List.of("armorer", "butcher", "cartographer", "cleric",
+	public static final List<String> COLLECTION = List.of("armorer", "butcher", "cartographer", "cleric",
 		"farmer", "fisherman", "fletcher", "leatherworker", "librarian", "mason", "nitwit", "shepherd", "toolsmith", "weaponsmith");
 	private static final Map<String, BiPredicate<ServerPlayer, ErrandsData.PlayerState>> ALL = new LinkedHashMap<>();
 
@@ -70,7 +73,7 @@ public final class Milestones {
 			// Saves from before the collection: the last errands in the history count.
 			for (Errand e : state.history) {
 				ErrandGenerator.taskNameOf(e).ifPresent(n ->
-					state.collection.computeIfAbsent(ErrandText.path(e.profession()), k -> new java.util.LinkedHashSet<>()).add(n));
+					state.collection.computeIfAbsent(ErrandText.path(e.profession()), k -> new LinkedHashSet<>()).add(n));
 			}
 			ErrandsData.get(server).setDirty();
 		}
@@ -113,7 +116,7 @@ public final class Milestones {
 
 	private static int villagersAt(ErrandsData.PlayerState state, int tier) {
 		int n = 0;
-		for (java.util.UUID id : state.villagerRep.keySet()) if (Reputation.villagerTier(state, id) >= tier) n++;
+		for (UUID id : state.villagerRep.keySet()) if (Reputation.villagerTier(state, id) >= tier) n++;
 		return n;
 	}
 

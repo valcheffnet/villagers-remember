@@ -3,6 +3,7 @@ package net.valcheff.villagersremember;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -18,10 +19,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /** Builds names, icons and description lines for errands, in the player's language. */
@@ -45,7 +50,7 @@ public final class ErrandText {
 	}
 
 	/** Actions that make an item; with a delivery of the same item and count the errand reads "Catch and bring". */
-	private static final java.util.Set<Objective.Type> MAKES_ITEM = java.util.EnumSet.of(Objective.Type.CATCH,
+	private static final Set<Objective.Type> MAKES_ITEM = EnumSet.of(Objective.Type.CATCH,
 		Objective.Type.CRAFT, Objective.Type.SMELT, Objective.Type.STATION, Objective.Type.FILL_BUCKET, Objective.Type.TRADE);
 
 	public static Component targetName(ServerPlayer player, Objective o) {
@@ -124,7 +129,7 @@ public final class ErrandText {
 		Optional<Item> item = BuiltInRegistries.ITEM.getOptional(Identifier.parse(o.target()));
 		if (item.isEmpty()) return "";
 		ItemStack stack = new ItemStack(item.get());
-		if (stack.has(net.minecraft.core.component.DataComponents.FOOD)) return ".food";
+		if (stack.has(DataComponents.FOOD)) return ".food";
 		String path = path(o.target());
 		if (path.endsWith("_ingot") || path.equals("netherite_scrap")) return ".ore";
 		return "";
@@ -283,16 +288,16 @@ public final class ErrandText {
 
 	/** "Sharpness II, Unbreaking I" for an enchanted item or book, in light purple; empty when none. */
 	public static Component enchantments(ItemStack stack) {
-		net.minecraft.world.item.enchantment.ItemEnchantments list = stack.getOrDefault(
-			net.minecraft.core.component.DataComponents.ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
-		if (list.isEmpty()) list = stack.getOrDefault(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS,
-			net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+		ItemEnchantments list = stack.getOrDefault(
+			DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+		if (list.isEmpty()) list = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS,
+			ItemEnchantments.EMPTY);
 		MutableComponent out = Component.empty();
 		boolean first = true;
 		for (var entry : list.entrySet()) {
 			if (!first) out.append(", ");
 			first = false;
-			out.append(net.minecraft.world.item.enchantment.Enchantment.getFullname(entry.getKey(), entry.getIntValue()).copy()
+			out.append(Enchantment.getFullname(entry.getKey(), entry.getIntValue()).copy()
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
 		return out;

@@ -8,6 +8,7 @@ import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -133,7 +134,7 @@ public final class Treasury {
 		VillageRegistry registry = VillageRegistry.get(server);
 		double bonus = 1 + networkBonus(friendlyVillages(server, state));
 		List<Entry> out = new ArrayList<>();
-		Set<String> seen = new java.util.HashSet<>();
+		Set<String> seen = new HashSet<>();
 		for (String key : keys(state)) {
 			GlobalPos center = ErrandsData.parseVillageKey(key);
 			if (center == null) continue;

@@ -1,16 +1,22 @@
 package net.valcheff.villagersremember;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import net.valcheff.villagersremember.ui.Chronicle;
 import net.valcheff.villagersremember.ui.DialogActions;
 import net.valcheff.villagersremember.ui.ErrandDialogs;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 /**
  * {@code /errands} opens the journal, {@code /errands village} tells about the village the player is in.
@@ -18,7 +24,7 @@ import net.valcheff.villagersremember.ui.ErrandDialogs;
  * the reputation and test commands are in {@link AdminCommands}.
  */
 public final class ErrandsCommand {
-	private static int villageInfo(CommandSourceStack source) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+	private static int villageInfo(CommandSourceStack source) throws CommandSyntaxException {
 		ServerPlayer player = source.getPlayerOrException();
 		VillageRegistry registry = VillageRegistry.get(source.getServer());
 		var found = registry.villageAt(player.level().dimension(), player.blockPosition());
@@ -28,8 +34,8 @@ public final class ErrandsCommand {
 		}
 		VillageRegistry.Village v = found.get();
 		ErrandsData.PlayerState state = ErrandService.state(player);
-		Reputation.Standing s = Reputation.standing(state, java.util.Optional.of(v.center));
-		java.util.Map<String, Integer> byProfession = new java.util.TreeMap<>();
+		Reputation.Standing s = Reputation.standing(state, Optional.of(v.center));
+		Map<String, Integer> byProfession = new TreeMap<>();
 		for (VillageRegistry.Resident r : v.residents.values()) byProfession.merge(ErrandText.path(r.profession), 1, Integer::sum);
 		source.sendSuccess(() -> Lang.tr(player, "village.info", ErrandText.villageName(player, v.center),
 			v.center.pos().toShortString(), v.bells.size(), v.residents.size(), v.workers().size(),
@@ -104,9 +110,9 @@ public final class ErrandsCommand {
 					ctx.getSource().sendSuccess(() -> Component.literal("Experience multiplier: x" + m), false);
 					return (int) Math.round(m * 100);
 				})
-				.then(Commands.argument("multiplier", com.mojang.brigadier.arguments.DoubleArgumentType.doubleArg(0, 10))
+				.then(Commands.argument("multiplier", DoubleArgumentType.doubleArg(0, 10))
 					.executes(ctx -> {
-						double m = com.mojang.brigadier.arguments.DoubleArgumentType.getDouble(ctx, "multiplier");
+						double m = DoubleArgumentType.getDouble(ctx, "multiplier");
 						ErrandsConfig.INSTANCE.xpMultiplier = m;
 						ErrandsConfig.save();
 						ctx.getSource().sendSuccess(() -> Component.literal("Experience from errands, contracts and village orders: x" + m), true);
@@ -141,7 +147,7 @@ public final class ErrandsCommand {
 	}
 
 	/** Turns emerald rewards on or off for the whole server and saves the choice in the config file. */
-	private static int emeralds(net.minecraft.commands.CommandSourceStack source, boolean on) {
+	private static int emeralds(CommandSourceStack source, boolean on) {
 		ErrandsConfig.INSTANCE.emeraldRewards = on;
 		ErrandsConfig.save();
 		source.sendSuccess(() -> Component.literal(on

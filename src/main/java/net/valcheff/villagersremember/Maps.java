@@ -1,22 +1,35 @@
 package net.valcheff.villagersremember;
 
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -42,15 +55,15 @@ public final class Maps {
 	/** A folded chart for a visit objective, drawn by the villager. */
 	public static Optional<ItemStack> chart(ServerPlayer player, Objective o, String villagerName) {
 		if (o.type() != Objective.Type.VISIT_STRUCTURE && o.type() != Objective.Type.VISIT_BIOME) return Optional.empty();
-		ItemStack chart = new ItemStack(net.minecraft.world.item.Items.FILLED_MAP);
-		net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+		ItemStack chart = new ItemStack(Items.FILLED_MAP);
+		CompoundTag tag = new CompoundTag();
 		tag.putString("type", o.type().key());
 		tag.putString("target", o.target());
 		tag.putBoolean("tag", o.tag());
 		tag.putString("by", villagerName);
-		net.minecraft.nbt.CompoundTag root = new net.minecraft.nbt.CompoundTag();
+		CompoundTag root = new CompoundTag();
 		root.put(CHART, tag);
-		chart.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(root));
+		chart.set(DataComponents.CUSTOM_DATA, CustomData.of(root));
 		chart.set(DataComponents.CUSTOM_NAME, Lang.tr(player, "chart.name", ErrandText.targetName(player, o))
 			.withStyle(s -> s.withItalic(false).withColor(ChatFormatting.AQUA)));
 		List<Component> lore = new ArrayList<>();
@@ -60,13 +73,13 @@ public final class Maps {
 		if (dntLook()) {
 			// Dungeons and Taverns' rolled chart (its resource pack draws "dnt:chart"), ribbon tinted by the place.
 			// Its own unfolding only reacts to an item being used over time, which ours never is.
-			chart.set(DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(
+			chart.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(
 				List.of(), List.of(), List.of("dnt:chart"), List.of()));
-			chart.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
-			chart.set(DataComponents.TOOLTIP_DISPLAY, net.minecraft.world.item.component.TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
+			chart.set(DataComponents.DYED_COLOR, new DyedItemColor(tint(o)));
+			chart.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
 		} else {
 			// Looks like a rolled-up chart (the globe banner pattern) until it is unfolded into the map.
-			chart.set(DataComponents.ITEM_MODEL, net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(net.minecraft.world.item.Items.GLOBE_BANNER_PATTERN));
+			chart.set(DataComponents.ITEM_MODEL, BuiltInRegistries.ITEM.getKey(Items.GLOBE_BANNER_PATTERN));
 		}
 		chart.set(DataComponents.MAX_STACK_SIZE, 1);
 		return Optional.of(chart);
@@ -77,20 +90,20 @@ public final class Maps {
 		String look = ErrandsConfig.INSTANCE.chartLook;
 		if ("dnt".equalsIgnoreCase(look)) return true;
 		if ("globe".equalsIgnoreCase(look)) return false;
-		return net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("mr_dungeons_andtaverns");
+		return FabricLoader.getInstance().isModLoaded("mr_dungeons_andtaverns");
 	}
 
-	private static net.minecraft.nbt.CompoundTag chartTag(net.minecraft.world.item.component.CustomData data) {
-		net.minecraft.nbt.CompoundTag all = data.copyTag();
-		net.minecraft.nbt.CompoundTag tag = all.getCompoundOrEmpty(CHART);
+	private static CompoundTag chartTag(CustomData data) {
+		CompoundTag all = data.copyTag();
+		CompoundTag tag = all.getCompoundOrEmpty(CHART);
 		return tag.isEmpty() ? all.getCompoundOrEmpty(OLD_CHART) : tag;
 	}
 
 	/** The objective a chart leads to, if the stack is one of our charts. */
 	public static Optional<Objective> chartTarget(ItemStack stack) {
-		net.minecraft.world.item.component.CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+		CustomData data = stack.get(DataComponents.CUSTOM_DATA);
 		if (data == null) return Optional.empty();
-		net.minecraft.nbt.CompoundTag tag = chartTag(data);
+		CompoundTag tag = chartTag(data);
 		if (tag.isEmpty()) return Optional.empty();
 		Objective.Type type = tag.getStringOr("type", "").equals(Objective.Type.VISIT_BIOME.key())
 			? Objective.Type.VISIT_BIOME : Objective.Type.VISIT_STRUCTURE;
@@ -101,10 +114,10 @@ public final class Maps {
 	 * Right-click with a chart: searched now, in this dimension. Found: the chart becomes the map. Elsewhere: it says
 	 * which dimension it unfolds in. Nowhere near: it stays folded.
 	 */
-	public static net.minecraft.world.InteractionResult use(ServerPlayer player, net.minecraft.world.InteractionHand hand) {
+	public static InteractionResult use(ServerPlayer player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		Optional<Objective> target = chartTarget(stack);
-		if (target.isEmpty()) return net.minecraft.world.InteractionResult.PASS;
+		if (target.isEmpty()) return InteractionResult.PASS;
 		Objective o = target.get();
 		String by = chartTag(stack.get(DataComponents.CUSTOM_DATA)).getStringOr("by", "?");
 		ServerLevel here = (ServerLevel) player.level();
@@ -112,9 +125,9 @@ public final class Maps {
 		if (map.isPresent()) {
 			player.setItemInHand(hand, map.get());
 			Hud.title(player, Component.empty(), Lang.tr(player, "chart.unfolding").withStyle(ChatFormatting.GOLD));
-			player.level().playSound(null, player.getX(), player.getY(), player.getZ(), net.minecraft.sounds.SoundEvents.BOOK_PAGE_TURN,
-				net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, 1.0f);
-			return net.minecraft.world.InteractionResult.SUCCESS;
+			player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOOK_PAGE_TURN,
+				SoundSource.PLAYERS, 1.0f, 1.0f);
+			return InteractionResult.SUCCESS;
 		}
 		// Not in this dimension: where then?
 		for (ServerLevel level : searchOrder(player.level().getServer(), here)) {
@@ -122,11 +135,11 @@ public final class Maps {
 			if (find(player, level, o) != null) {
 				player.sendSystemMessage(Lang.tr(player, "chart.wrong_dimension", Lang.tr(player, "dim." + level.dimension().identifier().getPath()))
 					.withStyle(ChatFormatting.YELLOW));
-				return net.minecraft.world.InteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 		player.sendSystemMessage(Lang.tr(player, "chart.nothing", ErrandText.targetName(player, o)).withStyle(ChatFormatting.GRAY));
-		return net.minecraft.world.InteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	/** Tint of a folded chart by what it leads to. */
@@ -179,8 +192,8 @@ public final class Maps {
 			map = map.transmuteCopy(kind.item);
 		} else {
 			map.set(DataComponents.ITEM_NAME, Lang.tr(player, "map.to", ErrandText.targetName(player, o)));
-			map.set(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(tint(o)));
-			map.set(DataComponents.TOOLTIP_DISPLAY, net.minecraft.world.item.component.TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
+			map.set(DataComponents.DYED_COLOR, new DyedItemColor(tint(o)));
+			map.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
 		}
 		List<Component> lore = new ArrayList<>();
 		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.GRAY)));
@@ -189,29 +202,29 @@ public final class Maps {
 	}
 
 	/** The game's explorer map item and map icon for a place, where it has them (26.3). */
-	private record Kind(net.minecraft.world.item.Item item, Holder<MapDecorationType> mark) {
+	private record Kind(Item item, Holder<MapDecorationType> mark) {
 	}
 
 	private static Kind kindOf(Objective o) {
 		if (o.type() != Objective.Type.VISIT_STRUCTURE) return new Kind(null, MapDecorationTypes.RED_X);
 		String id = o.target().substring(o.target().indexOf(':') + 1);
 		return switch (id) {
-			case "ancient_city" -> new Kind(net.minecraft.world.item.Items.BURIED_ANCIENT_CITY_MAP, MapDecorationTypes.ANCIENT_CITY);
-			case "mansion" -> new Kind(net.minecraft.world.item.Items.WOODLAND_MANSION_MAP, MapDecorationTypes.WOODLAND_MANSION);
-			case "monument" -> new Kind(net.minecraft.world.item.Items.OCEAN_MONUMENT_MAP, MapDecorationTypes.OCEAN_MONUMENT);
-			case "trial_chambers" -> new Kind(net.minecraft.world.item.Items.BURIED_TRIAL_CHAMBERS_MAP, MapDecorationTypes.TRIAL_CHAMBERS);
-			case "desert_pyramid" -> new Kind(net.minecraft.world.item.Items.DESERT_PYRAMID_MAP, MapDecorationTypes.DESERT_PYRAMID);
-			case "jungle_pyramid" -> new Kind(net.minecraft.world.item.Items.JUNGLE_PYRAMID_MAP, MapDecorationTypes.JUNGLE_TEMPLE);
-			case "swamp_hut" -> new Kind(net.minecraft.world.item.Items.SWAMP_HUT_MAP, MapDecorationTypes.SWAMP_HUT);
-			case "abandoned_camp" -> new Kind(net.minecraft.world.item.Items.ABANDONED_CAMP_MAP, MapDecorationTypes.ABANDONED_CAMP);
-			case "mineshaft", "mineshaft_mesa" -> new Kind(net.minecraft.world.item.Items.BURIED_MINESHAFT_MAP, MapDecorationTypes.MINESHAFT);
-			case "ocean_ruin_warm" -> new Kind(net.minecraft.world.item.Items.WARM_OCEAN_RUINS_MAP, MapDecorationTypes.OCEAN_RUIN_WARM);
-			case "buried_treasure" -> new Kind(net.minecraft.world.item.Items.BURIED_TREASURE_MAP, MapDecorationTypes.RED_X);
-			case "village_desert" -> new Kind(net.minecraft.world.item.Items.DESERT_VILLAGE_MAP, MapDecorationTypes.DESERT_VILLAGE);
-			case "village_plains" -> new Kind(net.minecraft.world.item.Items.PLAINS_VILLAGE_MAP, MapDecorationTypes.PLAINS_VILLAGE);
-			case "village_savanna" -> new Kind(net.minecraft.world.item.Items.SAVANNA_VILLAGE_MAP, MapDecorationTypes.SAVANNA_VILLAGE);
-			case "village_snowy" -> new Kind(net.minecraft.world.item.Items.SNOWY_VILLAGE_MAP, MapDecorationTypes.SNOWY_VILLAGE);
-			case "village_taiga" -> new Kind(net.minecraft.world.item.Items.TAIGA_VILLAGE_MAP, MapDecorationTypes.TAIGA_VILLAGE);
+			case "ancient_city" -> new Kind(Items.BURIED_ANCIENT_CITY_MAP, MapDecorationTypes.ANCIENT_CITY);
+			case "mansion" -> new Kind(Items.WOODLAND_MANSION_MAP, MapDecorationTypes.WOODLAND_MANSION);
+			case "monument" -> new Kind(Items.OCEAN_MONUMENT_MAP, MapDecorationTypes.OCEAN_MONUMENT);
+			case "trial_chambers" -> new Kind(Items.BURIED_TRIAL_CHAMBERS_MAP, MapDecorationTypes.TRIAL_CHAMBERS);
+			case "desert_pyramid" -> new Kind(Items.DESERT_PYRAMID_MAP, MapDecorationTypes.DESERT_PYRAMID);
+			case "jungle_pyramid" -> new Kind(Items.JUNGLE_PYRAMID_MAP, MapDecorationTypes.JUNGLE_TEMPLE);
+			case "swamp_hut" -> new Kind(Items.SWAMP_HUT_MAP, MapDecorationTypes.SWAMP_HUT);
+			case "abandoned_camp" -> new Kind(Items.ABANDONED_CAMP_MAP, MapDecorationTypes.ABANDONED_CAMP);
+			case "mineshaft", "mineshaft_mesa" -> new Kind(Items.BURIED_MINESHAFT_MAP, MapDecorationTypes.MINESHAFT);
+			case "ocean_ruin_warm" -> new Kind(Items.WARM_OCEAN_RUINS_MAP, MapDecorationTypes.OCEAN_RUIN_WARM);
+			case "buried_treasure" -> new Kind(Items.BURIED_TREASURE_MAP, MapDecorationTypes.RED_X);
+			case "village_desert" -> new Kind(Items.DESERT_VILLAGE_MAP, MapDecorationTypes.DESERT_VILLAGE);
+			case "village_plains" -> new Kind(Items.PLAINS_VILLAGE_MAP, MapDecorationTypes.PLAINS_VILLAGE);
+			case "village_savanna" -> new Kind(Items.SAVANNA_VILLAGE_MAP, MapDecorationTypes.SAVANNA_VILLAGE);
+			case "village_snowy" -> new Kind(Items.SNOWY_VILLAGE_MAP, MapDecorationTypes.SNOWY_VILLAGE);
+			case "village_taiga" -> new Kind(Items.TAIGA_VILLAGE_MAP, MapDecorationTypes.TAIGA_VILLAGE);
 			default -> new Kind(null, MapDecorationTypes.RED_X);
 		};
 	}

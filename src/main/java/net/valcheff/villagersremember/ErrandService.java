@@ -2,17 +2,20 @@ package net.valcheff.villagersremember;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.util.Prediction;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -236,7 +239,7 @@ public final class ErrandService {
 		state.completed++;
 		state.done.put(errand.id(), ErrandGenerator.day(level));
 		String prof = ErrandText.path(errand.profession());
-		ErrandGenerator.taskNameOf(errand).ifPresent(n -> state.collection.computeIfAbsent(prof, k -> new java.util.LinkedHashSet<>()).add(n));
+		ErrandGenerator.taskNameOf(errand).ifPresent(n -> state.collection.computeIfAbsent(prof, k -> new LinkedHashSet<>()).add(n));
 		if (contract) state.contracts.merge(prof, 1, Integer::sum);
 		data.prune(ErrandGenerator.day(level));
 		data.setDirty();
@@ -244,7 +247,7 @@ public final class ErrandService {
 		player.sendSystemMessage(Lang.tr(player, "msg.completed", ErrandText.task(player, errand)).withStyle(ChatFormatting.GREEN));
 		String who = ErrandText.villagerName(player, errand.villager(), villager);
 		int tierNow = Reputation.villagerTier(state, errand.villager());
-		net.minecraft.network.chat.Component tierName = Lang.tr(player, "rep.villager." + tierNow).withColor(ErrandText.tierColor(tierNow));
+		Component tierName = Lang.tr(player, "rep.villager." + tierNow).withColor(ErrandText.tierColor(tierNow));
 		if (villagerTierUp) {
 			player.sendSystemMessage(Lang.tr(player, "msg.villager_tier", who, tierName).withStyle(ChatFormatting.AQUA));
 		}
@@ -301,7 +304,7 @@ public final class ErrandService {
 	public static int missingRoom(ServerPlayer player, Errand errand, int choice) {
 		ServerLevel level = (ServerLevel) player.level();
 		ErrandsData.PlayerState state = state(player);
-		List<ItemStack> slots = new java.util.ArrayList<>();
+		List<ItemStack> slots = new ArrayList<>();
 		for (ItemStack stack : player.getInventory().getNonEquipmentItems()) slots.add(stack.copy());
 		ErrandsData.Active accepted = state.find(errand.id());
 		for (int i = 0; i < errand.objectives().size(); i++) {
@@ -316,7 +319,7 @@ public final class ErrandService {
 				left -= take;
 			}
 		}
-		List<ItemStack> reward = new java.util.ArrayList<>();
+		List<ItemStack> reward = new ArrayList<>();
 		double bonus = Reputation.VILLAGE_BONUS[Reputation.villageTier(state, errand.village())];
 		int emeralds = ErrandText.withBonus(errand.paidEmeralds(), bonus);
 		while (emeralds > 0) {

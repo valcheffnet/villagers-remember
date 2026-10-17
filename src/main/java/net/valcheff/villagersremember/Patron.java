@@ -8,7 +8,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,8 +72,8 @@ public final class Patron {
 			}
 		}
 		UUID old = village.patron;
-		if (java.util.Objects.equals(best, old)) return;
-		Map<UUID, String> oldNames = new java.util.HashMap<>();
+		if (Objects.equals(best, old)) return;
+		Map<UUID, String> oldNames = new HashMap<>();
 		if (old != null && village.patronName != null) oldNames.put(old, village.patronName);
 		village.patron = best;
 		ServerPlayer newcomer = best != null ? server.getPlayerList().getPlayer(best) : null;

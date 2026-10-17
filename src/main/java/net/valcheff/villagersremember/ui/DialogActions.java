@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
  */
 public final class DialogActions {
 	private static final Map<UUID, Map<String, Consumer<ServerPlayer>>> ACTIONS = new HashMap<>();
-	private static final Map<UUID, Map<String, java.util.function.BiConsumer<ServerPlayer, String>>> INPUTS = new HashMap<>();
+	private static final Map<UUID, Map<String, BiConsumer<ServerPlayer, String>>> INPUTS = new HashMap<>();
 
 	/** Starts a new dialog for the player: drops the tokens of the previous one. */
 	static void begin(ServerPlayer player) {
@@ -26,15 +27,15 @@ public final class DialogActions {
 	}
 
 	/** A button that sends what the player typed in the dialog's text field {@code key}. */
-	static String inputCommand(ServerPlayer player, String key, java.util.function.BiConsumer<ServerPlayer, String> action) {
+	static String inputCommand(ServerPlayer player, String key, BiConsumer<ServerPlayer, String> action) {
 		String token = Long.toString(ThreadLocalRandom.current().nextLong() & Long.MAX_VALUE, 36);
 		INPUTS.computeIfAbsent(player.getUUID(), k -> new HashMap<>()).put(token, action);
 		return "errands input " + token + " $(" + key + ")";
 	}
 
 	public static boolean runInput(ServerPlayer player, String token, String text) {
-		Map<String, java.util.function.BiConsumer<ServerPlayer, String>> inputs = INPUTS.get(player.getUUID());
-		java.util.function.BiConsumer<ServerPlayer, String> action = inputs != null ? inputs.get(token) : null;
+		Map<String, BiConsumer<ServerPlayer, String>> inputs = INPUTS.get(player.getUUID());
+		BiConsumer<ServerPlayer, String> action = inputs != null ? inputs.get(token) : null;
 		if (action == null) {
 			player.connection.send(ClientboundClearDialogPacket.INSTANCE);
 			return false;

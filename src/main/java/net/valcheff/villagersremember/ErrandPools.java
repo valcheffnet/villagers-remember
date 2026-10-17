@@ -13,7 +13,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 /**
@@ -36,9 +38,9 @@ public final class ErrandPools {
 	 * A task: objectives done together. Value is per rolled unit, in emeralds. A fixed reward replaces the roll
 	 * from the profession's reward list (reforge errands: the same item back, enchanted).
 	 */
-	public record Task(String key, List<ObjectiveTemplate> objectives, java.util.Optional<String> title,
+	public record Task(String key, List<ObjectiveTemplate> objectives, Optional<String> title,
 	                   int min, int max, double value, int minTier, int maxTier, int weight,
-	                   java.util.Optional<Reward> reward, double market) {
+	                   Optional<Reward> reward, double market) {
 	}
 
 	/** For ITEM: value per item. For LOOT: value of one roll. For ENCHANT: value per enchanting level. */
@@ -122,13 +124,13 @@ public final class ErrandPools {
 		double value = o.has("value") ? o.get("value").getAsDouble() : 0.1;
 		int weight = o.has("weight") ? o.get("weight").getAsInt() : 10;
 		if (weight <= 0) return null;
-		java.util.Optional<String> title = o.has("title") ? java.util.Optional.of(o.get("title").getAsString()) : java.util.Optional.empty();
-		java.util.Optional<Reward> reward = java.util.Optional.empty();
+		Optional<String> title = o.has("title") ? Optional.of(o.get("title").getAsString()) : Optional.empty();
+		Optional<Reward> reward = Optional.empty();
 		if (o.has("reward")) {
 			JsonObject r = o.getAsJsonObject("reward").deepCopy();
 			if (!r.has("value_per_level")) r.addProperty("value_per_level", 0);
 			if (!r.has("value")) r.addProperty("value", 0);
-			reward = java.util.Optional.ofNullable(parseReward(r, file));
+			reward = Optional.ofNullable(parseReward(r, file));
 			if (reward.isEmpty()) return null;
 		}
 		StringBuilder key = new StringBuilder();
@@ -157,7 +159,7 @@ public final class ErrandPools {
 		if (!target.isEmpty()) {
 			Identifier id = Identifier.tryParse(target);
 			if (id == null || (!tag && !exists(type.target, id))) {
-				VillagersRemember.LOG.warn("{}: unknown {} {}", file, type.target.name().toLowerCase(java.util.Locale.ROOT), raw);
+				VillagersRemember.LOG.warn("{}: unknown {} {}", file, type.target.name().toLowerCase(Locale.ROOT), raw);
 				return null;
 			}
 			target = id.toString();

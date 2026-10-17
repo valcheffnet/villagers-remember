@@ -2,6 +2,9 @@ package net.valcheff.villagersremember;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -9,9 +12,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -93,15 +98,15 @@ public record Errand(
 					// (RARE_POOL_CHANCE) a treasure one (#minecraft:treasure: Mending, Frost Walker... and whatever other
 					// mods tag as treasure), never curses. Only tags are used, so any set of mods works; without a treasure
 					// enchantment for this item the table's list is used.
-					var registry = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
+					var registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 					RandomSource random = RandomSource.create(seed);
-					var table = registry.get(net.minecraft.tags.EnchantmentTags.IN_ENCHANTING_TABLE)
-						.map(set -> (net.minecraft.core.HolderSet<net.minecraft.world.item.enchantment.Enchantment>) set);
+					var table = registry.get(EnchantmentTags.IN_ENCHANTING_TABLE)
+						.map(set -> (HolderSet<Enchantment>) set);
 					ItemStack stack = ItemStack.EMPTY;
 					if (random.nextFloat() < RARE_POOL_CHANCE) {
-						var rare = net.minecraft.core.HolderSet.direct(registry.listElements()
-							.filter(h -> h.is(net.minecraft.tags.EnchantmentTags.TREASURE) && !h.is(net.minecraft.tags.EnchantmentTags.CURSE))
-							.map(h -> (net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment>) h).toList());
+						var rare = HolderSet.direct(registry.listElements()
+							.filter(h -> h.is(EnchantmentTags.TREASURE) && !h.is(EnchantmentTags.CURSE))
+							.map(h -> (Holder<Enchantment>) h).toList());
 						stack = EnchantmentHelper.enchantItem(random, new ItemStack(item), amount + extraLevels, level.registryAccess(), Optional.of(rare));
 						if (!stack.isEnchanted()) stack = ItemStack.EMPTY;
 					}
@@ -124,7 +129,7 @@ public record Errand(
 					// A treasure map is shown by name until it is given, so its structure is searched only then.
 					if (origin == null && id.contains(":top/map_")) {
 						ItemStack map = new ItemStack(Items.FILLED_MAP);
-						map.set(net.minecraft.core.component.DataComponents.ITEM_NAME, TopRewards.mapName(id.substring(id.indexOf("map_") + 4)));
+						map.set(DataComponents.ITEM_NAME, TopRewards.mapName(id.substring(id.indexOf("map_") + 4)));
 						out.add(map);
 						break;
 					}

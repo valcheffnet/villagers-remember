@@ -15,6 +15,7 @@ import net.minecraft.world.item.Items;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -42,7 +43,7 @@ public final class GroupOrder {
 		}
 
 		public String key() {
-			return name().toLowerCase(java.util.Locale.ROOT);
+			return name().toLowerCase(Locale.ROOT);
 		}
 
 		static Kind of(String key) {

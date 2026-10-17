@@ -1,25 +1,29 @@
 package net.valcheff.villagersremember;
 
 import net.minecraft.core.GlobalPos;
-import java.util.Optional;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.valcheff.villagersremember.ui.ErrandDialogs;
 
+import java.util.Optional;
+
 /** Shift + right-click on a villager opens its errands; right-click on a bell opens the village board. */
 public final class Interactions {
 	public static InteractionResult onUseEntity(Player player, Level level, InteractionHand hand, Entity entity, EntityHitResult hit) {
 		if (level.isClientSide() || !(player instanceof ServerPlayer sp) || player.isSpectator()) return InteractionResult.PASS;
-		if (entity instanceof net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader trader) {
+		if (entity instanceof WanderingTrader trader) {
 			// A Legend finds rare goods with the wandering trader; the trading itself stays vanilla.
 			if (hand == InteractionHand.MAIN_HAND) Fame.legendGoods(sp, trader);
 			return InteractionResult.PASS;
@@ -36,7 +40,7 @@ public final class Interactions {
 		if (player.isShiftKeyDown()) return InteractionResult.PASS;
 		// Things vanilla uses on a villager keep working.
 		var held = player.getItemInHand(hand);
-		if (held.is(net.minecraft.world.item.Items.NAME_TAG) || held.getItem() instanceof net.minecraft.world.item.SpawnEggItem) {
+		if (held.is(Items.NAME_TAG) || held.getItem() instanceof SpawnEggItem) {
 			return InteractionResult.PASS;
 		}
 		if (!ErrandGenerator.givesErrands(villager) && !ErrandDialogs.canTrade(villager)) return InteractionResult.PASS;

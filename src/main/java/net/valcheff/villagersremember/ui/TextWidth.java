@@ -16,9 +16,11 @@ import net.valcheff.villagersremember.VillagersRemember;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * How wide a line of text is on a vanilla client, in GUI pixels. Dialogs centre every line, so lines that should
@@ -77,7 +79,7 @@ public final class TextWidth {
 			case PlainTextContents text -> text(text.text(), style);
 			case TranslatableContents tr -> translated(tr, style, lang);
 			case ObjectContents ignored -> sprite;
-			default -> text(component.getContents().visit(s -> java.util.Optional.of(s)).orElse(""), style);
+			default -> text(component.getContents().visit(s -> Optional.of(s)).orElse(""), style);
 		};
 		for (Component sibling : component.getSiblings()) w += walk(sibling, style, lang);
 		return w;
@@ -173,7 +175,7 @@ public final class TextWidth {
 			widest = Math.max(widest, lw[i] + rw[i]);
 		}
 		int total = (int) Math.ceil(widest) + MIN_GAP;
-		List<MutableComponent> out = new java.util.ArrayList<>();
+		List<MutableComponent> out = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
 			MutableComponent line = Component.empty().append(left.get(i))
 				.append(gap(Math.round(total - lw[i] - rw[i])));

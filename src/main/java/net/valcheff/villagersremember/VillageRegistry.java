@@ -20,7 +20,9 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -141,8 +143,8 @@ public final class VillageRegistry extends SavedData {
 	 */
 	public int nameIndex(Village village, int count) {
 		List<Village> byAge = new ArrayList<>(villages);
-		byAge.sort(java.util.Comparator.comparingInt(v -> v.id));
-		Set<Integer> used = new java.util.HashSet<>();
+		byAge.sort(Comparator.comparingInt(v -> v.id));
+		Set<Integer> used = new HashSet<>();
 		for (Village v : byAge) {
 			long hash = v.center.pos().asLong() * 31 + v.center.dimension().identifier().hashCode();
 			int start = (int) Math.floorMod(hash, (long) count);

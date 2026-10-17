@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 /** Finding a village from a bell and everything its board lists for a player. */
 public final class Villages {
@@ -73,7 +74,7 @@ public final class Villages {
 		return out;
 	}
 
-	public static Villager loaded(ServerLevel level, java.util.UUID id) {
+	public static Villager loaded(ServerLevel level, UUID id) {
 		return level.getEntity(id) instanceof Villager v && v.isAlive() ? v : null;
 	}
 }

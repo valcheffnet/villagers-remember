@@ -1,9 +1,14 @@
 package net.valcheff.villagersremember;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -12,9 +17,10 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 /** Per-player errand state and reputation, saved in {@code <world>/data/villagersremember/errands.dat}. */
@@ -96,7 +102,7 @@ public final class ErrandsData extends SavedData {
 		public int treasurySent;
 		public int weeklyDone;
 		/** Game days the player was online lately (village orders are sized by regular players). */
-		public final java.util.TreeSet<Long> daysSeen = new java.util.TreeSet<>();
+		public final TreeSet<Long> daysSeen = new TreeSet<>();
 		/** Emeralds and experience owed to the player (village order shares while offline, or a full ender chest). */
 		public int mail;
 		public int mailXp;
@@ -160,9 +166,9 @@ public final class ErrandsData extends SavedData {
 		String[] p = key.split("\\|");
 		if (p.length != 4) return null;
 		try {
-			return GlobalPos.of(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
-				net.minecraft.resources.Identifier.parse(p[0])),
-				new net.minecraft.core.BlockPos(Integer.parseInt(p[1]), Integer.parseInt(p[2]), Integer.parseInt(p[3])));
+			return GlobalPos.of(ResourceKey.create(Registries.DIMENSION,
+				Identifier.parse(p[0])),
+				new BlockPos(Integer.parseInt(p[1]), Integer.parseInt(p[2]), Integer.parseInt(p[3])));
 		} catch (RuntimeException e) {
 			return null;
 		}
@@ -444,7 +450,7 @@ public final class ErrandsData extends SavedData {
 			p.putInt("weekly_done", state.weeklyDone);
 			p.putInt("mail", state.mail);
 			p.putInt("mail_xp", state.mailXp);
-			p.put("days_seen", new net.minecraft.nbt.LongArrayTag(state.daysSeen.stream().mapToLong(Long::longValue).toArray()));
+			p.put("days_seen", new LongArrayTag(state.daysSeen.stream().mapToLong(Long::longValue).toArray()));
 			all.put(e.getKey().toString(), p);
 		}
 		root.put("players", all);

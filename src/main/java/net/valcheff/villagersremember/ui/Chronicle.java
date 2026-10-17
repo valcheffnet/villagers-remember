@@ -27,8 +27,13 @@ import net.valcheff.villagersremember.ErrandService;
 import net.valcheff.villagersremember.ErrandText;
 import net.valcheff.villagersremember.ErrandsConfig;
 import net.valcheff.villagersremember.ErrandsData;
+import net.valcheff.villagersremember.Fame;
 import net.valcheff.villagersremember.Lang;
+import net.valcheff.villagersremember.Legends;
+import net.valcheff.villagersremember.Milestones;
 import net.valcheff.villagersremember.Reputation;
+import net.valcheff.villagersremember.Treasury;
+import net.valcheff.villagersremember.VillageRegistry;
 import net.valcheff.villagersremember.VillagerHeads;
 
 import java.util.ArrayList;
@@ -71,33 +76,33 @@ public final class Chronicle {
 			.append("\n\n").append(Lang.tr(player, "book.day", ErrandGenerator.day(level)))
 			.append("\n").append(Icons.of(Items.EMERALD)).append(Lang.tr(player, "book.completed", state.completed))
 			.append("\n").append(Icons.of(Items.PAPER)).append(Lang.tr(player, "book.accepted", state.active.size(), ErrandsConfig.INSTANCE.maxActiveErrands))
-			.append("\n").append(Icons.of(Items.BELL)).append(Lang.tr(player, "book.villages", net.valcheff.villagersremember.Treasury.keys(state).size()))
+			.append("\n").append(Icons.of(Items.BELL)).append(Lang.tr(player, "book.villages", Treasury.keys(state).size()))
 			.append("\n").append(Icons.of(Items.NETHER_STAR)).append(Lang.tr(player, "book.fame", state.fame))
 			.append("\n\n").append(link(Lang.tr(player, "book.open_journal"), "/errands"));
 		pages.add(cover);
 
 		// Fame, contracts, legendary items
-		int title = net.valcheff.villagersremember.Fame.title(state);
+		int title = Fame.title(state);
 		MutableComponent fame = Component.empty().append(Lang.tr(player, "book.section_fame").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD))
 			.append("\n\n").append(Lang.tr(player, "book.fame_title")).append(title > 0
-				? net.valcheff.villagersremember.Fame.titleName(player, title).withStyle(ChatFormatting.BOLD)
+				? Fame.titleName(player, title).withStyle(ChatFormatting.BOLD)
 				: Lang.tr(player, "fame.title.0").withStyle(ChatFormatting.DARK_GRAY))
 			.append("\n").append(Lang.tr(player, "book.fame_points", state.fame));
-		if (title < net.valcheff.villagersremember.Fame.MAX_TITLE) {
-			fame.append("\n").append(Lang.tr(player, "book.fame_next", net.valcheff.villagersremember.Fame.titleName(player, title + 1),
-				net.valcheff.villagersremember.Fame.TITLES[title + 1]).withStyle(ChatFormatting.DARK_GRAY));
+		if (title < Fame.MAX_TITLE) {
+			fame.append("\n").append(Lang.tr(player, "book.fame_next", Fame.titleName(player, title + 1),
+				Fame.TITLES[title + 1]).withStyle(ChatFormatting.DARK_GRAY));
 		}
 		int contracts = state.contracts.values().stream().mapToInt(Integer::intValue).sum();
 		fame.append("\n\n").append(Icons.of(Items.PAPER)).append(Lang.tr(player, "book.contracts", contracts))
 			.append("\n").append(Icons.of(Items.NETHERITE_INGOT)).append(Lang.tr(player, "book.legends", state.legends.size(),
-				net.valcheff.villagersremember.Legends.professions().size()));
+				Legends.professions().size()));
 		for (String prof : state.legends) {
-			fame.append("\n ").append(Icons.of(net.valcheff.villagersremember.Legends.icon(prof)))
+			fame.append("\n ").append(Icons.of(Legends.icon(prof)))
 				.append(ErrandText.profession("minecraft:" + prof).copy().withColor(0xFF8000));
 		}
 		if (!state.patronOf.isEmpty()) {
 			fame.append("\n\n").append(Icons.of(Items.BEACON)).append(Lang.tr(player, "book.patron"));
-			var registry = net.valcheff.villagersremember.VillageRegistry.get(level.getServer());
+			var registry = VillageRegistry.get(level.getServer());
 			for (var v : registry.all()) {
 				if (player.getUUID().equals(v.patron)) fame.append("\n ").append(Component.literal(ErrandText.villageName(player, v.center)).withStyle(ChatFormatting.GOLD));
 			}
@@ -105,12 +110,12 @@ public final class Chronicle {
 		pages.add(fame);
 
 		// Profession collection: every task of a profession done once
-		List<String> professions = net.valcheff.villagersremember.Milestones.COLLECTION;
+		List<String> professions = Milestones.COLLECTION;
 		for (int i = 0; i < professions.size(); i += 7) {
 			MutableComponent page = Component.empty().append(Lang.tr(player, "book.section_collection").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD));
 			for (int j = i; j < Math.min(i + 7, professions.size()); j++) {
 				String prof = professions.get(j);
-				int[] c = net.valcheff.villagersremember.Milestones.collection(state, prof);
+				int[] c = Milestones.collection(state, prof);
 				boolean full = c[1] > 0 && c[0] >= c[1];
 				page.append("\n").append(ErrandText.profession("minecraft:" + prof).copy().withStyle(full ? ChatFormatting.DARK_GREEN : ChatFormatting.BLACK))
 					.append(Component.literal(" " + c[0] + "/" + c[1] + (full ? " ✔" : "")).withStyle(full ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_GRAY));
@@ -142,7 +147,7 @@ public final class Chronicle {
 
 		// Village standings
 		List<Map.Entry<String, Integer>> villages = new ArrayList<>();
-		for (String key : net.valcheff.villagersremember.Treasury.keys(state)) villages.add(Map.entry(key, state.villageRep.getOrDefault(key, 0)));
+		for (String key : Treasury.keys(state)) villages.add(Map.entry(key, state.villageRep.getOrDefault(key, 0)));
 		villages.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
 		for (int i = 0; i < villages.size(); i += VILLAGES_PER_PAGE) {
 			MutableComponent page = Component.empty().append(Lang.tr(player, "book.section_villages").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD));

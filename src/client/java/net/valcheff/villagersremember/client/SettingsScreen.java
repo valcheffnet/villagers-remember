@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -130,7 +131,7 @@ public class SettingsScreen extends Screen {
 		} else {
 			mode = Mode.LOCAL;
 			otherServer = mc.getConnection() != null;
-			waystones = net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("waystones");
+			waystones = FabricLoader.getInstance().isModLoaded("waystones");
 			values = JsonParser.parseString(ErrandsConfig.toJson(ErrandsConfig.INSTANCE)).getAsJsonObject();
 		}
 	}

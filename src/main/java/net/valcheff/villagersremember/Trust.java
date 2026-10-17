@@ -2,10 +2,16 @@ package net.valcheff.villagersremember;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.ai.gossip.GossipType;
+import net.minecraft.world.entity.npc.villager.Villager;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -19,7 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Gradual trust (user, 2026-10-14): in a village only a circle of villagers offers a player errands, and every player
+ * Gradual trust: in a village only a circle of villagers offers a player errands, and every player
  * has their own circle. The village picks one villager who dares to talk to a stranger. Every tier the player reaches
  * with anyone in the circle brings one more villager; the village's tier brings more (Known +1, Friend +2,
  * Respected +3, Hero: everyone), and so does helping to finish a village order. A member who dies leaves a gap that is
@@ -122,20 +128,20 @@ public final class Trust {
 	/**
 	 * Villagers who remember the player by their own vanilla memory (gossip) join on top of the places earned: cured
 	 * by the player (major positive, it never fades), or traded with them a lot lately. So a trading hall the player
-	 * has used for ages knows them from the start, Master villagers included (user, 2026-10-14).
+	 * has used for ages knows them from the start, Master villagers included.
 	 */
 	private static boolean remembered(MinecraftServer server, ErrandsData.PlayerState state, VillageRegistry.Village village, Circle circle) {
-		net.minecraft.server.level.ServerLevel level = server.getLevel(village.center.dimension());
+		ServerLevel level = server.getLevel(village.center.dimension());
 		if (level == null) return false;
 		boolean added = false;
 		for (VillageRegistry.Resident r : village.residents.values()) {
 			if (r.baby || circle.members.contains(r.id) || ErrandPools.get(r.profession) == null) continue;
-			net.minecraft.world.entity.npc.villager.Villager villager = Villages.loaded(level, r.id);
+			Villager villager = Villages.loaded(level, r.id);
 			if (villager == null) continue;
 			var memory = villager.getGossips().getGossipEntries().get(state.id);
 			if (memory == null) continue;
-			if (memory.getInt(net.minecraft.world.entity.ai.gossip.GossipType.MAJOR_POSITIVE) <= 0
-				&& memory.getInt(net.minecraft.world.entity.ai.gossip.GossipType.TRADING) < REMEMBERED_TRADING) continue;
+			if (memory.getInt(GossipType.MAJOR_POSITIVE) <= 0
+				&& memory.getInt(GossipType.TRADING) < REMEMBERED_TRADING) continue;
 			circle.members.add(r.id);
 			tell(server, state, r.id, "trust.known");
 			added = true;
@@ -220,10 +226,10 @@ public final class Trust {
 	}
 
 	/**
-	 * A villager went up a trade level after trading with this player (user, 2026-10-14): it wants to talk to them too.
+	 * A villager went up a trade level after trading with this player: it wants to talk to them too.
 	 * It joins the circle on top of the places earned.
 	 */
-	public static void tradedUp(ServerPlayer player, net.minecraft.world.entity.npc.villager.Villager villager) {
+	public static void tradedUp(ServerPlayer player, Villager villager) {
 		if (!enabled() || !ErrandGenerator.givesErrands(villager)) return;
 		MinecraftServer server = player.level().getServer();
 		Optional<VillageRegistry.Village> village = VillageRegistry.get(server).villageOf(villager.getUUID());
@@ -282,15 +288,15 @@ public final class Trust {
 
 	// ---- saving ----
 
-	public static net.minecraft.nbt.CompoundTag save(Circle circle) {
-		net.minecraft.nbt.CompoundTag t = new net.minecraft.nbt.CompoundTag();
-		net.minecraft.nbt.ListTag members = new net.minecraft.nbt.ListTag();
-		circle.members.forEach(id -> members.add(net.minecraft.nbt.StringTag.valueOf(id.toString())));
+	public static CompoundTag save(Circle circle) {
+		CompoundTag t = new CompoundTag();
+		ListTag members = new ListTag();
+		circle.members.forEach(id -> members.add(StringTag.valueOf(id.toString())));
 		t.put("members", members);
-		net.minecraft.nbt.CompoundTag lost = new net.minecraft.nbt.CompoundTag();
+		CompoundTag lost = new CompoundTag();
 		circle.lost.forEach((id, day) -> lost.putLong(id.toString(), day));
 		t.put("lost", lost);
-		net.minecraft.nbt.CompoundTag zombies = new net.minecraft.nbt.CompoundTag();
+		CompoundTag zombies = new CompoundTag();
 		circle.zombies.forEach((id, day) -> zombies.putLong(id.toString(), day));
 		t.put("zombies", zombies);
 		t.putInt("bonus", circle.bonus);
@@ -298,12 +304,12 @@ public final class Trust {
 		return t;
 	}
 
-	public static Circle load(net.minecraft.nbt.CompoundTag t) {
+	public static Circle load(CompoundTag t) {
 		Circle circle = new Circle();
 		t.getListOrEmpty("members").forEach(tag -> tag.asString().ifPresent(s -> parse(s).ifPresent(circle.members::add)));
-		net.minecraft.nbt.CompoundTag lost = t.getCompoundOrEmpty("lost");
+		CompoundTag lost = t.getCompoundOrEmpty("lost");
 		for (String k : lost.keySet()) parse(k).ifPresent(id -> circle.lost.put(id, lost.getLongOr(k, 0L)));
-		net.minecraft.nbt.CompoundTag zombies = t.getCompoundOrEmpty("zombies");
+		CompoundTag zombies = t.getCompoundOrEmpty("zombies");
 		for (String k : zombies.keySet()) parse(k).ifPresent(id -> circle.zombies.put(id, zombies.getLongOr(k, 0L)));
 		circle.bonus = t.getIntOr("bonus", 0);
 		circle.granted = t.getIntOr("granted", circle.members.size());

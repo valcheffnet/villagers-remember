@@ -19,11 +19,16 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.valcheff.villagersremember.mixin.VillagerInvoker;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -170,7 +175,7 @@ public final class AdminCommands {
 		MutableComponent out = Component.literal("Trust of " + target.getScoreboardName() + " in #" + village.id + ": "
 			+ circle.members.size() + " in the circle, room for " + Math.min(Trust.earned(state, village, circle), 999)
 			+ (Trust.enabled() ? "" : " (gradual trust is off)"));
-		for (java.util.UUID id : circle.members) {
+		for (UUID id : circle.members) {
 			String name = ErrandText.villagerName(target, id, Villages.loaded(server.overworld(), id));
 			String how = circle.lost.containsKey(id) ? " (died)" : circle.zombies.containsKey(id) ? " (zombie)" : "";
 			out.append("\n - " + name + ", " + Reputation.villager(state, id) + " points" + how);
@@ -319,7 +324,7 @@ public final class AdminCommands {
 			}
 			withTrade.merge(name.toLowerCase(Locale.ROOT), 1, Integer::sum);
 		}
-		Map<String, VillageRegistry.Resident> out = new java.util.LinkedHashMap<>();
+		Map<String, VillageRegistry.Resident> out = new LinkedHashMap<>();
 		for (VillageRegistry.Resident r : village.residents.values()) {
 			String name = names.get(r);
 			if (withTrade.get(name.toLowerCase(Locale.ROOT)) > 1) name = name + "." + r.id.toString().substring(0, 4);
@@ -516,7 +521,7 @@ public final class AdminCommands {
 		return all.size();
 	}
 
-	private static net.minecraft.world.entity.npc.villager.Villager namedVillager(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+	private static Villager namedVillager(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
 		ServerPlayer viewer = playerOrSelf(ctx);
 		VillageRegistry.Village village = village(ctx);
 		VillageRegistry.Resident r = villager(ctx, viewer, village);
@@ -529,10 +534,10 @@ public final class AdminCommands {
 		return entity;
 	}
 
-	private static net.minecraft.world.entity.npc.villager.Villager nearestVillager(CommandSourceStack source) throws CommandSyntaxException {
+	private static Villager nearestVillager(CommandSourceStack source) throws CommandSyntaxException {
 		var pos = source.getPosition();
-		var list = source.getLevel().getEntitiesOfClass(net.minecraft.world.entity.npc.villager.Villager.class,
-			new net.minecraft.world.phys.AABB(pos, pos).inflate(8), v -> v.isAlive());
+		var list = source.getLevel().getEntitiesOfClass(Villager.class,
+			new AABB(pos, pos).inflate(8), v -> v.isAlive());
 		return list.stream().min(Comparator.comparingDouble(v -> v.distanceToSqr(pos)))
 			.orElseThrow(() -> new SimpleCommandExceptionType(Component.literal("No villager within 8 blocks")).create());
 	}
@@ -541,7 +546,7 @@ public final class AdminCommands {
 	 * Raises a villager's trade level the way trading does: the next level with its new trades, and the experience
 	 * of that level. {@code /data merge ... {VillagerData:{level:5}}} only changes the number and adds no trades.
 	 */
-	private static int levelUp(CommandSourceStack source, net.minecraft.world.entity.npc.villager.Villager villager, int levels) {
+	private static int levelUp(CommandSourceStack source, Villager villager, int levels) {
 		var data = villager.getVillagerData();
 		String profession = ErrandGenerator.professionId(data);
 		if (profession.equals("minecraft:none") || profession.equals("minecraft:nitwit")) {
@@ -549,9 +554,9 @@ public final class AdminCommands {
 			return 0;
 		}
 		int done = 0;
-		while (done < levels && net.minecraft.world.entity.npc.villager.VillagerData.canLevelUp(villager.getVillagerData().level())) {
-			((net.valcheff.villagersremember.mixin.VillagerInvoker) villager).villagersremember$increaseMerchantCareer(source.getLevel());
-			villager.setVillagerXp(net.minecraft.world.entity.npc.villager.VillagerData.getMinXpPerLevel(villager.getVillagerData().level()));
+		while (done < levels && VillagerData.canLevelUp(villager.getVillagerData().level())) {
+			((VillagerInvoker) villager).villagersremember$increaseMerchantCareer(source.getLevel());
+			villager.setVillagerXp(VillagerData.getMinXpPerLevel(villager.getVillagerData().level()));
 			done++;
 		}
 		int raised = done;
