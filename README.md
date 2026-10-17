@@ -45,7 +45,7 @@ Rewards are tuned to the work. Every errand pays more than the same goods would 
 
 ## Talking to villagers
 
-Right-click a villager and they greet you the way your standing deserves. "Yes? Do I know you?" from a stranger, "My friend! Come, sit." from someone you have helped for weeks. From there you pick Errands or Trade. Sneak + right-click still trades straight away, so trading halls stay one click.
+Right-click a villager and they greet you the way your standing deserves. "Yes? Do I know you?" from a stranger, "My friend! Come, sit." from someone you have helped for weeks. From there you pick Tasks or Trade. Sneak + right-click still trades straight away, so trading halls stay one click.
 
 Every villager with a job offers a few errands a day, more as their trade level grows. Each errand is one or more of 21 kinds of tasks: craft, smelt, mine, harvest, fish, breed, tame, kill, brew, enchant, visit a structure or a biome, and so on. Harvesting counts whether you break the crop or pick it with a right-click mod like RightClickHarvest. Taking an item to a villager is counted apart from making it, so you can't just buy what was asked.
 

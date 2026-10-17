@@ -22,7 +22,8 @@ This is not an open source license. The source code is public so you can read it
 
 The mod is provided "as is", without warranty of any kind. The author is not liable for any damage or data loss caused by using it.
 
-For permission requests or questions, open an issue at https://github.com/valcheffnet/villagers-remember/issues
+For permission requests or questions, ask on Discord (https://discord.com/invite/X6yxJpk9Fz) or open an issue at
+https://github.com/valcheffnet/villagers-remember/issues
 
 ## Third-party content
 
