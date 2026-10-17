@@ -1246,7 +1246,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (state.villageRep.containsKey(old) || state.villageRep.getOrDefault(key, 0) != 999) return "old key not moved: " + state.villageRep;
 			if (net.valcheff.villagersremember.Treasury.entries(player, state).size() != 1) return "list has " + net.valcheff.villagersremember.Treasury.entries(player, state).size();
 			state.villageRep.remove(key);
-			// 40 best friends in a Hero village: about 36 a day (TIERS.md section 6).
+			// The formula alone: 40 residents with a share of 1.2 in a Hero village add up to about 36.
 			double forty = net.valcheff.villagersremember.Treasury.formula(java.util.Collections.nCopies(40, 1.2), 4);
 			if (Math.abs(forty - 35.7) > 0.3) return "40 villagers give " + forty;
 			if (Math.abs(net.valcheff.villagersremember.Treasury.networkBonus(2) - 0.10) > 1e-9) return "network bonus for 2";

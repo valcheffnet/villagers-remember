@@ -517,7 +517,7 @@ ORDERS = {
     "picnic": [("craft", "cookie", 8, 0.05), ("deliver", "apple", 4, 0.3), ("craft", "cake", 1, 0.3)],
 }
 
-# ---- what a task takes, for the audit table (docs/TASK_AUDIT.md, in Bulgarian) ----
+# ---- what a task takes, for the audit table (notes/TASK_AUDIT.md, in Bulgarian) ----
 NEED = {
     "wheat": "от фермата", "potato": "от фермата", "carrot": "от фермата", "beetroot": "от фермата",
     "sugar_cane": "ферма за тръстика", "pumpkin": "от фермата", "melon": "от фермата", "kelp": "ферма за водорасли",
@@ -792,7 +792,7 @@ def check(prof, task, items, entities):
 
 
 # ---- the audit table: every task, what it takes, minutes, pay ----
-AUDIT = os.path.join(os.path.dirname(__file__), "..", "docs", "TASK_AUDIT.md")
+AUDIT = os.path.join(os.path.dirname(__file__), "..", "notes", "TASK_AUDIT.md")
 BG_NAMES = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "villagersremember", "vanilla_names", "bg_bg.json")
 VERB = {"deliver": "донеси", "craft": "направи", "smelt": "изпечи", "station": "изсечи", "kill": "убий", "catch": "хвани",
         "breed": "развъди", "tame": "опитоми", "shear": "остражи", "harvest": "ожъни", "mine": "изкопай", "plant": "посади",

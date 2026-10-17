@@ -45,11 +45,5 @@ run/
 .gradle/
 __pycache__/
 
-# internal notes (not for the public repository)
-CLICKUP_QUEUE.md
-PROGRESS.md
-PUBLISHING.md
-TEST_SCENARIOS.md
-docs/TASK_AUDIT.md
-HEADS_PERMISSION_EMAIL.md
-docs/permissions/
+# notes
+notes/
