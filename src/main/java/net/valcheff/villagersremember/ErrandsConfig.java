@@ -138,7 +138,7 @@ public final class ErrandsConfig {
 	public int killPenalty = 25;
 
 	public static void load() {
-		// The mod was called Village Errands before 1.0.0 went public; keep a config made under the old name.
+		// The mod was called Village Errands before its first public version; keep a config made under the old name.
 		Path old = FILE.resolveSibling("villageerrands.json");
 		if (!Files.exists(FILE) && Files.exists(old)) {
 			try {

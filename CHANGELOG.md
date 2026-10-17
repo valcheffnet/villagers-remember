@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.0.0
+## 0.13.0-beta
 
-First release, for Minecraft 26.3 on Fabric. Server-side: players join with a vanilla client.
+First public beta, for Minecraft 26.3 on Fabric. Server-side: players join with a vanilla client.
 
 - Errands from every villager with a job, and the whole village's on the bell board. 21 kinds of tasks, orders for several goods, reforging for the smiths.
 - Right-click greets you by your standing, with Errands and Trade; sneak + right-click trades.

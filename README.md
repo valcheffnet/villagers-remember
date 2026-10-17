@@ -10,6 +10,33 @@ Villagers in vanilla Minecraft trade and that's it. With this mod they ask you f
 
 The whole mod runs on the server. Players join with a normal vanilla client and install nothing. The screens are vanilla dialogs, the markers are vanilla text displays, and the names come in each player's own language.
 
+## Screenshots
+
+<p align="center"><img src="art/screenshots/village-tracker.jpg" alt="A village with the errand tracker" width="100%"><br><em>A village, with your errands tracked on the right.</em></p>
+
+<table>
+<tr>
+<td width="50%"><img src="art/screenshots/greeting-best-friend.jpg" alt="Greeting from a best friend"><br><em>Boris knows you well. Warm words and 16% off.</em></td>
+<td width="50%"><img src="art/screenshots/greeting-stranger.jpg" alt="Greeting from a stranger"><br><em>Vela has never met you.</em></td>
+</tr>
+<tr>
+<td><img src="art/screenshots/errands.jpg" alt="A villager's errands"><br><em>A Master weaponsmith's errands, with this week's contract on top.</em></td>
+<td><img src="art/screenshots/errand-reward.jpg" alt="An errand and its reward"><br><em>Kalcho wants two chestplates and gives one back enchanted.</em></td>
+</tr>
+<tr>
+<td><img src="art/screenshots/contract.jpg" alt="A weekly contract"><br><em>Weekly contracts are harder and pay more.</em></td>
+<td><img src="art/screenshots/bell-board.jpg" alt="The village board at the bell"><br><em>Ring the bell for the village board.</em></td>
+</tr>
+<tr>
+<td><img src="art/screenshots/residents.jpg" alt="Residents of the village"><br><em>Everyone in the village and how well they know you.</em></td>
+<td><img src="art/screenshots/village-order.jpg" alt="A village order"><br><em>A village order: 256 logs, brought by anyone on the server.</em></td>
+</tr>
+<tr>
+<td><img src="art/screenshots/treasury.jpg" alt="The treasury"><br><em>Villages that trust you put emeralds aside for you.</em></td>
+<td><img src="art/screenshots/settings.jpg" alt="The settings screen"><br><em>Admins with the mod on their client edit the server's settings here.</em></td>
+</tr>
+</table>
+
 ## What makes it different
 
 Most quest mods give a village a board or a quest master, and every player has to install the mod. Here each villager is a person with their own memory of you. Stoyan the farmer may be your best friend while the butcher next door has never heard of you. That trust shows up where you already look: the prices in the trading screen go down for friends and up for people who hurt the village.
