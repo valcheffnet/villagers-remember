@@ -1,0 +1,93 @@
+plugins {
+	id 'java-library'
+	id 'net.neoforged.moddev' version '2.0.148'
+}
+
+// The NeoForge build shares the mod's code with the Fabric build in the parent folder: everything under src/main and
+// src/client except the Fabric entry points, plus the NeoForge entry points here. Run it from this folder.
+def root = file('..')
+def rootProps = new Properties()
+file('../gradle.properties').withInputStream { rootProps.load(it) }
+
+version = rootProps.getProperty('version')
+group = 'net.valcheff'
+
+base {
+	archivesName = 'villagers-remember-neoforge'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+sourceSets.main {
+	java {
+		srcDirs = ['src/main/java', "${root}/src/main/java", "${root}/src/client/java"]
+		exclude '**/fabric/**'
+	}
+	resources {
+		srcDirs = ["${root}/src/main/resources"]
+		exclude 'fabric.mod.json'
+	}
+}
+
+repositories {
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = 'Modrinth'
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter { includeGroup 'maven.modrinth' }
+	}
+}
+
+dependencies {
+	// Optional: Waystones (BlayTheNinth) names village waystones after the village. Compiled against, never bundled.
+	compileOnly "maven.modrinth:waystones:${project.waystones_version}"
+	compileOnly "maven.modrinth:balm:${project.balm_version}"
+}
+
+neoForge {
+	version = project.neo_version
+
+	runs {
+		client {
+			client()
+		}
+		server {
+			server()
+			programArgument '--nogui'
+		}
+	}
+
+	mods {
+		villagersremember {
+			sourceSet(sourceSets.main)
+		}
+	}
+}
+
+var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+	var replaceProperties = [
+		minecraft_version_range: minecraft_version_range,
+		neo_version            : neo_version,
+		mod_version            : project.version,
+	]
+	inputs.properties replaceProperties
+	expand replaceProperties
+	from 'src/main/templates'
+	into 'build/generated/sources/modMetadata'
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+processResources {
+	filesMatching('villagersremember.mixins.json') {
+		expand 'java_version': '25'
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.release = 25
+}

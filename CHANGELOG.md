@@ -13,3 +13,4 @@ First public beta for Minecraft 26.3 on Fabric. The mod runs on the server, and 
 - The mod has its own advancement tab and a chronicle book. Clients with the mod get a settings screen, where admins can change the server's settings.
 - Works with Waystones (BlayTheNinth's mod or KawaMood's datapack): village waystones take the name of their village.
 - English and Bulgarian.
+- On Fabric and on NeoForge 26.3, as two separate files with the same features.

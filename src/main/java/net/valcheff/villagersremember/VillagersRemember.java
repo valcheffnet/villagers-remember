@@ -1,19 +1,10 @@
 package net.valcheff.villagersremember;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.storage.LevelResource;
 import net.valcheff.villagersremember.ui.DialogActions;
 import net.valcheff.villagersremember.ui.Icons;
@@ -29,7 +20,7 @@ import java.nio.file.Path;
  * Everything runs on the logical server and uses vanilla menus, items and packets only,
  * so players with an unmodded client can take part.
  */
-public final class VillagersRemember implements ModInitializer {
+public final class VillagersRemember {
 	public static final String MOD_ID = "villagersremember";
 	public static final Logger LOG = LoggerFactory.getLogger("Villagers Remember");
 
@@ -58,59 +49,61 @@ public final class VillagersRemember implements ModInitializer {
 		}
 	}
 
-	@Override
-	public void onInitialize() {
+	/** Loads everything that does not need a world. The loader's entry point calls it first. */
+	public static void init() {
 		ErrandsConfig.load();
 		Lang.load();
 		VillagerHeads.load();
 		Icons.load();
 		TextWidth.load();
-		ConfigSync.register();
 		BlayWaystones.register();
+	}
 
-		ServerLifecycleEvents.SERVER_STARTING.register(s -> {
-			server = s;
-			moveOldData(s);
-		});
-		ServerLifecycleEvents.SERVER_STARTED.register(ErrandPools::reload);
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> {
-			if (success) ErrandPools.reload(server);
-		});
-		ServerLifecycleEvents.SERVER_STOPPED.register(s -> {
-			ErrandGenerator.clearCache();
-			server = null;
-		});
+	public static void serverStarting(MinecraftServer s) {
+		server = s;
+		moveOldData(s);
+	}
 
-		UseEntityCallback.EVENT.register(Interactions::onUseEntity);
-		// Folded charts from errands unfold when used.
-		UseItemCallback.EVENT.register((player, level, hand) ->
-			!level.isClientSide() && player instanceof ServerPlayer sp ? Maps.use(sp, hand)
-				: InteractionResult.PASS);
-		UseBlockCallback.EVENT.register(Interactions::onUseBlock);
-		ServerLivingEntityEvents.AFTER_DEATH.register(Tracking::onDeath);
-		ServerLivingEntityEvents.AFTER_DAMAGE.register(Tracking::onDamage);
-		ServerLivingEntityEvents.MOB_CONVERSION.register((previous, converted, params) -> Tracking.onConversion(previous, converted));
-		ServerTickEvents.END_SERVER_TICK.register(VillageRegistry::tick);
-		ServerTickEvents.END_SERVER_TICK.register(Hud::tick);
-		ServerTickEvents.END_SERVER_TICK.register(ActionHooks::tick);
-		ServerTickEvents.END_SERVER_TICK.register(ActionHooks::afterUse);
-		ServerTickEvents.END_SERVER_TICK.register(GroupOrder::tick);
-		ServerTickEvents.END_SERVER_TICK.register(Waystones::tick);
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, s) -> {
-			var player = handler.getPlayer();
-			Fame.updateTeam(player);
-			Patron.onJoin(player);
-			GroupOrder.deliverMail(player);
-			Milestones.check(player);
-		});
-		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-			Hud.forget(handler.getPlayer().getUUID());
-			DialogActions.forget(handler.getPlayer().getUUID());
-		});
+	public static void serverStarted(MinecraftServer s) {
+		ErrandPools.reload(s);
+	}
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-			ErrandsCommand.register(dispatcher));
+	/** Data packs were reloaded (/reload). */
+	public static void dataReloaded(MinecraftServer s) {
+		ErrandPools.reload(s);
+	}
 
-		LOG.info("Villagers Remember loaded");
+	public static void serverStopped(MinecraftServer s) {
+		ErrandGenerator.clearCache();
+		server = null;
+	}
+
+	/** The end of every server tick, in this order. */
+	public static void endTick(MinecraftServer s) {
+		VillageRegistry.tick(s);
+		Hud.tick(s);
+		ActionHooks.tick(s);
+		ActionHooks.afterUse(s);
+		GroupOrder.tick(s);
+		Waystones.tick(s);
+	}
+
+	public static void playerJoined(ServerPlayer player) {
+		Fame.updateTeam(player);
+		Patron.onJoin(player);
+		GroupOrder.deliverMail(player);
+		Milestones.check(player);
+	}
+
+	public static void playerLeft(ServerPlayer player) {
+		Hud.forget(player.getUUID());
+		DialogActions.forget(player.getUUID());
+	}
+
+	public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+		ErrandsCommand.register(dispatcher);
+	}
+
+	private VillagersRemember() {
 	}
 }

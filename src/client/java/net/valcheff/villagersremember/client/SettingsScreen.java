@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -27,6 +25,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.valcheff.villagersremember.ConfigSync;
 import net.valcheff.villagersremember.ErrandsConfig;
+import net.valcheff.villagersremember.Platform;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -125,13 +124,13 @@ public class SettingsScreen extends Screen {
 
 	private void start() {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.getConnection() != null && ClientPlayNetworking.canSend(ConfigSync.Request.TYPE)) {
+		if (mc.getConnection() != null && ClientPlatform.get().canSend(ConfigSync.Request.TYPE)) {
 			mode = Mode.LOADING;
-			ClientPlayNetworking.send(new ConfigSync.Request());
+			ClientPlatform.get().send(new ConfigSync.Request());
 		} else {
 			mode = Mode.LOCAL;
 			otherServer = mc.getConnection() != null;
-			waystones = FabricLoader.getInstance().isModLoaded("waystones");
+			waystones = Platform.get().isModLoaded("waystones");
 			values = JsonParser.parseString(ErrandsConfig.toJson(ErrandsConfig.INSTANCE)).getAsJsonObject();
 		}
 	}
@@ -171,7 +170,7 @@ public class SettingsScreen extends Screen {
 		if (mode == Mode.SERVER) {
 			saving = true;
 			updateSaveButton();
-			ClientPlayNetworking.send(new ConfigSync.Update(values.toString()));
+			ClientPlatform.get().send(new ConfigSync.Update(values.toString()));
 		} else if (mode == Mode.LOCAL) {
 			ErrandsConfig next = ErrandsConfig.fromJson(values.toString());
 			if (next != null) ErrandsConfig.replace(next);

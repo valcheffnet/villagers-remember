@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Translates game events (from Fabric events and the mixins) into {@link Actions#record} calls. */
+/** Translates game events (from the loader's events and the mixins) into {@link Actions#record} calls. */
 public final class ActionHooks {
 	private static final int VISIT_INTERVAL = 40;
 

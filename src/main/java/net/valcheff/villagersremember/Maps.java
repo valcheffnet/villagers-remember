@@ -1,7 +1,6 @@
 package net.valcheff.villagersremember;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -90,7 +89,7 @@ public final class Maps {
 		String look = ErrandsConfig.INSTANCE.chartLook;
 		if ("dnt".equalsIgnoreCase(look)) return true;
 		if ("globe".equalsIgnoreCase(look)) return false;
-		return FabricLoader.getInstance().isModLoaded("mr_dungeons_andtaverns");
+		return Platform.get().isModLoaded("mr_dungeons_andtaverns");
 	}
 
 	private static CompoundTag chartTag(CustomData data) {

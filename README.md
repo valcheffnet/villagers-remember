@@ -98,7 +98,12 @@ Villagers who trust you put a share of their work aside for you every day. The t
 
 ## Install
 
-Fabric Loader 0.19 or newer and Fabric API, Minecraft 26.3. Drop the jar into the server's `mods` folder. In single player it works the same when installed on the client.
+Minecraft 26.3, on Fabric or NeoForge. Each version comes as two files, so take the one for your server's loader:
+
+- **Fabric:** `villagers-remember-fabric-<version>.jar`, with Fabric Loader 0.19 or newer and Fabric API.
+- **NeoForge:** `villagers-remember-neoforge-<version>.jar`, with NeoForge 26.3. Nothing else is needed.
+
+Drop the jar into the server's `mods` folder. Players join with a vanilla client either way. In single player it works the same when installed on the client.
 
 ## Configuration
 

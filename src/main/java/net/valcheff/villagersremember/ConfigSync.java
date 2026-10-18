@@ -3,8 +3,6 @@ package net.valcheff.villagersremember;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -94,22 +92,18 @@ public final class ConfigSync {
 		}
 	}
 
-	public static void register() {
-		PayloadTypeRegistry.serverboundPlay().register(Request.TYPE, Request.CODEC);
-		PayloadTypeRegistry.serverboundPlay().register(Update.TYPE, Update.CODEC);
-		PayloadTypeRegistry.clientboundPlay().register(Settings.TYPE, Settings.CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(Request.TYPE, (payload, context) -> {
-			ServerPlayer player = context.player();
-			boolean allowed = canEdit(player);
-			context.responseSender().sendPacket(new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, false, Waystones.available(context.server())));
-		});
-		ServerPlayNetworking.registerGlobalReceiver(Update.TYPE, (payload, context) -> {
-			ServerPlayer player = context.player();
-			boolean saved = apply(player.getScoreboardName(), canEdit(player), payload.json());
-			boolean allowed = canEdit(player);
-			context.responseSender().sendPacket(new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, saved, Waystones.available(context.server())));
-			if (saved) player.sendSystemMessage(Lang.tr(player, "config.saved").withStyle(ChatFormatting.GREEN));
-		});
+	/** The answer to a client asking for the settings. */
+	public static Settings answerRequest(ServerPlayer player) {
+		boolean allowed = canEdit(player);
+		return new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, false, Waystones.available(player.level().getServer()));
+	}
+
+	/** Uses a client's changed settings if the player may change them, and answers with what the server has now. */
+	public static Settings answerUpdate(ServerPlayer player, Update payload) {
+		boolean saved = apply(player.getScoreboardName(), canEdit(player), payload.json());
+		boolean allowed = canEdit(player);
+		if (saved) player.sendSystemMessage(Lang.tr(player, "config.saved").withStyle(ChatFormatting.GREEN));
+		return new Settings(allowed ? ErrandsConfig.toJson(ErrandsConfig.INSTANCE) : "", allowed, saved, Waystones.available(player.level().getServer()));
 	}
 
 	/** Level 3, like the operator commands, or the owner of a single player world (cheats on or not). */

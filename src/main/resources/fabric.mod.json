@@ -17,13 +17,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.valcheff.villagersremember.VillagersRemember"
+			"net.valcheff.villagersremember.fabric.FabricEntry"
 		],
 		"client": [
-			"net.valcheff.villagersremember.client.VillagersRememberClient"
+			"net.valcheff.villagersremember.client.fabric.FabricClientEntry"
 		],
 		"modmenu": [
-			"net.valcheff.villagersremember.client.ModMenuIntegration"
+			"net.valcheff.villagersremember.client.fabric.ModMenuIntegration"
 		]
 	},
 	"mixins": [

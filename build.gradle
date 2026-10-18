@@ -3,7 +3,7 @@ plugins {
 }
 
 base {
-	archivesName = 'villagers-remember'
+	archivesName = 'villagers-remember-fabric'
 }
 
 repositories {

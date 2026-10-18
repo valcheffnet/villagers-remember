@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+issueTrackerURL="https://discord.com/invite/X6yxJpk9Fz"
+
+[[mods]]
+modId="villagersremember"
+version="${mod_version}"
+displayName="Villagers Remember"
+# The server runs everything: clients without the mod (or with another version) can join.
+displayTest="IGNORE_ALL_VERSION"
+displayURL="https://github.com/valcheffnet/villagers-remember"
+iconFile="assets/villagersremember/icon.png"
+authors="SasnycoN"
+description='''
+Villagers ask you for help: craft, hunt, fish, explore. Earn their trust, better prices, a share of their work and the title of patron. Server-side, works with vanilla clients.
+'''
+
+[[mixins]]
+config="villagersremember.mixins.json"
+
+[[dependencies.villagersremember]]
+modId="neoforge"
+type="required"
+versionRange="[${neo_version},)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.villagersremember]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.villagersremember]]
+modId="waystones"
+type="optional"
+versionRange="*"
+ordering="NONE"
+side="SERVER"

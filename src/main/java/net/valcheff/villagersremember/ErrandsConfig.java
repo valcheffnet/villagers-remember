@@ -2,7 +2,6 @@ package net.valcheff.villagersremember;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -15,7 +14,7 @@ import java.util.Locale;
 
 /** {@code config/villagersremember.json}. Missing keys keep their defaults; the file is rewritten with all keys. */
 public final class ErrandsConfig {
-	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("villagersremember.json");
+	private static final Path FILE = Platform.get().configDir().resolve("villagersremember.json");
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	public static ErrandsConfig INSTANCE = new ErrandsConfig();

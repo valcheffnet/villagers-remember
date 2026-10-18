@@ -1,6 +1,5 @@
 package net.valcheff.villagersremember;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 
 /**
@@ -9,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
  * If a later version of the mod changes what is used here, the support turns itself off and says so in the log.
  */
 public final class BlayWaystones {
-	public static final boolean LOADED = FabricLoader.getInstance().isModLoaded("waystones");
+	public static final boolean LOADED = Platform.get().isModLoaded("waystones");
 	private static boolean broken;
 
 	public static void register() {
