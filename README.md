@@ -107,7 +107,7 @@ Drop the jar into the server's `mods` folder. Players join with a vanilla client
 
 ## Configuration
 
-Players who install the mod on their client get a settings screen, from Mod Menu or with `/villagersremember`. On a server that runs the mod, admins (permission level 3) see and change the server's settings there; in single player the world's owner always can. Every change is written to the server log.
+Players who install the mod on their client get a settings screen: from Mod Menu on Fabric, from the Config button in the mod list on NeoForge, or with `/villagersremember`. On a server that runs the mod, admins (permission level 3) see and change the server's settings there; in single player the world's owner always can. Every change is written to the server log.
 
 The same settings live in `config/villagersremember.json`, created on first start, with a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villagersremember/ErrandsConfig.java)). Some of them:
 
