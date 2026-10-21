@@ -23,6 +23,7 @@ import net.minecraft.server.dialog.MultiActionDialog;
 import net.minecraft.server.dialog.action.StaticAction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +31,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.StonecutterMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -319,6 +323,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 					: "coal dropped " + coal + ", progress " + progress + ", line '" + line + "', title '" + title + "'";
 			});
 			check(mined.equals("ok"), "mine coal: " + mined);
+			String cut = sp.getServer().computeOnServer(server -> stonecutter(server, base));
+			check(cut.equals("ok"), "stonecutter: " + cut);
 			sp.getServer().runOnServer(server -> {
 				ServerPlayer player = player(server);
 				ServerLevel level = server.overworld();
@@ -1987,6 +1993,52 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			for (int i = 0; i < n; i++) if (wanted.test(offers.get(i))) return offers.get(i);
 		}
 		return null;
+	}
+
+	/**
+	 * Stone slabs from a real stonecutter menu: a shift-click of the result takes all five crafts (10 slabs) and counts
+	 * them, a normal click counts one craft (2 slabs), and neither is counted twice.
+	 */
+	private static String stonecutter(MinecraftServer server, BlockPos base) {
+		ServerPlayer player = player(server);
+		ServerLevel level = server.overworld();
+		Errand slabs = new Errand("test/0/4", UUID.randomUUID(), "minecraft:mason", "minecraft:plains", 1, 1, Optional.empty(),
+			Optional.empty(), List.of(new Objective(Objective.Type.STATION, "minecraft:stone_slab", false, 30, 0)), 1, 0, 1, Optional.empty(), 1);
+		if (!ErrandService.accept(player, slabs)) return "accept";
+		player.getInventory().clearContent();
+		BlockPos pos = base.offset(-3, 0, 3);
+		level.setBlockAndUpdate(pos, Blocks.STONECUTTER.defaultBlockState());
+		player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new StonecutterMenu(id, inventory, ContainerLevelAccess.create(level, pos)),
+			Component.empty()));
+		String result;
+		if (!(player.containerMenu instanceof StonecutterMenu menu)) {
+			result = "no stonecutter menu";
+		} else {
+			menu.getSlot(StonecutterMenu.INPUT_SLOT).set(new ItemStack(Items.STONE, 5));
+			for (int i = 0; i < menu.getNumberOfVisibleRecipes() && !menu.getSlot(StonecutterMenu.RESULT_SLOT).getItem().is(Items.STONE_SLAB); i++) {
+				menu.clickMenuButton(player, i);
+			}
+			if (!menu.getSlot(StonecutterMenu.RESULT_SLOT).getItem().is(Items.STONE_SLAB)) {
+				result = "no slab recipe";
+			} else {
+				int recipe = menu.getSelectedRecipeIndex();
+				menu.clicked(StonecutterMenu.RESULT_SLOT, 0, ContainerInput.QUICK_MOVE, player);
+				int shifted = state(server).find(slabs.id()).progress[0];
+				int inInventory = player.getInventory().countItem(Items.STONE_SLAB);
+				menu.getSlot(StonecutterMenu.INPUT_SLOT).set(new ItemStack(Items.STONE, 1));
+				menu.clickMenuButton(player, recipe);
+				menu.clicked(StonecutterMenu.RESULT_SLOT, 0, ContainerInput.PICKUP, player);
+				int clicked = state(server).find(slabs.id()).progress[0];
+				menu.setCarried(ItemStack.EMPTY);
+				result = shifted == 10 && inInventory == 10 && clicked == 12 ? "ok"
+					: "shift-click " + shifted + " (" + inInventory + " slabs in the inventory), after a click " + clicked;
+			}
+		}
+		player.closeContainer();
+		player.getInventory().clearContent();
+		level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+		ErrandService.abandon(player, slabs.id());
+		return result;
 	}
 
 	/** Crafting as the game reports it: the result taken from the player's own 2x2 grid. */
