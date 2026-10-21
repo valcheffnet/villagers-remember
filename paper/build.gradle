@@ -1,0 +1,75 @@
+plugins {
+	id 'java'
+	id 'io.papermc.paperweight.userdev' version '2.0.0-beta.24'
+}
+
+// The Paper build shares the mod's code with the Fabric build in the parent folder: everything under src/main except
+// the Fabric entry point, the mixins and the mixin-backed VanillaAccess, plus the Paper plugin here. The mod's data
+// folder goes into the jar as a data pack that the plugin registers at bootstrap. Run it from this folder.
+def root = file('..')
+def rootProps = new Properties()
+file('../gradle.properties').withInputStream { rootProps.load(it) }
+
+version = rootProps.getProperty('version')
+group = 'net.valcheff'
+
+base {
+	archivesName = 'villagers-remember-paper'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+sourceSets.main {
+	java {
+		srcDirs = ['src/main/java', "${root}/src/main/java"]
+		exclude '**/fabric/**', '**/mixin/**'
+		// The Paper copy in src/main/java here takes its place.
+		def sharedAccess = file('../src/main/java/net/valcheff/villagersremember/VanillaAccess.java').canonicalPath
+		exclude { it.file.canonicalPath == sharedAccess }
+	}
+	resources {
+		srcDirs = ['src/main/resources', "${root}/src/main/resources"]
+		exclude 'fabric.mod.json', 'villagersremember.mixins.json', 'data/**'
+	}
+}
+
+repositories {
+	maven {
+		name = 'PaperMC'
+		url = 'https://repo.papermc.io/repository/maven-public/'
+	}
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = 'Modrinth'
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter { includeGroup 'maven.modrinth' }
+	}
+}
+
+dependencies {
+	paperweight.paperDevBundle(project.paper_dev_bundle)
+	// Only so the shared Waystones support compiles; it stays off on Paper, where that mod does not exist.
+	compileOnly "maven.modrinth:waystones:${project.waystones_version}"
+	compileOnly "maven.modrinth:balm:${project.balm_version}"
+}
+
+processResources {
+	inputs.property 'version', version
+	filesMatching('paper-plugin.yml') {
+		expand version: version
+	}
+	into('datapack') {
+		from 'src/main/datapack'
+		from("${root}/src/main/resources") {
+			include 'data/**'
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.release = 25
+}

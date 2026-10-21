@@ -1,0 +1,8 @@
+name: VillagersRemember
+version: '${version}'
+main: net.valcheff.villagersremember.paper.PaperPlugin
+bootstrapper: net.valcheff.villagersremember.paper.PaperBootstrap
+api-version: '26.3'
+description: Villagers ask you for help. Earn their trust, better prices, a share of their work and the title of patron. Works with vanilla clients.
+authors: [SasnycoN]
+website: https://github.com/valcheffnet/villagers-remember
