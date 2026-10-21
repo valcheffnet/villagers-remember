@@ -23,7 +23,6 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.valcheff.villagersremember.mixin.VillagerInvoker;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -555,7 +554,7 @@ public final class AdminCommands {
 		}
 		int done = 0;
 		while (done < levels && VillagerData.canLevelUp(villager.getVillagerData().level())) {
-			((VillagerInvoker) villager).villagersremember$increaseMerchantCareer(source.getLevel());
+			VanillaAccess.increaseMerchantCareer(villager, source.getLevel());
 			villager.setVillagerXp(VillagerData.getMinXpPerLevel(villager.getVillagerData().level()));
 			done++;
 		}

@@ -49,10 +49,10 @@ import net.valcheff.villagersremember.Reputation;
 import net.valcheff.villagersremember.TopRewards;
 import net.valcheff.villagersremember.Treasury;
 import net.valcheff.villagersremember.Trust;
+import net.valcheff.villagersremember.VanillaAccess;
 import net.valcheff.villagersremember.VillageRegistry;
 import net.valcheff.villagersremember.VillagerHeads;
 import net.valcheff.villagersremember.Villages;
-import net.valcheff.villagersremember.mixin.VillagerInvoker;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -179,7 +179,7 @@ public final class ErrandDialogs {
 			player.sendSystemMessage(Lang.tr(player, "trade.busy").withStyle(ChatFormatting.GRAY));
 			return;
 		}
-		((VillagerInvoker) villager).villagersremember$startTrading(player);
+		VanillaAccess.startTrading(villager, player);
 	}
 
 	public static void villager(ServerPlayer player, Villager villager) {

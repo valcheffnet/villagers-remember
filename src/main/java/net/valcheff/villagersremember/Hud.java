@@ -50,7 +50,6 @@ import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
-import net.valcheff.villagersremember.mixin.EntityNameAccessor;
 import net.valcheff.villagersremember.ui.Icons;
 
 import java.util.ArrayList;
@@ -327,8 +326,8 @@ public final class Hud {
 				// For Jade and similar mods: the villager's name, never drawn by vanilla (that is our nameplate's job:
 				// vanilla hides the name of a mob that carries a passenger, like our "!").
 				player.connection.send(new ClientboundSetEntityDataPacket(v.getId(), List.of(
-					SynchedEntityData.DataValue.create(EntityNameAccessor.villagersremember$customName(), Optional.of(name)),
-					SynchedEntityData.DataValue.create(EntityNameAccessor.villagersremember$customNameVisible(), false))));
+					SynchedEntityData.DataValue.create(VanillaAccess.customName(), Optional.of(name)),
+					SynchedEntityData.DataValue.create(VanillaAccess.customNameVisible(), false))));
 			}
 			if (!always) continue;
 			Integer plate = hud.nameplates.get(v.getId());
