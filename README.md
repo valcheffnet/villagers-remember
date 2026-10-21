@@ -4,6 +4,8 @@
 
 **Server-side. Vanilla clients welcome.**
 
+**Download 0.13.0-beta:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.0-beta/villagers-remember-0.13.0-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.0-beta/villagers-remember-neoforge-0.13.0-beta.jar). Older versions are on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
+
 **Questions, bugs or ideas? Come to [Discord](https://discord.com/invite/X6yxJpk9Fz).**
 
 Villagers in vanilla Minecraft trade and that's it. With this mod they ask you for help. The farmer needs 20 bread baked, the cleric wants zombies cleared off the road, the cartographer sends you to find a shipwreck. Do the job, bring what was asked, and get paid. Keep helping and every villager remembers it: they greet you by how well they know you, give you better work, sell to you cheaper and one day make you the patron of their village.
