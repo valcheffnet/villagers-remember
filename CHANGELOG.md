@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.13.1-beta
+
+- A Paper version: `villagers-remember-paper-0.13.1-beta.jar` runs as a plugin on Paper 26.3, with the same errands and prices as the mod. Paper has no settings screen, so admins edit `plugins/VillagersRemember/villagersremember.json` and run `/errands reload`.
+- Taking stonecutter results with shift-click now counts for errands like Make Stone Bricks. Before, only single clicks counted.
+
 ## 0.13.0-beta
 
 First public beta for Minecraft 26.3 on Fabric. The mod runs on the server, and players join with a vanilla client.

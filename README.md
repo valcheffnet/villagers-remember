@@ -4,7 +4,7 @@
 
 **Server-side. Vanilla clients welcome.**
 
-**Download 0.13.0-beta:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.0-beta/villagers-remember-0.13.0-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.0-beta/villagers-remember-neoforge-0.13.0-beta.jar). Older versions are on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
+**Download 0.13.1-beta:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.1-beta/villagers-remember-fabric-0.13.1-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.1-beta/villagers-remember-neoforge-0.13.1-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.1-beta/villagers-remember-paper-0.13.1-beta.jar). Older versions are on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
 
 **Questions, bugs or ideas? Come to [Discord](https://discord.com/invite/X6yxJpk9Fz).**
 
@@ -100,16 +100,17 @@ Villagers who trust you put a share of their work aside for you every day. The t
 
 ## Install
 
-Minecraft 26.3, on Fabric or NeoForge. Each version comes as two files, so take the one for your server's loader:
+Minecraft 26.3, on Fabric, NeoForge or Paper. Each version comes as three files, so take the one for your server:
 
 - **Fabric:** `villagers-remember-fabric-<version>.jar`, with Fabric Loader 0.19 or newer and Fabric API.
 - **NeoForge:** `villagers-remember-neoforge-<version>.jar`, with NeoForge 26.3. Nothing else is needed.
+- **Paper:** `villagers-remember-paper-<version>.jar`, a plugin for Paper 26.3.
 
-Drop the jar into the server's `mods` folder. Players join with a vanilla client either way. In single player it works the same when installed on the client.
+Drop the jar into the server's `mods` folder (`plugins` on Paper). Players join with a vanilla client either way. In single player it works the same when installed on the client.
 
 ## Configuration
 
-Players who install the mod on their client get a settings screen: from Mod Menu on Fabric, from the Config button in the mod list on NeoForge, or with `/villagersremember`. On a server that runs the mod, admins (permission level 3) see and change the server's settings there; in single player the world's owner always can. Every change is written to the server log.
+Players who install the mod on their client get a settings screen: from Mod Menu on Fabric, from the Config button in the mod list on NeoForge, or with `/villagersremember`. On a server that runs the mod, admins (permission level 3) see and change the server's settings there; in single player the world's owner always can. Every change is written to the server log. Paper has no settings screen: there the settings are in `plugins/VillagersRemember/villagersremember.json`, and `/errands reload` applies them.
 
 The same settings live in `config/villagersremember.json`, created on first start, with a comment in the code for each one ([ErrandsConfig.java](src/main/java/net/valcheff/villagersremember/ErrandsConfig.java)). Some of them:
 
