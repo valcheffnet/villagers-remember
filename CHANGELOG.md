@@ -10,7 +10,7 @@ First public beta for Minecraft 26.3 on Fabric. The mod runs on the server, and 
 - Errands pay experience and standing. Server owners can turn emerald rewards on with `/errands emeralds on`. Items come once, from trials of trust and from each profession's top reward.
 - Villages that trust you set emeralds aside in a treasury, and you collect them in your ender chest.
 - For the long run there are weekly contracts, legendary items, monthly village orders for the whole server, fame titles and one patron per village.
-- The mod has its own advancement tab and a chronicle book. Clients with the mod get a settings screen, where admins can change the server's settings.
+- The mod has its own advancement tab and a chronicle book. Clients with the mod get a settings screen, where admins can chnage the server's settings.
 - Works with Waystones (BlayTheNinth's mod or KawaMood's datapack): village waystones take the name of their village.
 - English and Bulgarian.
-- On Fabric and on NeoForge 26.3, as two separate files with the same features.
+- On Fabric and on NeoForge 26.3, as two seperate files with the same features.

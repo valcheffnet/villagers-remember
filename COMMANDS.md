@@ -47,7 +47,7 @@ The standing commands work for one player in one village.
 
 `show` prints the village standing and every resident with stars, points and tier.
 
-`villager` changes the standing with one villager. `village` changes only the village points. A village tier also needs enough working residents at that tier, so `village tier 3` alone can leave the player lower; the command says so when that happens.
+`villager` changes the standing with one villager. `village` chnages only the village points. A village tier also needs enough working residents at that tier, so `village tier 3` alone can leave the player lower; the command says so when that happens.
 
 `all tier` sets the village points and every working resident to that tier at once, which meets every requirement of the tier. `all reset` makes the player a stranger to the whole village again. `standing <player> <tier>` is the short form of `rep <player> here all tier <tier>`.
 
@@ -74,7 +74,7 @@ Tiers and the points they start at:
 | `/errands legend <player> <profession>` | Gives the profession's legendary item and records it, as the third contract would. |
 | `/errands trust <player> <village>` | The player's circle of trust there: who offers them errands, points, who died or is a zombie, and how many may. |
 | `/errands trust <player> <village> add <villager>` | Puts a villager into the circle. |
-| `/errands trust <player> <village> reset` | Starts the circle over (villagers the player already has points with come back in). |
+| `/errands trust <player> <village> reset` | Starts the circle over (villagers the player allready has points with come back in). |
 
 ### Naming villages and villagers
 

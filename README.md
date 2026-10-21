@@ -65,9 +65,9 @@ Each pack asks for more work. A first errand takes about five minutes for a play
 
 ## Rewards
 
-Daily errands pay experience and standing, sized by the work. Emerald rewards are off by default so that trading keeps its worth; a server that wants them runs `/errands emeralds on`. Then errands pay emeralds as well: a few for a five-minute job, 40 to 56 emeralds' worth for a half-hour one.
+Daily errands pay experience and standing, sized by the work. Emerald rewards are off by default so that trading keeps it's worth; a server that wants them runs `/errands emeralds on`. Then errands pay emeralds as well: a few for a five-minute job, 40 to 56 emeralds' worth for a half-hour one.
 
-Items come once. The first trial of trust of each tier with a profession gives one of its items: golden carrots, a treasure map, enchanted books. The first time a villager of a profession makes you their Best friend, you choose its top reward: Fortune or Silk Touch on a netherite pickaxe, Sharpness or Smite on the sword, a map to a mansion. Gear comes with Unbreaking III and Mending, and the enchantments stay a surprise until you hand the trial in. The smiths reforge each kind of piece once: forge a few iron swords, get one back enchanted, stone at the start up to netherite at the top.
+Items come once. The first trial of trust of each tier with a profession gives one of its items: golden carrots, a treasure map, enchanted books. The first time a villager of a profession makes you their Best friend, you choose its top reward: Fortune or Silk Touch on a netherite pickaxe, Sharpness or Smite on the sword, a map to a mansion. Gear comes with Unbreaking III and Mending, and the enchantments stay a surprise untill you hand the trial in. The smiths reforge each kind of piece once: forge a few iron swords, get one back enchanted, stone at the start up to netherite at the top.
 
 ## Prices
 

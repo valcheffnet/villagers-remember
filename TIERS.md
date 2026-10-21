@@ -104,7 +104,7 @@ on request.
 - A village keeps at most 504 game days of pay (a real week of play).
 - A Hero village of best friends gives about 0.6 emeralds a game day.
 
-The treasury pays whether errand emeralds are on or off.
+The treasury pays wether errand emeralds are on or off.
 
 ## 7. End game
 

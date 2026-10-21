@@ -1,62 +1,141 @@
 package net.valcheff.villagersremember.test;
 
+import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import net.blay09.mods.waystones.api.WaystoneKinds;
+import net.blay09.mods.waystones.api.WaystoneOrigin;
+import net.blay09.mods.waystones.api.WaystoneVisibility;
+import net.blay09.mods.waystones.core.PlayerWaystoneManager;
+import net.blay09.mods.waystones.core.WaystoneImpl;
+import net.blay09.mods.waystones.store.SavedDataWaystonesStore;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.client.gui.screens.dialog.DialogScreen;
 import net.minecraft.client.gui.screens.dialog.WaitingForResponseScreen;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dialog.ActionButton;
 import net.minecraft.server.dialog.Dialog;
 import net.minecraft.server.dialog.MultiActionDialog;
+import net.minecraft.server.dialog.action.Action;
 import net.minecraft.server.dialog.action.StaticAction;
+import net.minecraft.server.dialog.body.DialogBody;
+import net.minecraft.server.dialog.body.PlainMessage;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
+import net.minecraft.server.permissions.PermissionSet;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.ConversionParams;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.inventory.StonecutterMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.valcheff.villagersremember.ActionHooks;
+import net.valcheff.villagersremember.AdminCommands;
+import net.valcheff.villagersremember.BlayWaystones;
+import net.valcheff.villagersremember.ConfigSync;
 import net.valcheff.villagersremember.Errand;
 import net.valcheff.villagersremember.ErrandGenerator;
-import net.valcheff.villagersremember.ErrandText;
-import net.valcheff.villagersremember.Objective;
+import net.valcheff.villagersremember.ErrandPools;
 import net.valcheff.villagersremember.ErrandService;
+import net.valcheff.villagersremember.ErrandText;
 import net.valcheff.villagersremember.ErrandsConfig;
 import net.valcheff.villagersremember.ErrandsData;
+import net.valcheff.villagersremember.GroupOrder;
+import net.valcheff.villagersremember.Hud;
+import net.valcheff.villagersremember.Interactions;
+import net.valcheff.villagersremember.Lang;
+import net.valcheff.villagersremember.Legends;
+import net.valcheff.villagersremember.Maps;
+import net.valcheff.villagersremember.Milestones;
+import net.valcheff.villagersremember.Objective;
+import net.valcheff.villagersremember.Patron;
+import net.valcheff.villagersremember.Prices;
 import net.valcheff.villagersremember.Reputation;
+import net.valcheff.villagersremember.TopRewards;
+import net.valcheff.villagersremember.Treasury;
+import net.valcheff.villagersremember.Trust;
+import net.valcheff.villagersremember.VillageRegistry;
+import net.valcheff.villagersremember.VillagersRemember;
+import net.valcheff.villagersremember.Waystones;
+import net.valcheff.villagersremember.client.SettingsScreen;
+import net.valcheff.villagersremember.ui.ErrandDialogs;
+import net.valcheff.villagersremember.ui.Icons;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * End-to-end test with a real client, driving the dialogs the way a player does (pressing their buttons):
@@ -75,7 +154,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext context) {
 		// Silent: the test window opens on the user's desktop.
 		context.runOnClient(mc -> {
-			mc.options.getSoundSourceOptionInstance(net.minecraft.sounds.SoundSource.MASTER).set(0.0);
+			mc.options.getSoundSourceOptionInstance(SoundSource.MASTER).set(0.0);
 			mc.options.save();
 		});
 		// ERRANDS_TEST_QUICK=1: only open the window for a few seconds (to see where it goes), no test.
@@ -253,33 +332,33 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				BlockPos field = base.offset(6, 0, -6);
 				for (int i = 0; i < 2; i++) {
 					level.setBlockAndUpdate(field.offset(i, -1, 0), Blocks.FARMLAND.defaultBlockState());
-					level.setBlockAndUpdate(field.offset(i, 0, 0), ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(7));
+					level.setBlockAndUpdate(field.offset(i, 0, 0), ((CropBlock) Blocks.CARROTS).getStateForAge(7));
 				}
 				// One right-click picks both (a hoe's reach); the mod drops what they gave (2 and 3 carrots, seeds left
 				// out) and sets them back to age 0 in the same tick. The harvest counts the carrots, not the plants.
-				net.valcheff.villagersremember.ActionHooks.beforeUse(player, field);
-				net.minecraft.world.level.block.Block.popResource(level, field, new ItemStack(Items.CARROT, 2));
-				net.minecraft.world.level.block.Block.popResource(level, field.offset(1, 0, 0), new ItemStack(Items.CARROT, 3));
-				net.minecraft.world.level.block.Block.popResource(level, field.offset(1, 0, 0), new ItemStack(Items.WHEAT_SEEDS, 1));
-				for (int i = 0; i < 2; i++) level.setBlockAndUpdate(field.offset(i, 0, 0), ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(0));
-				net.valcheff.villagersremember.ActionHooks.used();
-				net.valcheff.villagersremember.ActionHooks.afterUse(server);
+				ActionHooks.beforeUse(player, field);
+				Block.popResource(level, field, new ItemStack(Items.CARROT, 2));
+				Block.popResource(level, field.offset(1, 0, 0), new ItemStack(Items.CARROT, 3));
+				Block.popResource(level, field.offset(1, 0, 0), new ItemStack(Items.WHEAT_SEEDS, 1));
+				for (int i = 0; i < 2; i++) level.setBlockAndUpdate(field.offset(i, 0, 0), ((CropBlock) Blocks.CARROTS).getStateForAge(0));
+				ActionHooks.used();
+				ActionHooks.afterUse(server);
 				int picked = state(server).find(clickHarvest.id()).progress[0];
 				// Clicking a young crop counts nothing; a mature one broken by hand counts the carrots it dropped.
-				net.valcheff.villagersremember.ActionHooks.beforeUse(player, field);
-				net.valcheff.villagersremember.ActionHooks.used();
-				net.valcheff.villagersremember.ActionHooks.afterUse(server);
+				ActionHooks.beforeUse(player, field);
+				ActionHooks.used();
+				ActionHooks.afterUse(server);
 				int afterYoung = state(server).find(clickHarvest.id()).progress[0];
-				var around = new net.minecraft.world.phys.AABB(field).inflate(3);
-				level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).forEach(net.minecraft.world.entity.Entity::discard);
-				level.setBlockAndUpdate(field, ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(7));
-				net.valcheff.villagersremember.ActionHooks.beforeUse(player, field);
+				var around = new AABB(field).inflate(3);
+				level.getEntitiesOfClass(ItemEntity.class, around).forEach(Entity::discard);
+				level.setBlockAndUpdate(field, ((CropBlock) Blocks.CARROTS).getStateForAge(7));
+				ActionHooks.beforeUse(player, field);
 				player.gameMode.destroyBlock(field);
-				net.valcheff.villagersremember.ActionHooks.used();
-				net.valcheff.villagersremember.ActionHooks.afterUse(server);
-				int dropped = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).stream()
+				ActionHooks.used();
+				ActionHooks.afterUse(server);
+				int dropped = level.getEntitiesOfClass(ItemEntity.class, around).stream()
 					.filter(e -> e.getItem().is(Items.CARROT)).mapToInt(e -> e.getItem().getCount()).sum();
-				level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).forEach(net.minecraft.world.entity.Entity::discard);
+				level.getEntitiesOfClass(ItemEntity.class, around).forEach(Entity::discard);
 				int total = state(server).find(clickHarvest.id()).progress[0];
 				ErrandService.abandon(player, clickHarvest.id());
 				for (int i = 0; i < 2; i++) {
@@ -301,23 +380,23 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				int slot = player.getInventory().getSelectedSlot();
 				ItemStack held = player.getInventory().getItem(slot).copy();
 				ItemStack pick = new ItemStack(Items.DIAMOND_PICKAXE);
-				pick.enchant(level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
-					.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE), 3);
+				pick.enchant(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+					.getOrThrow(Enchantments.FORTUNE), 3);
 				player.getInventory().setItem(slot, pick);
 				BlockPos ore = base.offset(-6, 0, 6);
-				var around = new net.minecraft.world.phys.AABB(ore).inflate(3);
-				level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).forEach(net.minecraft.world.entity.Entity::discard);
+				var around = new AABB(ore).inflate(3);
+				level.getEntitiesOfClass(ItemEntity.class, around).forEach(Entity::discard);
 				for (int i = 0; i < 3; i++) {
 					level.setBlockAndUpdate(ore, Blocks.COAL_ORE.defaultBlockState());
 					player.gameMode.destroyBlock(ore);
 				}
 				player.getInventory().setItem(slot, held);
-				int coal = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).stream()
+				int coal = level.getEntitiesOfClass(ItemEntity.class, around).stream()
 					.filter(e -> e.getItem().is(Items.COAL)).mapToInt(e -> e.getItem().getCount()).sum();
-				level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, around).forEach(net.minecraft.world.entity.Entity::discard);
+				level.getEntitiesOfClass(ItemEntity.class, around).forEach(Entity::discard);
 				int progress = state(server).find(mineCoal.id()).progress[0];
-				String line = net.valcheff.villagersremember.ErrandText.shortName(player, mineCoal, mineCoal.objectives().get(0)).getString();
-				String title = net.valcheff.villagersremember.ErrandText.task(player, mineCoal).getString();
+				String line = ErrandText.shortName(player, mineCoal, mineCoal.objectives().get(0)).getString();
+				String title = ErrandText.task(player, mineCoal).getString();
 				ErrandService.abandon(player, mineCoal.id());
 				return coal >= 3 && progress == coal && line.equals("Mine Coal") && title.equals("Mine and bring 30× Coal") ? "ok"
 					: "coal dropped " + coal + ", progress " + progress + ", line '" + line + "', title '" + title + "'";
@@ -335,15 +414,15 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				player.gameMode.destroyBlock(ore);
 				var cow = EntityTypes.COW.create(level, EntitySpawnReason.COMMAND);
 				var calf = EntityTypes.COW.create(level, EntitySpawnReason.COMMAND);
-				net.minecraft.advancements.triggers.CriteriaTriggers.BRED_ANIMALS.trigger(player, cow, cow, calf);
+				CriteriaTriggers.BRED_ANIMALS.trigger(player, cow, cow, calf);
 				var cat = EntityTypes.CAT.create(level, EntitySpawnReason.COMMAND);
-				net.minecraft.advancements.triggers.CriteriaTriggers.TAME_ANIMAL.trigger(player, cat);
+				CriteriaTriggers.TAME_ANIMAL.trigger(player, cat);
 				var sheep = EntityTypes.SHEEP.create(level, EntitySpawnReason.COMMAND);
-				net.minecraft.advancements.triggers.CriteriaTriggers.PLAYER_INTERACTED_WITH_ENTITY.trigger(player, new ItemStack(Items.SHEARS), sheep);
+				CriteriaTriggers.PLAYER_INTERACTED_WITH_ENTITY.trigger(player, new ItemStack(Items.SHEARS), sheep);
 				var hook = EntityTypes.FISHING_BOBBER.create(level, EntitySpawnReason.COMMAND);
-				net.minecraft.advancements.triggers.CriteriaTriggers.FISHING_ROD_HOOKED.trigger(player, new ItemStack(Items.FISHING_ROD), hook,
+				CriteriaTriggers.FISHING_ROD_HOOKED.trigger(player, new ItemStack(Items.FISHING_ROD), hook,
 					List.of(new ItemStack(Items.COD, 2)));
-				net.minecraft.advancements.triggers.CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, base, new ItemStack(Items.BONE_MEAL));
+				CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, base, new ItemStack(Items.BONE_MEAL));
 				int[] progress = state(server).find(synthetic.id()).progress;
 				for (int i = 0; i < actions.size(); i++) {
 					check(progress[i] == actions.get(i).needed(), "action " + actions.get(i).type() + " progress " + progress[i]);
@@ -411,8 +490,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				Errand accepted = reforge;
 				Objective make = accepted.main();
 				craft(server, make, make.count());
-				ItemStack enchanted = net.minecraft.world.item.enchantment.EnchantmentHelper.enchantItem(
-					net.minecraft.util.RandomSource.create(1), new ItemStack(Items.IRON_SWORD), 20, level.registryAccess(), Optional.empty());
+				ItemStack enchanted = EnchantmentHelper.enchantItem(
+					RandomSource.create(1), new ItemStack(Items.IRON_SWORD), 20, level.registryAccess(), Optional.empty());
 				check(enchanted.isEnchanted(), "test sword enchanted");
 				player.getInventory().add(enchanted.copy());
 				player.getInventory().add(new ItemStack(Items.IRON_SWORD, make.count() - 1));
@@ -438,7 +517,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			});
 
 			// Errands saved by the previous version (single deliver/kill fields) still load.
-			net.minecraft.nbt.CompoundTag old = new net.minecraft.nbt.CompoundTag();
+			CompoundTag old = new CompoundTag();
 			old.putString("id", "old/1/0");
 			old.putString("villager", UUID.randomUUID().toString());
 			old.putString("kind", "KILL");
@@ -487,7 +566,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				StringBuilder text = new StringBuilder();
 				if (mc.gui.screen() instanceof DialogScreen<?> screen) {
 					for (var body : dialog(screen).common().body()) {
-						if (body instanceof net.minecraft.server.dialog.body.PlainMessage m) text.append(m.contents().getString()).append('\n');
+						if (body instanceof PlainMessage m) text.append(m.contents().getString()).append('\n');
 					}
 				}
 				return text.toString();
@@ -497,7 +576,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			press(context, label -> label.contains("Errand chronicle"));
 			context.waitFor(mc -> mc.gui.screen() instanceof BookViewScreen, 60);
 			context.takeScreenshot("book-1");
-			context.runOnClient(mc -> mc.gui.screen().keyPressed(new net.minecraft.client.input.KeyEvent(262, 0, 0)));
+			context.runOnClient(mc -> mc.gui.screen().keyPressed(new KeyEvent(262, 0, 0)));
 			context.waitTicks(3);
 			context.takeScreenshot("book-2");
 			closeScreen(context);
@@ -508,13 +587,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			sp.getServer().runCommand("errands standing @p 3");
 			int tier = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
-				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
+				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
 				return village.map(v -> Reputation.villageTier(state(server), Optional.of(v.center))).orElse(-1);
 			});
 			check(tier == 3, "standing command gave village tier " + tier);
 			int extra = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
-				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
+				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
 				return Reputation.enchantBonus(state(server), village.map(v -> v.center));
 			});
 			check(extra == 9, "enchant bonus at village tier 3: " + extra);
@@ -571,7 +650,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return feet.add(dir.scale(2.0));
 		});
 		walkTo(context, sp, stand);
-		context.runOnClient(mc -> mc.player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, eyes));
+		context.runOnClient(mc -> mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, eyes));
 		context.waitTicks(3);
 		// Right-click: the villager greets; Tasks opens their list.
 		context.getInput().pressKey(options -> options.keyUse);
@@ -589,11 +668,11 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	}
 
 	/** Presses the dialog button whose label matches, exactly as a click would, and waits for the next dialog. */
-	private static void press(ClientGameTestContext context, java.util.function.Predicate<String> label) {
+	private static void press(ClientGameTestContext context, Predicate<String> label) {
 		press(context, label, true);
 	}
 
-	private static void press(ClientGameTestContext context, java.util.function.Predicate<String> label, boolean waitDialog) {
+	private static void press(ClientGameTestContext context, Predicate<String> label, boolean waitDialog) {
 		Screen before = context.computeOnClient(mc -> {
 			if (!(mc.gui.screen() instanceof DialogScreen<?> screen)) throw new AssertionError("no dialog open: " + mc.gui.screen());
 			ActionButton found = null;
@@ -636,20 +715,20 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	 */
 	private static void writeFontWidths(ClientGameTestContext context) {
 		byte[] table = context.computeOnClient(mc -> {
-			net.minecraft.client.StringSplitter splitter = mc.font.getSplitter();
+			StringSplitter splitter = mc.font.getSplitter();
 			byte[] out = new byte[0x10000 + 2];
 			for (int cp = 0x20; cp < 0x10000; cp++) {
 				if (Character.isSurrogate((char) cp)) continue;
 				out[cp] = encode(splitter.stringWidth(String.valueOf((char) cp)));
 			}
-			out[0x10000] = encode(splitter.stringWidth(net.valcheff.villagersremember.ui.Icons.of(Items.COD)) - splitter.stringWidth(" "));
-			out[0x10001] = encode(splitter.stringWidth(net.minecraft.network.chat.Component.literal("a")
-				.withStyle(net.minecraft.ChatFormatting.BOLD)) - splitter.stringWidth("a"));
+			out[0x10000] = encode(splitter.stringWidth(Icons.of(Items.COD)) - splitter.stringWidth(" "));
+			out[0x10001] = encode(splitter.stringWidth(Component.literal("a")
+				.withStyle(ChatFormatting.BOLD)) - splitter.stringWidth("a"));
 			return out;
 		});
 		Path file = projectDir().resolve("src/main/resources/assets/villagersremember/font_widths.bin");
 		try {
-			if (Files.exists(file) && java.util.Arrays.equals(Files.readAllBytes(file), table)) return;
+			if (Files.exists(file) && Arrays.equals(Files.readAllBytes(file), table)) return;
 			Files.write(file, table);
 		} catch (IOException e) {
 			throw new AssertionError(e);
@@ -672,13 +751,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	private static void checkColumns(ClientGameTestContext context) {
 		String result = context.computeOnClient(mc -> {
 			if (!(mc.gui.screen() instanceof DialogScreen<?> screen)) return "no dialog";
-			List<net.minecraft.server.dialog.body.DialogBody> body = dialog(screen).common().body();
-			if (body.size() < 3 || !(body.get(2) instanceof net.minecraft.server.dialog.body.PlainMessage message)) {
+			List<DialogBody> body = dialog(screen).common().body();
+			if (body.size() < 3 || !(body.get(2) instanceof PlainMessage message)) {
 				return "no objectives body";
 			}
 			List<Integer> widths = new ArrayList<>();
-			for (net.minecraft.network.chat.FormattedText line : mc.font.getSplitter().splitLines(message.contents(), 10000,
-				net.minecraft.network.chat.Style.EMPTY)) {
+			for (FormattedText line : mc.font.getSplitter().splitLines(message.contents(), 10000,
+				Style.EMPTY)) {
 				if (!line.getString().isBlank()) widths.add(mc.font.width(line));
 			}
 			if (widths.size() < 2) return "too few lines " + widths;
@@ -694,13 +773,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		Vec3 eyes = sp.getServer().computeOnServer(server -> villager(server, id).getEyePosition());
 		Vec3 feet = sp.getServer().computeOnServer(server -> villager(server, id).position());
 		walkTo(context, sp, feet.add(0, 0, 2));
-		context.runOnClient(mc -> mc.player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, eyes));
+		context.runOnClient(mc -> mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, eyes));
 		context.waitTicks(3);
 		context.getInput().pressKey(options -> options.keyUse);
 		waitForDialog(context, null);
 		Screen greeting = context.computeOnClient(mc -> mc.gui.screen());
 		press(context, label -> label.contains("Trade"), false);
-		context.waitFor(mc -> mc.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.MerchantScreen, 60);
+		context.waitFor(mc -> mc.gui.screen() instanceof MerchantScreen, 60);
 		context.takeScreenshot("dlg-13-trade");
 		closeTrade(context);
 	}
@@ -711,20 +790,20 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	 */
 	private static void prices(ClientGameTestContext context, TestSingleplayerContext sp, List<UUID> villagers) {
 		UUID id = villagers.get(6);
-		check(Math.abs(net.valcheff.villagersremember.Prices.change(20, 0.66) + 7) == 0, "20 at 34 % off costs 13");
-		check(net.valcheff.villagersremember.Prices.change(1, 0.6) == 0, "a price never drops below 1");
+		check(Math.abs(Prices.change(20, 0.66) + 7) == 0, "20 at 34 % off costs 13");
+		check(Prices.change(1, 0.6) == 0, "a price never drops below 1");
 		sp.getServer().runOnServer(server -> {
 			ServerPlayer player = player(server);
 			Villager v = villager(server, id);
 			state(server).villagerRep.put(id, Reputation.VILLAGER_TIERS[4]);
 			state(server).trialsPassed.put(id, 4);
 			// What 0.1 left behind: gossip for the errands.
-			v.getGossips().add(player.getUUID(), net.minecraft.world.entity.ai.gossip.GossipType.MAJOR_POSITIVE, 15);
-			v.getGossips().add(player.getUUID(), net.minecraft.world.entity.ai.gossip.GossipType.MINOR_POSITIVE, 8);
+			v.getGossips().add(player.getUUID(), GossipType.MAJOR_POSITIVE, 15);
+			v.getGossips().add(player.getUUID(), GossipType.MINOR_POSITIVE, 8);
 			state(server).gossipToClean.put(id, 15);
 		});
 		double factor = sp.getServer().computeOnServer(server ->
-			Reputation.priceFactor(state(server), id, net.valcheff.villagersremember.ErrandGenerator.village(villager(server, id))));
+			Reputation.priceFactor(state(server), id, ErrandGenerator.village(villager(server, id))));
 		check(factor <= 0.84 + 1e-9 && factor >= 0.55 - 1e-9, "best friend price factor " + factor);
 		checkTradePrices(context, sp, id, factor, "discount");
 		int gossip = sp.getServer().computeOnServer(server -> villager(server, id).getPlayerReputation(player(server)));
@@ -737,9 +816,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			state(server).trialsPassed.remove(id);
 		});
 		double grudge = sp.getServer().computeOnServer(server ->
-			Reputation.priceFactor(state(server), id, net.valcheff.villagersremember.ErrandGenerator.village(villager(server, id))));
+			Reputation.priceFactor(state(server), id, ErrandGenerator.village(villager(server, id))));
 		double surcharge = sp.getServer().computeOnServer(server ->
-			Reputation.surcharge(state(server), id, net.valcheff.villagersremember.ErrandGenerator.village(villager(server, id))));
+			Reputation.surcharge(state(server), id, ErrandGenerator.village(villager(server, id))));
 		check(Math.abs(surcharge - 0.30) < 1e-9 && grudge > factor, "surcharge " + surcharge + ", factor " + grudge);
 		checkTradePrices(context, sp, id, grudge, "surcharge");
 		sp.getServer().runOnServer(server -> state(server).villagerRep.put(id, 0));
@@ -758,10 +837,10 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		String patron = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
 			ErrandsData.PlayerState state = state(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			net.valcheff.villagersremember.Patron.check(server, Optional.of(village.center));
-			if (!player.getUUID().equals(village.patron)) return "not patron: qualifies " + net.valcheff.villagersremember.Patron.qualifies(state, village)
-				+ ", best friends " + net.valcheff.villagersremember.Patron.bestFriends(state, village);
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			Patron.check(server, Optional.of(village.center));
+			if (!player.getUUID().equals(village.patron)) return "not patron: qualifies " + Patron.qualifies(state, village)
+				+ ", best friends " + Patron.bestFriends(state, village);
 			double d = Reputation.discount(state, villagers.get(0), Optional.of(village.center));
 			if (Math.abs(d - 0.45) > 1e-9) return "patron discount " + d;
 			// A rival with more points takes the place; when the rival is gone the place comes back.
@@ -771,14 +850,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			rival.trialsPassed.putAll(state.trialsPassed);
 			String key = ErrandsData.villageKey(village.center);
 			rival.villageRep.put(key, state.villageRep.getOrDefault(key, 0) + 100);
-			net.valcheff.villagersremember.Patron.check(server, Optional.of(village.center));
+			Patron.check(server, Optional.of(village.center));
 			if (!rivalId.equals(village.patron)) return "rival with more points did not take the place";
 			if (Reputation.discount(state, villagers.get(0), Optional.of(village.center)) > 0.4 + 1e-9) return "former patron kept the discount";
 			ErrandsData.get(server).players().remove(rivalId);
-			net.valcheff.villagersremember.Patron.check(server, Optional.of(village.center));
+			Patron.check(server, Optional.of(village.center));
 			if (!player.getUUID().equals(village.patron)) return "place did not come back";
-			if (net.valcheff.villagersremember.Patron.rename(player, village.center, "")) return "empty name accepted";
-			if (!net.valcheff.villagersremember.Patron.rename(player, village.center, "Testville") || !"Testville".equals(village.name)) return "rename";
+			if (Patron.rename(player, village.center, "")) return "empty name accepted";
+			if (!Patron.rename(player, village.center, "Testville") || !"Testville".equals(village.name)) return "rename";
 			return "ok";
 		});
 		check(patron.equals("ok"), "patron: " + patron);
@@ -786,15 +865,15 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		// The village order (monthly), brought in parts through the button.
 		String kind = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			var view = net.valcheff.villagersremember.GroupOrder.current(server, village).orElseThrow();
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			var view = GroupOrder.current(server, village).orElseThrow();
 			player.getInventory().clearContent();
 			Item item = switch (view.kind()) {
 				case FOOD -> Items.BREAD;
 				case WOOD -> Items.OAK_LOG;
 				case STONE -> Items.COBBLESTONE;
 				case IRON -> Items.IRON_INGOT;
-				case WOOL -> net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace("white_wool"));
+				case WOOL -> BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace("white_wool"));
 				case DEFEND -> Items.AIR;
 			};
 			if (item != Items.AIR) player.getInventory().add(new ItemStack(item, 32));
@@ -811,20 +890,20 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			press(context, label -> label.contains("Give what I have"));
 			int progress = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
-				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-				return net.valcheff.villagersremember.GroupOrder.current(server, village).orElseThrow().order().progress;
+				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+				return GroupOrder.current(server, village).orElseThrow().order().progress;
 			});
 			check(progress == 32, "village order got " + progress + " of 32 " + kind);
 		} else {
 			// A monster killed inside the village counts.
 			int progress = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
-				var zombie = net.minecraft.world.entity.EntityTypes.ZOMBIE.create(server.overworld(), EntitySpawnReason.COMMAND);
+				var zombie = EntityTypes.ZOMBIE.create(server.overworld(), EntitySpawnReason.COMMAND);
 				zombie.snapTo(player.getX() + 2, player.getY(), player.getZ(), 0, 0);
 				server.overworld().addFreshEntity(zombie);
 				zombie.hurtServer(server.overworld(), player.damageSources().playerAttack(player), 1000);
-				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-				return net.valcheff.villagersremember.GroupOrder.current(server, village).orElseThrow().order().progress;
+				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+				return GroupOrder.current(server, village).orElseThrow().order().progress;
 			});
 			check(progress == 1, "defend order counted " + progress);
 		}
@@ -836,15 +915,15 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		Screen renameScreen = context.computeOnClient(mc -> {
 			DialogScreen<?> screen = (DialogScreen<?>) mc.gui.screen();
 			ActionButton save = buttons(dialog(screen)).stream().filter(x -> x.button().label().getString().equals("Save")).findFirst().orElseThrow();
-			Optional<ClickEvent> click = save.action().orElseThrow().createAction(java.util.Map.of("name",
-				net.minecraft.server.dialog.action.Action.ValueGetter.of("Bodilovo Upper")));
+			Optional<ClickEvent> click = save.action().orElseThrow().createAction(Map.of("name",
+				Action.ValueGetter.of("Bodilovo Upper")));
 			screen.runAction(click);
 			return screen;
 		});
 		waitForDialog(context, renameScreen);
 		String renamed = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
 			return village.name;
 		});
 		check("Bodilovo Upper".equals(renamed), "renamed through the dialog to " + renamed);
@@ -853,12 +932,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			ServerPlayer player = player(server);
 			player.getEnderChestInventory().clearContent();
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands order here add " + player.getScoreboardName() + " 100000");
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			var view = net.valcheff.villagersremember.GroupOrder.current(server, village).orElseThrow();
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			var view = GroupOrder.current(server, village).orElseThrow();
 			if (!view.order().settled || !view.done()) return "not settled " + view.order().progress + "/" + view.target();
 			int emeralds = player.getEnderChestInventory().countItem(Items.EMERALD);
 			if (view.order().players != 1 || view.target() != view.kind().base) return "sized for " + view.order().players + ": " + view.target();
-			if (emeralds != Math.round(net.valcheff.villagersremember.GroupOrder.pool(1))) return "paid " + emeralds;
+			if (emeralds != Math.round(GroupOrder.pool(1))) return "paid " + emeralds;
 			if (state(server).weeklyDone != 1) return "orders done " + state(server).weeklyDone;
 			return "ok";
 		});
@@ -868,23 +947,23 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			// The flat test world has no structures: a map to the biome the player stands in.
 			String biome = player.level().getBiome(player.blockPosition()).unwrapKey().orElseThrow().identifier().toString();
 			Objective visit = new Objective(Objective.Type.VISIT_BIOME, biome, false, 1, 0);
-			var map = net.valcheff.villagersremember.Maps.forVisit(player, visit, "Odo");
+			var map = Maps.forVisit(player, visit, "Odo");
 			if (map.isEmpty()) return "no map to " + biome;
 			// The chart given with an errand unfolds into the map when used.
-			ItemStack chart = net.valcheff.villagersremember.Maps.chart(player, visit, "Odo").orElseThrow();
+			ItemStack chart = Maps.chart(player, visit, "Odo").orElseThrow();
 			ItemStack held = player.getMainHandItem().copy();
-			player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, chart);
-			net.valcheff.villagersremember.Maps.use(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+			player.setItemInHand(InteractionHand.MAIN_HAND, chart);
+			Maps.use(player, InteractionHand.MAIN_HAND);
 			ItemStack unfolded = player.getMainHandItem();
-			player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
-			if (unfolded.get(net.minecraft.core.component.DataComponents.MAP_ID) == null) return "chart did not unfold: " + unfolded;
+			player.setItemInHand(InteractionHand.MAIN_HAND, held);
+			if (unfolded.get(DataComponents.MAP_ID) == null) return "chart did not unfold: " + unfolded;
 			if (!map.get().is(Items.FILLED_MAP) || !map.get().getHoverName().getString().endsWith(" Map")) return "map " + map.get();
 			// Enchanted rewards: from any set of enchantments, never a curse, always at the highest level.
 			for (int i = 0; i < 60; i++) {
-				ItemStack sword = new Errand.ItemReward(net.valcheff.villagersremember.ErrandPools.RewardKind.ENCHANT_MAX, "minecraft:iron_sword", 12, i)
+				ItemStack sword = new Errand.ItemReward(ErrandPools.RewardKind.ENCHANT_MAX, "minecraft:iron_sword", 12, i)
 					.create(server.overworld()).getFirst();
 				for (var e : sword.getEnchantments().entrySet()) {
-					if (e.getKey().is(net.minecraft.tags.EnchantmentTags.CURSE)) return "curse on reward " + i;
+					if (e.getKey().is(EnchantmentTags.CURSE)) return "curse on reward " + i;
 					if (e.getIntValue() != e.getKey().value().getMaxLevel()) return "level " + e.getIntValue() + " of " + e.getKey().getRegisteredName();
 				}
 			}
@@ -899,7 +978,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				int days = i < 2 ? 3 : 1;
 				for (int d = 0; d < days; d++) friend.daysSeen.add(today - d);
 			}
-			int n = net.valcheff.villagersremember.GroupOrder.regularPlayers(server);
+			int n = GroupOrder.regularPlayers(server);
 			for (int i = 0; i < 3; i++) ErrandsData.get(server).players().remove(new UUID(0xF1EL, i));
 			return n;
 		});
@@ -917,7 +996,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				Villager candidate = villager(server, id);
 				var found = ErrandGenerator.contract(server.overworld(), ErrandGenerator.Giver.of(candidate), state);
 				String path = ErrandText.path(found.map(Errand::profession).orElse("minecraft:none"));
-				if (found.isPresent() && net.valcheff.villagersremember.Legends.professions().contains(path)) {
+				if (found.isPresent() && Legends.professions().contains(path)) {
 					v = candidate;
 					c = found.get();
 					break;
@@ -943,7 +1022,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (!state.legends.contains(prof) || state.contracts.get(prof) != 3) return "legend " + state.legends + " contracts " + state.contracts;
 			boolean has = false;
 			for (ItemStack st : player.getInventory().getNonEquipmentItems()) {
-				if (st.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME) != null && st.getRarity() == net.minecraft.world.item.Rarity.EPIC) has = true;
+				if (st.get(DataComponents.CUSTOM_NAME) != null && st.getRarity() == Rarity.EPIC) has = true;
 			}
 			if (!has) return "no legendary item in the inventory";
 			if (state.fame < fameBefore + 5 + 15) return "fame " + fameBefore + " -> " + state.fame;
@@ -961,13 +1040,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands fame " + player.getScoreboardName() + " set 1600");
 			team = server.getScoreboard().getPlayersTeam(player.getScoreboardName());
 			if (!team.getPlayerPrefix().getString().contains("Legend")) return "legend prefix " + team.getPlayerPrefix().getString();
-			var trader = net.minecraft.world.entity.EntityTypes.WANDERING_TRADER.create(server.overworld(), EntitySpawnReason.COMMAND);
+			var trader = EntityTypes.WANDERING_TRADER.create(server.overworld(), EntitySpawnReason.COMMAND);
 			trader.snapTo(player.getX() + 1, player.getY(), player.getZ(), 0, 0);
 			trader.setNoAi(true);
 			server.overworld().addFreshEntity(trader);
 			int before = trader.getOffers().size();
-			net.valcheff.villagersremember.Interactions.onUseEntity(player, server.overworld(), net.minecraft.world.InteractionHand.MAIN_HAND, trader, null);
-			net.valcheff.villagersremember.Interactions.onUseEntity(player, server.overworld(), net.minecraft.world.InteractionHand.MAIN_HAND, trader, null);
+			Interactions.onUseEntity(player, server.overworld(), InteractionHand.MAIN_HAND, trader, null);
+			Interactions.onUseEntity(player, server.overworld(), InteractionHand.MAIN_HAND, trader, null);
 			int after = trader.getOffers().size();
 			trader.discard();
 			return after == before + 3 ? "ok" : "trader offers " + before + " -> " + after;
@@ -976,12 +1055,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 		String advancements = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			net.valcheff.villagersremember.Milestones.check(player);
+			Milestones.check(player);
 			StringBuilder missing = new StringBuilder();
 			for (String id : List.of("root", "errands/first", "trust/trial", "trust/best_friend", "trust/close_circle", "contracts/first",
 				"contracts/legend", "villages/hero", "villages/patron", "villages/weekly", "explore/first", "treasury/first",
 				"fame/helper", "fame/legend")) {
-				var holder = server.getAdvancements().get(net.valcheff.villagersremember.VillagersRemember.id(id));
+				var holder = server.getAdvancements().get(VillagersRemember.id(id));
 				if (holder == null) missing.append(" ").append(id).append("(no file)");
 				else if (!player.getAdvancements().getOrStartProgress(holder).isDone()) missing.append(" ").append(id);
 			}
@@ -991,13 +1070,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return missing.toString();
 		});
 		check(advancements.isEmpty(), "advancements not granted:" + advancements);
-		context.runOnClient(mc -> mc.gui.setScreen(new net.minecraft.client.gui.screens.advancements.AdvancementsScreen(mc.player.connection.getAdvancements())));
+		context.runOnClient(mc -> mc.gui.setScreen(new AdvancementsScreen(mc.player.connection.getAdvancements())));
 		context.waitTicks(10);
 		context.takeScreenshot("adv-1-tree");
 		closeScreen(context);
 		context.runOnClient(mc -> mc.player.connection.sendCommand("errands book"));
 		context.waitFor(mc -> mc.gui.screen() instanceof BookViewScreen, 60);
-		context.runOnClient(mc -> mc.gui.screen().keyPressed(new net.minecraft.client.input.KeyEvent(262, 0, 0)));
+		context.runOnClient(mc -> mc.gui.screen().keyPressed(new KeyEvent(262, 0, 0)));
 		context.waitTicks(3);
 		context.takeScreenshot("book-3-fame");
 		closeScreen(context);
@@ -1007,16 +1086,16 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		Vec3 eyes = sp.getServer().computeOnServer(server -> villager(server, id).getEyePosition());
 		Vec3 feet = sp.getServer().computeOnServer(server -> villager(server, id).position());
 		walkTo(context, sp, feet.add(0, 0, 2));
-		context.runOnClient(mc -> mc.player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, eyes));
+		context.runOnClient(mc -> mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, eyes));
 		context.waitTicks(3);
 		context.getInput().pressKey(options -> options.keyUse);
 		waitForDialog(context, null);
 		press(context, label -> label.contains("Trade"), false);
-		context.waitFor(mc -> mc.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.MerchantScreen, 60);
+		context.waitFor(mc -> mc.gui.screen() instanceof MerchantScreen, 60);
 		context.waitTicks(5);
 		context.takeScreenshot("trade-" + what);
 		String result = context.computeOnClient(mc -> {
-			if (!(mc.player.containerMenu instanceof net.minecraft.world.inventory.MerchantMenu menu)) return "no menu";
+			if (!(mc.player.containerMenu instanceof MerchantMenu menu)) return "no menu";
 			StringBuilder bad = new StringBuilder();
 			int n = 0;
 			for (var offer : menu.getOffers()) {
@@ -1047,8 +1126,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			for (var e : mc.level.entitiesForRendering()) {
 				if (!e.getUUID().equals(id)) continue;
 				String jade = e.getCustomName() == null ? "<none>" : e.getCustomName().getString();
-				String plate = e.getPassengers().stream().filter(p -> p instanceof net.minecraft.world.entity.Display.TextDisplay)
-					.map(p -> ((net.minecraft.world.entity.Display.TextDisplay) p).getText().getString())
+				String plate = e.getPassengers().stream().filter(p -> p instanceof Display.TextDisplay)
+					.map(p -> ((Display.TextDisplay) p).getText().getString())
 					.filter(t -> !t.equals("!") && !t.equals("?")).findFirst().orElse("<no plate>");
 				return jade + "|" + plate;
 			}
@@ -1065,21 +1144,21 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			StringBuilder seen = new StringBuilder();
 			for (String p : List.of("farmer", "fisherman", "shepherd", "librarian", "cartographer", "cleric", "armorer", "weaponsmith",
 				"toolsmith", "butcher", "leatherworker", "mason", "fletcher")) {
-				List<ItemStack> given = new Errand.ItemReward(net.valcheff.villagersremember.ErrandPools.RewardKind.TOP, "minecraft:" + p, 1, 77)
+				List<ItemStack> given = new Errand.ItemReward(ErrandPools.RewardKind.TOP, "minecraft:" + p, 1, 77)
 					.create(level, 0, player.position());
 				if (given.isEmpty() || given.stream().anyMatch(ItemStack::isEmpty)) return p + " top reward is empty";
 				seen.append(p).append('=').append(given.getFirst().getHoverName().getString()).append(' ');
 			}
 			System.out.println("TOP-REWARDS " + seen);
 			// Gear among the top rewards always has Unbreaking III and Mending, except the bow with Infinity.
-			var unbreaking = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
-				.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.UNBREAKING);
-			var mending = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
-				.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.MENDING);
-			var infinity = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
-				.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.INFINITY);
+			var unbreaking = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+				.getOrThrow(Enchantments.UNBREAKING);
+			var mending = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+				.getOrThrow(Enchantments.MENDING);
+			var infinity = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+				.getOrThrow(Enchantments.INFINITY);
 			for (String p : List.of("farmer", "butcher", "fisherman", "armorer", "weaponsmith", "toolsmith", "fletcher")) {
-				for (List<ItemStack> option : net.valcheff.villagersremember.TopRewards.options("minecraft:" + p, level, 5, null)) {
+				for (List<ItemStack> option : TopRewards.options("minecraft:" + p, level, 5, null)) {
 					ItemStack st = option.getFirst();
 					if (!st.isEnchanted()) continue;
 					var ench = st.getEnchantments();
@@ -1090,9 +1169,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			}
 			// The librarian's books carry several enchantments, each at its highest level.
 			for (int i = 0; i < 40; i++) {
-				var book = new Errand.ItemReward(net.valcheff.villagersremember.ErrandPools.RewardKind.TOP, "minecraft:librarian", 1, i)
+				var book = new Errand.ItemReward(ErrandPools.RewardKind.TOP, "minecraft:librarian", 1, i)
 					.create(level, 0, player.position()).getFirst();
-				var stored = book.get(net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS);
+				var stored = book.get(DataComponents.STORED_ENCHANTMENTS);
 				if (stored == null || stored.size() < 2) return "book " + i + " has " + stored;
 				for (var e : stored.entrySet()) if (e.getIntValue() != e.getKey().value().getMaxLevel()) return "book level " + e.getIntValue();
 			}
@@ -1112,7 +1191,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			state.trialsPassed.put(farmer, 3);
 			var giver = new ErrandGenerator.Giver(farmer, "minecraft:farmer", "minecraft:plains", 5, Optional.empty());
 			Errand trial = ErrandGenerator.trial(server.overworld(), giver, state).orElse(null);
-			if (trial == null || !trial.item().map(r -> r.kind() == net.valcheff.villagersremember.ErrandPools.RewardKind.TOP).orElse(false)) return "";
+			if (trial == null || !trial.item().map(r -> r.kind() == ErrandPools.RewardKind.TOP).orElse(false)) return "";
 			ErrandService.accept(player, trial);
 			return ErrandText.task(player, trial).getString();
 		});
@@ -1141,7 +1220,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			player.getInventory().clearContent();
 			ErrandsData.Active a = state(server).active.getFirst();
 			for (Objective o : a.errand.objectives()) if (o.isDelivery()) giveTarget(player, o);
-			net.valcheff.villagersremember.ui.ErrandDialogs.chooseTop(player, a.errand.id());
+			ErrandDialogs.chooseTop(player, a.errand.id());
 		});
 		waitForDialog(context, null);
 		context.takeScreenshot("dlg-12-top-choice");
@@ -1195,11 +1274,11 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (v.getVillagerData().level() != 5 || v.getOffers().size() <= tradesBefore) {
 				return "levelup: level " + v.getVillagerData().level() + ", trades " + tradesBefore + " -> " + v.getOffers().size();
 			}
-			var zombie = v.convertTo(net.minecraft.world.entity.EntityTypes.ZOMBIE_VILLAGER,
-				net.minecraft.world.entity.ConversionParams.single(v, true, true), z -> { });
+			var zombie = v.convertTo(EntityTypes.ZOMBIE_VILLAGER,
+				ConversionParams.single(v, true, true), z -> { });
 			if (zombie == null) return "no zombie";
-			var cured = zombie.convertTo(net.minecraft.world.entity.EntityTypes.VILLAGER,
-				net.minecraft.world.entity.ConversionParams.single(zombie, false, false), c -> { });
+			var cured = zombie.convertTo(EntityTypes.VILLAGER,
+				ConversionParams.single(zombie, false, false), c -> { });
 			if (cured == null) return "no cure";
 			UUID now = cured.getUUID();
 			if (now.equals(first)) return "same id, nothing to check";
@@ -1216,13 +1295,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	/** More villages than names: every name of the list once, then they come round again as "Name 2". */
 	private static void uniqueNames(TestSingleplayerContext sp) {
 		String result = sp.getServer().computeOnServer(server -> {
-			var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
-			int count = net.valcheff.villagersremember.Lang.villageNameCount();
+			var registry = VillageRegistry.get(server);
+			int count = Lang.villageNameCount();
 			for (int i = 1; i <= count + 10; i++) {
 				registry.forBell(server, GlobalPos.of(server.overworld().dimension(), new BlockPos(5000 * i, 64, -7000)), true);
 			}
 			ServerPlayer player = player(server);
-			java.util.Set<String> names = new java.util.HashSet<>();
+			Set<String> names = new HashSet<>();
 			int numbered = 0;
 			for (var v : registry.all()) {
 				String name = ErrandText.villageName(player, v.center);
@@ -1242,38 +1321,38 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		String result = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
 			ErrandsData.PlayerState state = state(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
 			String key = ErrandsData.villageKey(village.center);
 			if (!state.discovered.containsKey(key)) return "village not discovered";
 			// Standing stored under a bell position by an older version moves to the village's center.
-			String old = ErrandsData.villageKey(net.minecraft.core.GlobalPos.of(village.center.dimension(), village.center.pos().offset(3, 0, 3)));
+			String old = ErrandsData.villageKey(GlobalPos.of(village.center.dimension(), village.center.pos().offset(3, 0, 3)));
 			state.villageRep.put(old, 999);
-			net.valcheff.villagersremember.Treasury.normalize(server, state);
+			Treasury.normalize(server, state);
 			if (state.villageRep.containsKey(old) || state.villageRep.getOrDefault(key, 0) != 999) return "old key not moved: " + state.villageRep;
-			if (net.valcheff.villagersremember.Treasury.entries(player, state).size() != 1) return "list has " + net.valcheff.villagersremember.Treasury.entries(player, state).size();
+			if (Treasury.entries(player, state).size() != 1) return "list has " + Treasury.entries(player, state).size();
 			state.villageRep.remove(key);
 			// The formula alone: 40 residents with a share of 1.2 in a Hero village add up to about 36.
-			double forty = net.valcheff.villagersremember.Treasury.formula(java.util.Collections.nCopies(40, 1.2), 4);
+			double forty = Treasury.formula(Collections.nCopies(40, 1.2), 4);
 			if (Math.abs(forty - 35.7) > 0.3) return "40 villagers give " + forty;
-			if (Math.abs(net.valcheff.villagersremember.Treasury.networkBonus(2) - 0.10) > 1e-9) return "network bonus for 2";
+			if (Math.abs(Treasury.networkBonus(2) - 0.10) > 1e-9) return "network bonus for 2";
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands rep " + player.getScoreboardName() + " here all tier 4");
 			long today = ErrandGenerator.day(server.overworld());
-			double daily = net.valcheff.villagersremember.Treasury.perDay(state, village) * 1.05;
+			double daily = Treasury.perDay(state, village) * 1.05;
 			state.treasury.put(key, 0.0);
 			state.paidUntil.put(key, today - 10);
-			net.valcheff.villagersremember.Treasury.settle(server, state, today);
+			Treasury.settle(server, state, today);
 			double waiting = state.treasury.getOrDefault(key, 0.0);
 			int kept = Math.min(10, ErrandsConfig.INSTANCE.treasuryKeepDays);
 			if (Math.abs(waiting - daily * kept) > 0.01) return "after 10 days " + waiting + ", expected " + kept + " days of " + daily;
 			player.getEnderChestInventory().clearContent();
-			int sent = net.valcheff.villagersremember.Treasury.sendToEnderChest(player, state);
+			int sent = Treasury.sendToEnderChest(player, state);
 			int inChest = player.getEnderChestInventory().countItem(Items.EMERALD);
 			if (sent != (int) Math.floor(waiting) || inChest != sent) return "sent " + sent + ", in chest " + inChest + ", waiting was " + waiting;
 			for (int i = 0; i < player.getEnderChestInventory().getContainerSize(); i++) {
 				player.getEnderChestInventory().setItem(i, new ItemStack(Items.DIRT, 64));
 			}
 			state.treasury.put(key, 10.0);
-			int none = net.valcheff.villagersremember.Treasury.sendToEnderChest(player, state);
+			int none = Treasury.sendToEnderChest(player, state);
 			if (none != 0 || Math.abs(state.treasury.get(key) - 10.0) > 1e-9) return "full chest took " + none;
 			player.getEnderChestInventory().clearContent();
 			return "ok";
@@ -1310,12 +1389,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				ErrandsConfig cfg = ErrandsConfig.INSTANCE;
 				if (cfg.emeraldRewards || cfg.xpMultiplier != 2.0) return "commands did not set " + cfg.emeraldRewards + " x" + cfg.xpMultiplier;
 				if (errand.paidEmeralds() != 0 || errand.paidXp() != Math.round(errand.xp() * 2.0)) return "paid " + errand.paidEmeralds() + "/" + errand.paidXp();
-				var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
+				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition());
 				// The treasury is not an errand reward: it pays the same with emerald rewards off.
 				if (village.isPresent()) {
-					double off = net.valcheff.villagersremember.Treasury.perDay(state, village.get());
+					double off = Treasury.perDay(state, village.get());
 					cfg.emeraldRewards = true;
-					double on = net.valcheff.villagersremember.Treasury.perDay(state, village.get());
+					double on = Treasury.perDay(state, village.get());
 					cfg.emeraldRewards = false;
 					if (off != on) return "treasury pays " + off + " with emeralds off, " + on + " with them on";
 				}
@@ -1345,27 +1424,27 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 	/** The settings screen of a client with the mod reads and saves the server's settings; players without level 3 can't. */
 	private static void settingsScreen(ClientGameTestContext context, TestSingleplayerContext sp) {
-		context.runOnClient(mc -> mc.gui.setScreen(new net.valcheff.villagersremember.client.SettingsScreen(null)));
-		context.waitFor(mc -> mc.gui.screen() instanceof net.valcheff.villagersremember.client.SettingsScreen s && s.loaded(), 100);
+		context.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
+		context.waitFor(mc -> mc.gui.screen() instanceof SettingsScreen s && s.loaded(), 100);
 		context.takeScreenshot("settings-1-server");
 		// Waystones is in the test runtime, so the waystone setting is offered.
-		check(context.computeOnClient(mc -> ((net.valcheff.villagersremember.client.SettingsScreen) mc.gui.screen()).showsWaystones()),
+		check(context.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).showsWaystones()),
 			"waystone setting hidden with Waystones installed");
 		context.runOnClient(mc -> {
-			var screen = (net.valcheff.villagersremember.client.SettingsScreen) mc.gui.screen();
-			screen.setForTest("xpMultiplier", new com.google.gson.JsonPrimitive(1.5));
-			screen.setForTest("emeraldRewards", new com.google.gson.JsonPrimitive(false));
+			var screen = (SettingsScreen) mc.gui.screen();
+			screen.setForTest("xpMultiplier", new JsonPrimitive(1.5));
+			screen.setForTest("emeraldRewards", new JsonPrimitive(false));
 			screen.saveForTest();
 		});
-		context.waitFor(mc -> !(mc.gui.screen() instanceof net.valcheff.villagersremember.client.SettingsScreen), 100);
+		context.waitFor(mc -> !(mc.gui.screen() instanceof SettingsScreen), 100);
 		String result = sp.getServer().computeOnServer(server -> {
 			ErrandsConfig cfg = ErrandsConfig.INSTANCE;
 			if (cfg.xpMultiplier != 1.5 || cfg.emeraldRewards) return "server has x" + cfg.xpMultiplier + " emeralds " + cfg.emeraldRewards;
 			ErrandsConfig copy = ErrandsConfig.fromJson(ErrandsConfig.toJson(cfg));
 			copy.xpMultiplier = 3;
-			if (net.valcheff.villagersremember.ConfigSync.apply("nobody", net.valcheff.villagersremember.ConfigSync.canEdit(
-				net.minecraft.server.permissions.PermissionSet.NO_PERMISSIONS), ErrandsConfig.toJson(copy)) || cfg.xpMultiplier != 1.5) return "saved without permission";
-			if (net.valcheff.villagersremember.ConfigSync.canEdit(net.minecraft.server.permissions.LevelBasedPermissionSet.GAMEMASTER)) return "level 2 may edit";
+			if (ConfigSync.apply("nobody", ConfigSync.canEdit(
+				PermissionSet.NO_PERMISSIONS), ErrandsConfig.toJson(copy)) || cfg.xpMultiplier != 1.5) return "saved without permission";
+			if (ConfigSync.canEdit(LevelBasedPermissionSet.GAMEMASTER)) return "level 2 may edit";
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands xp 1");
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands emeralds on");
 			return "ok";
@@ -1373,14 +1452,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		check(result.equals("ok"), "settings screen: " + result);
 		// The answer is one JSON string: fields from a newer version are skipped, missing ones read as defaults.
 		String codec = sp.getServer().computeOnServer(server -> {
-			var buf = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), server.registryAccess());
-			net.minecraft.network.codec.ByteBufCodecs.STRING_UTF8.encode(buf, "{\"settings\":\"{}\",\"allowed\":true,\"from_the_future\":5}");
-			var read = net.valcheff.villagersremember.ConfigSync.Settings.CODEC.decode(buf);
+			var buf = new RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), server.registryAccess());
+			ByteBufCodecs.STRING_UTF8.encode(buf, "{\"settings\":\"{}\",\"allowed\":true,\"from_the_future\":5}");
+			var read = ConfigSync.Settings.CODEC.decode(buf);
 			if (!read.allowed() || read.saved() || read.waystones() || !read.json().equals("{}")) return "newer message read as " + read;
-			var out = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), server.registryAccess());
-			var sent = new net.valcheff.villagersremember.ConfigSync.Settings("{\"a\":1}", true, true, true);
-			net.valcheff.villagersremember.ConfigSync.Settings.CODEC.encode(out, sent);
-			var back = net.valcheff.villagersremember.ConfigSync.Settings.CODEC.decode(out);
+			var out = new RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), server.registryAccess());
+			var sent = new ConfigSync.Settings("{\"a\":1}", true, true, true);
+			ConfigSync.Settings.CODEC.encode(out, sent);
+			var back = ConfigSync.Settings.CODEC.decode(out);
 			return back.equals(sent) ? "ok" : "round trip " + back;
 		});
 		check(codec.equals("ok"), "settings packet: " + codec);
@@ -1393,35 +1472,35 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	private static void waystones(TestSingleplayerContext sp, BlockPos bell) {
 		String result = sp.getServer().computeOnServer(server -> {
 			var level = server.overworld();
-			var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
+			var registry = VillageRegistry.get(server);
 			var village = registry.villageAt(level.dimension(), bell).orElse(null);
 			if (village == null) return "no village at the bell";
 			BlockPos at = bell.offset(3, 0, 0);
-			level.setBlockAndUpdate(at.above(), net.minecraft.world.level.block.Blocks.BARREL.defaultBlockState());
-			var barrel = (net.minecraft.world.level.block.entity.BarrelBlockEntity) level.getBlockEntity(at.above());
+			level.setBlockAndUpdate(at.above(), Blocks.BARREL.defaultBlockState());
+			var barrel = (BarrelBlockEntity) level.getBlockEntity(at.above());
 			ItemStack pane = new ItemStack(Items.GLASS_PANE);
-			net.minecraft.nbt.CompoundTag pk = new net.minecraft.nbt.CompoundTag();
-			net.minecraft.nbt.CompoundTag pkData = new net.minecraft.nbt.CompoundTag();
+			CompoundTag pk = new CompoundTag();
+			CompoundTag pkData = new CompoundTag();
 			pkData.putBoolean("custom_block", true);
 			pk.put("pk_data", pkData);
-			pane.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(pk));
+			pane.set(DataComponents.CUSTOM_DATA, CustomData.of(pk));
 			barrel.setItem(0, pane);
 			String location = "location:{dimension:\"minecraft:overworld\",x:" + at.getX() + ",y:" + at.getY() + ",z:" + at.getZ() + "}";
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "data modify storage pk:waystones database.waystones set value ["
 				+ "{id:7,name:{text:\"Waystone\"}," + location + "},"
 				+ "{id:8,name:{text:\"My base\"}," + location + "}]");
-			int renamed = net.valcheff.villagersremember.Waystones.sync(server);
-			var list = server.getCommandStorage().get(net.minecraft.resources.Identifier.fromNamespaceAndPath("pk", "waystones"))
+			int renamed = Waystones.sync(server);
+			var list = server.getCommandStorage().get(Identifier.fromNamespaceAndPath("pk", "waystones"))
 				.getCompoundOrEmpty("database").getListOrEmpty("waystones");
-			String expected = net.valcheff.villagersremember.Lang.villageNameAt("en_us", registry.nameIndex(village, net.valcheff.villagersremember.Lang.villageNameCount()));
+			String expected = Lang.villageNameAt("en_us", registry.nameIndex(village, Lang.villageNameCount()));
 			String first = list.getCompoundOrEmpty(0).getCompoundOrEmpty("name").getStringOr("text", "?");
 			String second = list.getCompoundOrEmpty(1).getCompoundOrEmpty("name").getStringOr("text", "?");
 			if (renamed != 1 || !first.equals(expected) || !second.equals("My base")) return renamed + " renamed: " + first + ", " + second + ", expected " + expected;
-			if (net.valcheff.villagersremember.Waystones.sync(server) != 0) return "renamed again";
+			if (Waystones.sync(server) != 0) return "renamed again";
 			String title = barrel.getCustomName() == null ? "none" : barrel.getCustomName().getString();
 			if (!title.equals(expected + " (7)")) return "barrel title " + title;
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "data remove storage pk:waystones database");
-			level.setBlockAndUpdate(at.above(), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+			level.setBlockAndUpdate(at.above(), Blocks.AIR.defaultBlockState());
 			return "ok";
 		});
 		check(result.equals("ok"), "waystones: " + result);
@@ -1434,25 +1513,25 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	private static void blayWaystones(TestSingleplayerContext sp, BlockPos bell) {
 		String result = sp.getServer().computeOnServer(server -> {
 			var level = server.overworld();
-			var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
+			var registry = VillageRegistry.get(server);
 			var village = registry.villageAt(level.dimension(), bell).orElse(null);
 			if (village == null) return "no village at the bell";
 			String oldName = village.name;
-			var store = net.blay09.mods.waystones.store.SavedDataWaystonesStore.get(server);
-			var waystone = new net.blay09.mods.waystones.core.WaystoneImpl(net.blay09.mods.waystones.api.WaystoneKinds.WAYSTONE,
-				UUID.randomUUID(), level.dimension(), bell.offset(-3, 0, 0), net.blay09.mods.waystones.api.WaystoneOrigin.VILLAGE,
-				Component.empty(), net.blay09.mods.waystones.api.WaystoneVisibility.ACTIVATION);
+			var store = SavedDataWaystonesStore.get(server);
+			var waystone = new WaystoneImpl(WaystoneKinds.WAYSTONE,
+				UUID.randomUUID(), level.dimension(), bell.offset(-3, 0, 0), WaystoneOrigin.VILLAGE,
+				Component.empty(), WaystoneVisibility.ACTIVATION);
 			store.addWaystone(waystone);
 			try {
-				net.blay09.mods.waystones.core.PlayerWaystoneManager.activateWaystone(player(server), waystone);
-				String expected = net.valcheff.villagersremember.Waystones.name(registry, village).getString();
+				PlayerWaystoneManager.activateWaystone(player(server), waystone);
+				String expected = Waystones.name(registry, village).getString();
 				if (!waystone.getName().getString().equals(expected)) return "activated as " + waystone.getName().getString() + ", expected " + expected;
 				village.name = "Brightwater";
-				net.valcheff.villagersremember.BlayWaystones.sync(server);
+				BlayWaystones.sync(server);
 				if (!waystone.getName().getString().equals("Brightwater")) return "after rename: " + waystone.getName().getString();
 				waystone.setName(Component.literal("Home"));
 				village.name = "Clearbrook";
-				net.valcheff.villagersremember.BlayWaystones.sync(server);
+				BlayWaystones.sync(server);
 				if (!waystone.getName().getString().equals("Home")) return "player's name replaced: " + waystone.getName().getString();
 				return "ok";
 			} finally {
@@ -1476,7 +1555,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			check(ErrandService.accept(player, errand), "accept the right-click harvest errand");
 			carrotsBefore[0] = player.getInventory().countItem(Items.CARROT);
 			level.setBlockAndUpdate(crop.below(), Blocks.FARMLAND.defaultBlockState());
-			level.setBlockAndUpdate(crop, ((net.minecraft.world.level.block.CropBlock) Blocks.CARROTS).getStateForAge(7));
+			level.setBlockAndUpdate(crop, ((CropBlock) Blocks.CARROTS).getStateForAge(7));
 			// Empty hand, in the slot the client has selected (changing the slot on the server alone desyncs the client).
 			held[0] = player.getInventory().getSelectedItem().copy();
 			player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
@@ -1491,12 +1570,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			int progress = state(server).find(errand.id()).progress[0];
 			// What the harvest gave: carrots picked up or still on the ground (the mod keeps one to replant).
 			int got = player(server).getInventory().countItem(Items.CARROT) - carrotsBefore[0]
-				+ server.overworld().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(crop).inflate(4)).stream()
+				+ server.overworld().getEntitiesOfClass(ItemEntity.class, new AABB(crop).inflate(4)).stream()
 					.filter(e -> e.getItem().is(Items.CARROT)).mapToInt(e -> e.getItem().getCount()).sum();
 			ErrandService.abandon(player(server), errand.id());
 			player(server).getInventory().setItem(player(server).getInventory().getSelectedSlot(), held[0]);
 			var inventory = player(server).getInventory();
-			for (int i = 0; i < inventory.getContainerSize(); i++) if (inventory.getItem(i).is(net.minecraft.world.item.Items.CARROT)) inventory.setItem(i, ItemStack.EMPTY);
+			for (int i = 0; i < inventory.getContainerSize(); i++) if (inventory.getItem(i).is(Items.CARROT)) inventory.setItem(i, ItemStack.EMPTY);
 			server.overworld().setBlockAndUpdate(crop, Blocks.AIR.defaultBlockState());
 			server.overworld().setBlockAndUpdate(crop.below(), Blocks.GRASS_BLOCK.defaultBlockState());
 			if (!state.is(Blocks.CARROTS)) return "the crop was broken, not replanted: " + state;
@@ -1517,22 +1596,22 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			ErrandsConfig.INSTANCE.gradualTrust = true;
 			try {
 				ServerLevel level = server.overworld();
-				var registry = net.valcheff.villagersremember.VillageRegistry.get(server);
+				var registry = VillageRegistry.get(server);
 				var village = registry.villageAt(level.dimension(), bell).orElse(null);
 				if (village == null) return "no village";
 				ErrandsData data = ErrandsData.get(server);
 				ErrandsData.PlayerState fresh = data.player(new UUID(99, 1));
-				List<UUID> everyone = new java.util.ArrayList<>(villagers);
-				java.util.function.Supplier<List<Villager>> open = () -> {
-					net.valcheff.villagersremember.Trust.refresh(server, fresh, village);
-					List<Villager> out = new java.util.ArrayList<>();
+				List<UUID> everyone = new ArrayList<>(villagers);
+				Supplier<List<Villager>> open = () -> {
+					Trust.refresh(server, fresh, village);
+					List<Villager> out = new ArrayList<>();
 					for (UUID id : everyone) {
 						if (level.getEntity(id) instanceof Villager v && v.isAlive()
 							&& !ErrandGenerator.shown(level, ErrandGenerator.Giver.of(v), fresh).isEmpty()) out.add(v);
 					}
 					return out;
 				};
-				java.util.function.Consumer<Villager> acquaint = v -> {
+				Consumer<Villager> acquaint = v -> {
 					fresh.villagerRep.put(v.getUUID(), 20);
 					fresh.trialsPassed.put(v.getUUID(), 1);
 				};
@@ -1554,7 +1633,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				fresh.villageRep.put(ErrandsData.villageKey(village.center), 60);
 				if (open.get().size() != 4) return "with village Known " + open.get().size() + " open, expected 4";
 				// A finished village order the player helped with: one more.
-				net.valcheff.villagersremember.Trust.orderHelped(server, fresh, village);
+				Trust.orderHelped(server, fresh, village);
 				if (open.get().size() != 5) return "after a village order " + open.get().size() + " open, expected 5";
 
 				// A member dies: the gap stays, today and tomorrow.
@@ -1564,14 +1643,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				if (open.get().size() != 4) return "the day after a member died " + open.get().size() + " open, expected 4 (no new one)";
 
 				// A member becomes a zombie villager: no new one; cured, they are back with their points.
-				var circle = net.valcheff.villagersremember.Trust.circle(server, fresh, village);
+				var circle = Trust.circle(server, fresh, village);
 				Villager victim = second;
 				int points = Reputation.villager(fresh, victim.getUUID());
 				var villagerData = victim.getVillagerData();
-				var zombie = victim.convertTo(EntityTypes.ZOMBIE_VILLAGER, net.minecraft.world.entity.ConversionParams.single(victim, true, true), z -> {});
+				var zombie = victim.convertTo(EntityTypes.ZOMBIE_VILLAGER, ConversionParams.single(victim, true, true), z -> {});
 				if (zombie == null || !circle.zombies.containsKey(zombie.getUUID())) return "the zombie isn't known as a zombified member";
 				if (open.get().size() != 3) return "with a zombified member " + open.get().size() + " open, expected 3";
-				Villager cured = zombie.convertTo(EntityTypes.VILLAGER, net.minecraft.world.entity.ConversionParams.single(zombie, true, true), v -> {});
+				Villager cured = zombie.convertTo(EntityTypes.VILLAGER, ConversionParams.single(zombie, true, true), v -> {});
 				if (cured == null) return "no cure";
 				// A real cure gives the villager back their trade (ZombieVillager.finishConversion); a bare conversion doesn't.
 				cured.setVillagerData(villagerData);
@@ -1595,27 +1674,27 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				int before = open.get().size();
 				ErrandsData.PlayerState real = ErrandService.state(player(server));
 				// tradedUp works on the trading player's state; use the test player with the fresh player's circle.
-				real.circles.put(ErrandsData.villageKey(village.center), net.valcheff.villagersremember.Trust.circle(server, fresh, village));
-				net.valcheff.villagersremember.Trust.tradedUp(player(server), trader);
-				if (!net.valcheff.villagersremember.Trust.circle(server, fresh, village).members.contains(trader.getUUID())) return "trading up didn't win the villager over";
+				real.circles.put(ErrandsData.villageKey(village.center), Trust.circle(server, fresh, village));
+				Trust.tradedUp(player(server), trader);
+				if (!Trust.circle(server, fresh, village).members.contains(trader.getUUID())) return "trading up didn't win the villager over";
 				if (open.get().size() != before + 1) return "after trading up " + open.get().size() + " open, expected " + (before + 1);
 				real.circles.remove(ErrandsData.villageKey(village.center));
 
 				// A villager's own memory: a few trades aren't enough, many recent trades or a cure are.
-				List<Villager> strangers = new java.util.ArrayList<>();
+				List<Villager> strangers = new ArrayList<>();
 				for (UUID id : everyone) {
 					if (level.getEntity(id) instanceof Villager v && v.isAlive() && ErrandGenerator.givesErrands(v)
-						&& !net.valcheff.villagersremember.Trust.circle(server, fresh, village).members.contains(v.getUUID())) strangers.add(v);
+						&& !Trust.circle(server, fresh, village).members.contains(v.getUUID())) strangers.add(v);
 				}
 				if (strangers.size() < 2) return "not enough strangers left: " + strangers.size();
 				Villager traded = strangers.get(0);
 				Villager curedBy = strangers.get(1);
-				traded.getGossips().add(fresh.id, net.minecraft.world.entity.ai.gossip.GossipType.TRADING, 10);
-				net.valcheff.villagersremember.Trust.refresh(server, fresh, village);
-				if (net.valcheff.villagersremember.Trust.circle(server, fresh, village).members.contains(traded.getUUID())) return "five trades were enough";
-				traded.getGossips().add(fresh.id, net.minecraft.world.entity.ai.gossip.GossipType.TRADING, 10);
-				curedBy.getGossips().add(fresh.id, net.minecraft.world.entity.ai.gossip.GossipType.MAJOR_POSITIVE, 20);
-				var known = net.valcheff.villagersremember.Trust.refresh(server, fresh, village);
+				traded.getGossips().add(fresh.id, GossipType.TRADING, 10);
+				Trust.refresh(server, fresh, village);
+				if (Trust.circle(server, fresh, village).members.contains(traded.getUUID())) return "five trades were enough";
+				traded.getGossips().add(fresh.id, GossipType.TRADING, 10);
+				curedBy.getGossips().add(fresh.id, GossipType.MAJOR_POSITIVE, 20);
+				var known = Trust.refresh(server, fresh, village);
 				if (!known.members.contains(traded.getUUID())) return "ten recent trades didn't make the villager remember";
 				if (!known.members.contains(curedBy.getUUID())) return "a cure didn't make the villager remember";
 
@@ -1628,10 +1707,10 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 				// A save from before gradual trust: the villagers the player worked with stay open.
 				ErrandsData.PlayerState old = data.player(new UUID(99, 2));
-				List<UUID> worked = new java.util.ArrayList<>();
+				List<UUID> worked = new ArrayList<>();
 				for (UUID id : everyone) if (level.getEntity(id) instanceof Villager v && v.isAlive() && worked.size() < 3) worked.add(id);
 				for (UUID id : worked) old.villagerRep.put(id, 5);
-				if (!net.valcheff.villagersremember.Trust.refresh(server, old, village).members.containsAll(worked)) return "an older save lost villagers it knew";
+				if (!Trust.refresh(server, old, village).members.containsAll(worked)) return "an older save lost villagers it knew";
 				return "ok";
 			} finally {
 				ErrandsConfig.INSTANCE.gradualTrust = false;
@@ -1658,16 +1737,16 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	/** A player without permissions sees only the commands about their own progress, plus the dialog plumbing. */
 	private static void commandPermissions(TestSingleplayerContext sp) {
 		String result = sp.getServer().computeOnServer(server -> {
-			var plain = player(server).createCommandSourceStack().withPermission(net.minecraft.server.permissions.PermissionSet.NO_PERMISSIONS);
-			var gamemaster = player(server).createCommandSourceStack().withPermission(net.minecraft.server.permissions.LevelBasedPermissionSet.GAMEMASTER);
+			var plain = player(server).createCommandSourceStack().withPermission(PermissionSet.NO_PERMISSIONS);
+			var gamemaster = player(server).createCommandSourceStack().withPermission(LevelBasedPermissionSet.GAMEMASTER);
 			var root = server.getCommands().getDispatcher().getRoot().getChild("errands");
 			if (root == null || !root.canUse(plain)) return "/errands not open to players";
-			java.util.Set<String> open = new java.util.TreeSet<>();
+			Set<String> open = new TreeSet<>();
 			for (var child : root.getChildren()) {
 				if (child.canUse(plain)) open.add(child.getName());
 				else if (child.canUse(gamemaster)) return child.getName() + " open to level 2";
 			}
-			if (!open.equals(new java.util.TreeSet<>(List.of("book", "click", "input", "track", "village")))) return "open to players: " + open;
+			if (!open.equals(new TreeSet<>(List.of("book", "click", "input", "track", "village")))) return "open to players: " + open;
 			if (root.getChild("village").getChild("name").canUse(plain)) return "village name open to players";
 			return "ok";
 		});
@@ -1733,12 +1812,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 					if (pack.size() < 3) return p + " T" + tier + " has " + pack.size() + " errands";
 					double[] window = {0, 4, 8, 12, 18, 25, 35};
 					for (Errand e : pack) {
-						boolean reforge = e.item().map(r -> r.kind() == net.valcheff.villagersremember.ErrandPools.RewardKind.ENCHANT_MAX).orElse(false);
+						boolean reforge = e.item().map(r -> r.kind() == ErrandPools.RewardKind.ENCHANT_MAX).orElse(false);
 						if (e.item().isPresent() && !reforge) return p + " T" + tier + " daily with an item: " + e.item().get();
 						if (reforge) continue;
 						if (e.value() < window[tier] * 0.8 || e.value() > window[tier + 1] * 1.25) return p + " T" + tier + " " + e.id() + " takes " + e.value() + " min";
 						// Never less than selling the goods to a villager (x1.5).
-						java.util.Map<String, Double> perEmerald = java.util.Map.of("minecraft:carrot", 22.0, "minecraft:wheat", 20.0,
+						Map<String, Double> perEmerald = Map.of("minecraft:carrot", 22.0, "minecraft:wheat", 20.0,
 							"minecraft:gold_ingot", 3.0, "minecraft:iron_ingot", 4.0, "minecraft:diamond", 1.0, "minecraft:rotten_flesh", 32.0);
 						for (Objective o : e.objectives()) {
 							Double per = o.isDelivery() ? perEmerald.get(o.target()) : null;
@@ -1763,7 +1842,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				}
 			}
 			if (sword == null) return "no iron sword reforge";
-			state.collection.computeIfAbsent("weaponsmith", k -> new java.util.LinkedHashSet<>()).add("reforge.iron_sword");
+			state.collection.computeIfAbsent("weaponsmith", k -> new LinkedHashSet<>()).add("reforge.iron_sword");
 			boolean again = ErrandGenerator.reforgeDone(state, sword);
 			state.villagerRep.remove(smith);
 			state.trialsPassed.remove(smith);
@@ -1834,18 +1913,18 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	private static void adminCommands(ClientGameTestContext context, TestSingleplayerContext sp, List<UUID> villagers) {
 		// Two villagers with the same name: they are told apart by their trade.
 		sp.getServer().runOnServer(server -> {
-			villager(server, villagers.get(0)).setCustomName(net.minecraft.network.chat.Component.literal("Twin"));
-			villager(server, villagers.get(1)).setCustomName(net.minecraft.network.chat.Component.literal("Twin"));
+			villager(server, villagers.get(0)).setCustomName(Component.literal("Twin"));
+			villager(server, villagers.get(1)).setCustomName(Component.literal("Twin"));
 		});
 		String villageArg = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			return com.mojang.brigadier.arguments.StringArgumentType.escapeIfRequired(ErrandText.villageName(player, village.center));
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			return StringArgumentType.escapeIfRequired(ErrandText.villageName(player, village.center));
 		});
 		String twin = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			var names = net.valcheff.villagersremember.AdminCommands.residentNames(server, player, village);
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			var names = AdminCommands.residentNames(server, player, village);
 			for (var e : names.entrySet()) if (e.getValue().id.equals(villagers.get(1))) return e.getKey();
 			return "";
 		});
@@ -1867,7 +1946,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		sp.getServer().runCommand("errands rep @p here all reset");
 		check(sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
 			return Reputation.village(state(server), Optional.of(village.center)) == 0
 				&& villagers.stream().noneMatch(id -> state(server).villagerRep.containsKey(id));
 		}), "rep all reset");
@@ -1875,14 +1954,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		// give: a chosen errand from a chosen villager, accepted right away.
 		String smith = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
-			var village = net.valcheff.villagersremember.VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
-			for (var e : net.valcheff.villagersremember.AdminCommands.residentNames(server, player, village).entrySet()) {
+			var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+			for (var e : AdminCommands.residentNames(server, player, village).entrySet()) {
 				if (e.getValue().profession.equals("minecraft:weaponsmith")) return e.getKey();
 			}
 			return "";
 		});
 		sp.getServer().runOnServer(server -> state(server).active.clear());
-		sp.getServer().runCommand("errands give @p " + villageArg + " " + com.mojang.brigadier.arguments.StringArgumentType.escapeIfRequired(smith)
+		sp.getServer().runCommand("errands give @p " + villageArg + " " + StringArgumentType.escapeIfRequired(smith)
 			+ " reforge.iron_sword");
 		check(sp.getServer().computeOnServer(server -> state(server).active.stream().anyMatch(a ->
 			a.errand.item().map(i -> i.id().equals("minecraft:iron_sword")).orElse(false) && a.errand.tier() == 3)), "give reforge.iron_sword");
@@ -1985,7 +2064,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		return server.overworld().getEntitiesOfClass(Villager.class, new AABB(base).inflate(16)).stream().map(Villager::getUUID).toList();
 	}
 
-	private static Errand findErrand(MinecraftServer server, List<UUID> villagers, java.util.function.Predicate<Errand> wanted) {
+	private static Errand findErrand(MinecraftServer server, List<UUID> villagers, Predicate<Errand> wanted) {
 		for (UUID id : villagers) {
 			Villager v = villager(server, id);
 			List<Errand> offers = ErrandGenerator.offers(server.overworld(), ErrandGenerator.Giver.of(v), state(server));
@@ -2054,7 +2133,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		ServerPlayer player = player(server);
 		BlockPos pos = base.offset(-3, 0, -3);
 		level.setBlockAndUpdate(pos, Blocks.FURNACE.defaultBlockState());
-		if (level.getBlockEntity(pos) instanceof net.minecraft.world.MenuProvider furnace) player.openMenu(furnace);
+		if (level.getBlockEntity(pos) instanceof MenuProvider furnace) player.openMenu(furnace);
 		new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse(o.target())), o.count()).onCraftedBy(player, o.count());
 		player.closeContainer();
 		level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
@@ -2068,7 +2147,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		BlockPos pos = base.offset(3, 0, -3);
 		level.setBlockAndUpdate(pos.below(), Blocks.FARMLAND.defaultBlockState());
 		for (int i = 0; i < o.count(); i++) {
-			var state = block instanceof net.minecraft.world.level.block.CropBlock crop ? crop.getStateForAge(crop.getMaxAge()) : block.defaultBlockState();
+			var state = block instanceof CropBlock crop ? crop.getStateForAge(crop.getMaxAge()) : block.defaultBlockState();
 			level.setBlockAndUpdate(pos, state);
 			player.gameMode.destroyBlock(pos);
 		}
@@ -2112,7 +2191,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 	private static String mark(MinecraftServer server, UUID villager) {
 		return server.overworld().getEntity(villager) instanceof Villager v
-			? net.valcheff.villagersremember.Hud.markOf(player(server), v) : "no villager";
+			? Hud.markOf(player(server), v) : "no villager";
 	}
 
 	private static int countEmeralds(ServerPlayer player) {
@@ -2149,8 +2228,8 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 						UUID id = new UUID(p.hashCode() * 7919L + tier, i * 104729L + 17);
 						List<Errand> offers = ErrandGenerator.generate(id, i % 7, "minecraft:" + p, "minecraft:plains", 5, Optional.empty(), tier);
 						for (Errand e : offers.subList(0, Math.min(3, offers.size()))) {
-							out.append(p).append(',').append(tier).append(',').append(e.objectives().stream().map(o -> o.type().key()).collect(java.util.stream.Collectors.joining("+"))).append(',')
-								.append(e.main().target()).append(',').append(e.main().count()).append(',').append(String.format(java.util.Locale.ROOT, "%.2f", e.value())).append(',')
+							out.append(p).append(',').append(tier).append(',').append(e.objectives().stream().map(o -> o.type().key()).collect(Collectors.joining("+"))).append(',')
+								.append(e.main().target()).append(',').append(e.main().count()).append(',').append(String.format(Locale.ROOT, "%.2f", e.value())).append(',')
 								.append(e.emeralds()).append(',').append(e.xp()).append(',')
 								.append(e.item().map(x -> x.kind().name()).orElse("")).append(',')
 								.append(e.item().map(Errand.ItemReward::id).orElse("")).append(',')
