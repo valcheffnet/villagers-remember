@@ -245,9 +245,10 @@ final class PaperEvents implements Listener {
 		// The event comes before a book turns into an enchanted book; the trigger sees the result.
 		if (item.is(Items.BOOK)) item = item.transmuteCopy(Items.ENCHANTED_BOOK);
 		ItemStack enchanted = item;
-		int levels = event.whichButton() + 1;
+		// The level shown on the chosen option, which min_level is about (not the 1 to 3 levels it costs).
+		int level = event.getExpLevelCost();
 		Actions.record(player(event.getEnchanter()), Objective.Type.ENCHANT, 1,
-			o -> levels >= o.minLevel() && (o.target().isEmpty() || o.matchesItem(enchanted)));
+			o -> level >= o.minLevel() && (o.target().isEmpty() || o.matchesItem(enchanted)));
 	}
 
 	/**

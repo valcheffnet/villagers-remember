@@ -69,6 +69,7 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.inventory.StonecutterMenu;
 import net.minecraft.world.item.Item;
@@ -630,6 +631,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			treasury(context, sp, bell);
 			uniqueNames(sp);
 			zombieAndCure(sp, base);
+			enchantLevels(sp, base);
 			topRewards(context, sp);
 			names(context, sp, villagers);
 			tradeFromGreeting(context, sp, villagers);
@@ -1290,6 +1292,41 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return "ok";
 		});
 		check(result.equals("ok"), "zombie and cure: " + result);
+	}
+
+	/**
+	 * "Enchant at level 10 or higher" goes by the level on the chosen option of the table (5, 15, 30 here), not by the
+	 * 1 to 3 levels the enchant costs.
+	 */
+	private static void enchantLevels(TestSingleplayerContext sp, BlockPos base) {
+		String result = sp.getServer().computeOnServer(server -> {
+			ServerLevel level = server.overworld();
+			ServerPlayer player = player(server);
+			Errand errand = new Errand("test/0/enchant", UUID.randomUUID(), "minecraft:librarian", "minecraft:plains", 1, 1,
+				Optional.empty(), Optional.empty(), List.of(new Objective(Objective.Type.ENCHANT, "", false, 4, 10)), 1, 0, 1,
+				Optional.empty(), 1);
+			if (!ErrandService.accept(player, errand)) return "accept";
+			BlockPos table = base.offset(8, 0, 8);
+			level.setBlockAndUpdate(table, Blocks.ENCHANTING_TABLE.defaultBlockState());
+			player.openMenu(level.getBlockState(table).getMenuProvider(level, table));
+			if (!(player.containerMenu instanceof EnchantmentMenu menu)) return "no enchanting menu";
+			player.setExperienceLevels(100);
+			StringBuilder seen = new StringBuilder();
+			for (int option : new int[] {2, 0, 1}) {
+				menu.getSlot(0).set(new ItemStack(Items.BOOK));
+				menu.getSlot(1).set(new ItemStack(Items.LAPIS_LAZULI, 3));
+				menu.costs[0] = 5;
+				menu.costs[1] = 15;
+				menu.costs[2] = 30;
+				if (!menu.clickMenuButton(player, option)) return "option " + option + " refused";
+				seen.append(state(server).find(errand.id()).progress[0]);
+			}
+			player.closeContainer();
+			ErrandService.abandon(player, errand.id());
+			// Level 30 counts, level 5 does not, level 15 counts.
+			return seen.toString().equals("112") ? "ok" : "progress after 30, 5, 15: " + seen;
+		});
+		check(result.equals("ok"), "enchant levels: " + result);
 	}
 
 	/** More villages than names: every name of the list once, then they come round again as "Name 2". */

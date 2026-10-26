@@ -4,7 +4,7 @@
 
 **Server-side. Vanilla clients welcome.**
 
-**Download 0.13.1-beta:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.1-beta/villagers-remember-fabric-0.13.1-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.1-beta/villagers-remember-neoforge-0.13.1-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.1-beta/villagers-remember-paper-0.13.1-beta.jar). Older versions are on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
+**Download 0.13.2-beta:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.2-beta/villagers-remember-fabric-0.13.2-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.2-beta/villagers-remember-neoforge-0.13.2-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.2-beta/villagers-remember-paper-0.13.2-beta.jar). Older versions are on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
 
 **Questions, bugs or ideas? Come to [Discord](https://discord.com/invite/X6yxJpk9Fz).**
 

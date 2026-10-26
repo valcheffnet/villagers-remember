@@ -7,6 +7,7 @@
 		"BrewedPotionTriggerMixin",
 		"CuredZombieVillagerTriggerMixin",
 		"EnchantedItemTriggerMixin",
+		"EnchantmentMenuMixin",
 		"FilledBucketTriggerMixin",
 		"FishingRodHookedTriggerMixin",
 		"ItemStackCraftedMixin",

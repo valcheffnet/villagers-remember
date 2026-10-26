@@ -59,6 +59,19 @@ public final class ActionHooks {
 		Actions.record(player, type, count, o -> o.matchesItem(stack));
 	}
 
+	/** The level shown on the enchanting option a player picked this tick (cleared in {@link #afterUse}). */
+	private static final Map<ServerPlayer, Integer> ENCHANT_LEVELS = new HashMap<>();
+
+	public static void enchantChosen(ServerPlayer player, int level) {
+		ENCHANT_LEVELS.put(player, level);
+	}
+
+	/** The chosen option's level for the enchant just made; {@code levels} (what it cost) if none was noted. */
+	public static int enchantLevel(ServerPlayer player, int levels) {
+		Integer level = ENCHANT_LEVELS.remove(player);
+		return level != null ? level : levels;
+	}
+
 	/**
 	 * A harvest counts what it gave: "harvest 18 carrots" means 18 carrots, not 18 plants that drop two or three each.
 	 * While a block is broken or a right-click is handled, the items dropped are kept by position ({@link #dropped}),
@@ -168,6 +181,7 @@ public final class ActionHooks {
 		}
 		CLICKED.clear();
 		DROPS.clear();
+		ENCHANT_LEVELS.clear();
 	}
 
 	private static boolean mature(BlockState state) {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.2-beta
+
+- The librarian's "Enchant at level 10 (or 30) or higher" errands can be finished now. They compared the level with what the enchant cost (1 to 3 levels) instead of the level shown on the chosen option, so they never moved.
+
 ## 0.13.1-beta
 
 - A Paper version: `villagers-remember-paper-0.13.1-beta.jar` runs as a plugin on Paper 26.3, with the same errands and prices as the mod. Paper has no settings screen, so admins edit `plugins/VillagersRemember/villagersremember.json` and run `/errands reload`.
