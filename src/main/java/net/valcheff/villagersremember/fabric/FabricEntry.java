@@ -40,6 +40,17 @@ public final class FabricEntry implements ModInitializer {
 			}
 
 			@Override
+			public String version() {
+				return FabricLoader.getInstance().getModContainer(VillagersRemember.MOD_ID)
+					.map(c -> c.getMetadata().getVersion().getFriendlyString()).orElse("");
+			}
+
+			@Override
+			public String loader() {
+				return "fabric";
+			}
+
+			@Override
 			public void send(ServerPlayer player, CustomPacketPayload payload) {
 				ServerPlayNetworking.send(player, payload);
 			}

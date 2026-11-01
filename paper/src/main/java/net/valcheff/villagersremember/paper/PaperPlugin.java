@@ -42,6 +42,16 @@ public final class PaperPlugin extends JavaPlugin {
 				return false;
 			}
 
+			@Override
+			public String version() {
+				return getPluginMeta().getVersion();
+			}
+
+			@Override
+			public String loader() {
+				return "paper";
+			}
+
 			/** Payloads go to a client with the mod; a Paper server has no settings screen to answer. */
 			@Override
 			public void send(ServerPlayer player, CustomPacketPayload payload) {

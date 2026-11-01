@@ -905,5 +905,12 @@
 	"side.have": "Носи %s",
 	"lore.have.ender_chest": "Добър беше с нас. Вземи си ендър сандък: от време на време ще ти оставяме по нещо малко в него.",
 	"trust.traded": "%s хареса търговията с теб и иска да си поговорите.",
-	"trust.known": "%s те помни и иска да си поговорите."
+	"trust.known": "%s те помни и иска да си поговорите.",
+	"update.available": "[Селяните помнят] Излезе версия %s, в този свят е %s. %s",
+	"update.download": "Изтегли",
+	"update.support": "[Селяните помнят] Въпроси или бъгове? Пиши ни в %s.",
+	"villagersremember.config.updateCheck": "Проверка за нови версии",
+	"villagersremember.config.updateCheck.tooltip": "При старт сървърът пита GitHub веднъж има ли нова версия и казва на админите, когато влязат. Не се праща нищо за сървъра или играчите.",
+	"villagersremember.config.supportMessage": "Discord линк за админите",
+	"villagersremember.config.supportMessage.tooltip": "Админите виждат ред с линк към Discord за въпроси и бъгове при всяко влизане."
 }

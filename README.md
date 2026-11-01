@@ -128,6 +128,8 @@ The same settings live in `config/villagersremember.json`, created on first star
 | `xpMultiplier` | `1.0` | Experience from errands, contracts and village orders. Same as `/errands xp`. |
 | `contracts` | `true` | `contractMinutes` 90, `contractMaxEmeralds` 160, `contractsForLegend` 3. |
 | `villagerNames` | `always` | `always`, `look` (only when looking at them) or `off`. |
+| `updateCheck` | `true` | When the server starts, it asks GitHub's release list once whether there's a newer version and tells admins when they join. The request carries nothing about your server or players. |
+| `supportMessage` | `true` | Admins get a line with the Discord link each time they join. |
 
 Run `/errands reload` after editing.
 

@@ -12,6 +12,12 @@ public final class Platform {
 
 		boolean isModLoaded(String modId);
 
+		/** This mod's version, as in the jar's metadata. */
+		String version();
+
+		/** "fabric", "neoforge" or "paper": decides which download page the update notice links to. */
+		String loader();
+
 		/** Sends a payload to a player whose client has the mod (the caller checks that the client asked). */
 		void send(ServerPlayer player, CustomPacketPayload payload);
 	}

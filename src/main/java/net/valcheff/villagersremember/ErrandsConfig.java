@@ -135,6 +135,10 @@ public final class ErrandsConfig {
 	/** Reputation lost in a village (and with the villager) for hitting / killing a villager. */
 	public int hitPenalty = 2;
 	public int killPenalty = 25;
+	/** Ask GitHub once at server start whether a newer version is out, and tell admins when they join. */
+	public boolean updateCheck = true;
+	/** Admins get a line with the Discord link for questions and bugs each time they join. */
+	public boolean supportMessage = true;
 
 	public static void load() {
 		// The mod was called Village Errands before its first public version; keep a config made under the old name.

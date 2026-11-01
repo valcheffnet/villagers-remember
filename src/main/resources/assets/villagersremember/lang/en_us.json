@@ -905,5 +905,12 @@
 	"side.have": "Have %s",
 	"lore.have.ender_chest": "You've been good to us. Get yourself an ender chest: now and then we'll leave a little something in it for you.",
 	"trust.traded": "%s liked trading with you and wants to talk.",
-	"trust.known": "%s remembers you and wants to talk."
+	"trust.known": "%s remembers you and wants to talk.",
+	"update.available": "[Villagers Remember] Version %s is out, this world has %s. %s",
+	"update.download": "Download",
+	"update.support": "[Villagers Remember] Questions or bugs? Come to %s.",
+	"villagersremember.config.updateCheck": "Check for new versions",
+	"villagersremember.config.updateCheck.tooltip": "When the server starts it asks GitHub once if there is a newer version, and tells admins when they join. Nothing about the server or its players is sent.",
+	"villagersremember.config.supportMessage": "Discord link for admins",
+	"villagersremember.config.supportMessage.tooltip": "Admins get a line with the Discord link for questions and bugs each time they join."
 }

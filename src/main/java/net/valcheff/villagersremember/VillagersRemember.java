@@ -66,6 +66,7 @@ public final class VillagersRemember {
 
 	public static void serverStarted(MinecraftServer s) {
 		ErrandPools.reload(s);
+		UpdateCheck.start();
 	}
 
 	/** Data packs were reloaded (/reload). */
@@ -93,6 +94,7 @@ public final class VillagersRemember {
 		Patron.onJoin(player);
 		GroupOrder.deliverMail(player);
 		Milestones.check(player);
+		UpdateCheck.joined(player);
 	}
 
 	public static void playerLeft(ServerPlayer player) {

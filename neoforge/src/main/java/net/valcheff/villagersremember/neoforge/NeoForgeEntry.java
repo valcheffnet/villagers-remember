@@ -6,6 +6,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
@@ -46,6 +47,17 @@ public final class NeoForgeEntry {
 			@Override
 			public boolean isModLoaded(String modId) {
 				return FMLLoader.getCurrent().getLoadingModList().getModFileById(modId) != null;
+			}
+
+			@Override
+			public String version() {
+				return ModList.get().getModContainerById(VillagersRemember.MOD_ID)
+					.map(c -> c.getModInfo().getVersion().toString()).orElse("");
+			}
+
+			@Override
+			public String loader() {
+				return "neoforge";
 			}
 
 			@Override

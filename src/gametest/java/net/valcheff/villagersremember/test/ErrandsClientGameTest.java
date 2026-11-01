@@ -11,6 +11,7 @@ import net.blay09.mods.waystones.store.SavedDataWaystonesStore;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
@@ -110,6 +111,7 @@ import net.valcheff.villagersremember.Reputation;
 import net.valcheff.villagersremember.TopRewards;
 import net.valcheff.villagersremember.Treasury;
 import net.valcheff.villagersremember.Trust;
+import net.valcheff.villagersremember.UpdateCheck;
 import net.valcheff.villagersremember.VillageRegistry;
 import net.valcheff.villagersremember.VillagersRemember;
 import net.valcheff.villagersremember.Waystones;
@@ -133,6 +135,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -164,7 +167,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			context.waitTicks(200);
 			return;
 		}
+		// System messages the client gets, for the notices on join. No request to GitHub from the test.
+		List<String> chat = new CopyOnWriteArrayList<>();
+		ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+			if (!overlay) chat.add(message.getString());
+		});
+		ErrandsConfig.INSTANCE.updateCheck = false;
 		try (TestSingleplayerContext sp = context.worldBuilder().create()) {
+			joinNotices(context, sp, chat);
 			dumpBalance(sp);
 			writeFontWidths(context);
 			sp.getServer().runCommand("time set day");
@@ -2282,6 +2292,31 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			Files.writeString(Path.of("errand-balance.csv"), csv);
 		} catch (IOException e) {
 			throw new AssertionError(e);
+		}
+	}
+
+	/** The owner of a single player world gets the Discord line on join, and the update line once a newer version is known. */
+	private static void joinNotices(ClientGameTestContext context, TestSingleplayerContext sp, List<String> chat) {
+		context.waitTicks(20);
+		check(chat.stream().anyMatch(m -> m.contains("Questions or bugs? Come to Discord")), "no Discord line on join: " + chat);
+		check(chat.stream().noneMatch(m -> m.contains(" is out")), "update line without a newer version: " + chat);
+		sp.getServer().runOnServer(server -> {
+			setNewer("99.0.0");
+			UpdateCheck.joined(player(server));
+			setNewer(null);
+		});
+		context.waitTicks(5);
+		check(chat.stream().anyMatch(m -> m.contains("Version 99.0.0 is out")), "no update line: " + chat);
+		ErrandsConfig.INSTANCE.updateCheck = true;
+	}
+
+	private static void setNewer(String version) {
+		try {
+			Field newer = UpdateCheck.class.getDeclaredField("newer");
+			newer.setAccessible(true);
+			newer.set(null, version);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 

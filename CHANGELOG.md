@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Admins (and the owner of a single player world) see a line when they join if a newer version is out, with a link to its download page. The server checks GitHub once at start. Each time they join they also get a line with the Discord link for questions and bugs. Both can be turned off in the settings (`updateCheck`, `supportMessage`).
+
 ## 0.13.2-beta
 
 - The librarian's "Enchant at level 10 (or 30) or higher" errands can be finished now. They compared the level with what the enchant cost (1 to 3 levels) instead of the level shown on the chosen option, so they never moved.
