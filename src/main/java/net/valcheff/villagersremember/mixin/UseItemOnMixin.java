@@ -20,7 +20,7 @@ public abstract class UseItemOnMixin {
 		shift = At.Shift.AFTER))
 	private void villagersremember$beforeUse(ServerboundUseItemOnPacket packet, CallbackInfo ci) {
 		ServerGamePacketListenerImpl self = (ServerGamePacketListenerImpl) (Object) this;
-		ActionHooks.beforeUse(self.player, packet.hitResult().getBlockPos());
+		ActionHooks.beforeUse(self.player, packet.getHitResult().getBlockPos());
 	}
 
 	@Inject(method = "handleUseItemOn", at = @At("RETURN"))

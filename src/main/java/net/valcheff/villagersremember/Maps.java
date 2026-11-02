@@ -20,7 +20,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
@@ -182,51 +181,37 @@ public final class Maps {
 	private static Optional<ItemStack> mapIn(ServerPlayer player, ServerLevel level, Objective o, String villagerName) {
 		BlockPos found = find(player, level, o);
 		if (found == null) return Optional.empty();
-		Kind kind = kindOf(o);
 		ItemStack map = MapItem.create(level, found.getX(), found.getZ(), (byte) 2, true, true);
 		MapItem.renderBiomePreviewMap(level, map);
-		MapItemSavedData.addTargetDecoration(map, found, "+", kind.mark);
-		if (kind.item != null) {
-			// The game's own explorer map for this place: its icon in the inventory and its name in every language.
-			map = map.transmuteCopy(kind.item);
-		} else {
-			map.set(DataComponents.ITEM_NAME, Lang.tr(player, "map.to", ErrandText.targetName(player, o)));
-			map.set(DataComponents.DYED_COLOR, new DyedItemColor(tint(o)));
-			map.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
-		}
+		MapItemSavedData.addTargetDecoration(map, found, "+", markOf(o));
+		map.set(DataComponents.ITEM_NAME, Lang.tr(player, "map.to", ErrandText.targetName(player, o)));
+		map.set(DataComponents.DYED_COLOR, new DyedItemColor(tint(o)));
+		map.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.DYED_COLOR, true));
 		List<Component> lore = new ArrayList<>();
 		lore.add(Lang.tr(player, "map.from", villagerName).withStyle(s -> s.withItalic(true).withColor(ChatFormatting.GRAY)));
 		map.set(DataComponents.LORE, new ItemLore(lore));
 		return Optional.of(map);
 	}
 
-	/** The game's explorer map item and map icon for a place, where it has them (26.3). */
-	private record Kind(Item item, Holder<MapDecorationType> mark) {
-	}
-
-	private static Kind kindOf(Objective o) {
-		if (o.type() != Objective.Type.VISIT_STRUCTURE) return new Kind(null, MapDecorationTypes.RED_X);
+	/** The game's map icon for a place, where it has one. 26.2 has no explorer map item for most of them. */
+	private static Holder<MapDecorationType> markOf(Objective o) {
+		if (o.type() != Objective.Type.VISIT_STRUCTURE) return MapDecorationTypes.RED_X;
 		String id = o.target().substring(o.target().indexOf(':') + 1);
 		return switch (id) {
-			case "ancient_city" -> new Kind(Items.BURIED_ANCIENT_CITY_MAP, MapDecorationTypes.ANCIENT_CITY);
-			case "mansion" -> new Kind(Items.WOODLAND_MANSION_MAP, MapDecorationTypes.WOODLAND_MANSION);
-			case "monument" -> new Kind(Items.OCEAN_MONUMENT_MAP, MapDecorationTypes.OCEAN_MONUMENT);
-			case "trial_chambers" -> new Kind(Items.BURIED_TRIAL_CHAMBERS_MAP, MapDecorationTypes.TRIAL_CHAMBERS);
-			case "desert_pyramid" -> new Kind(Items.DESERT_PYRAMID_MAP, MapDecorationTypes.DESERT_PYRAMID);
-			case "jungle_pyramid" -> new Kind(Items.JUNGLE_PYRAMID_MAP, MapDecorationTypes.JUNGLE_TEMPLE);
-			case "swamp_hut" -> new Kind(Items.SWAMP_HUT_MAP, MapDecorationTypes.SWAMP_HUT);
-			case "abandoned_camp" -> new Kind(Items.ABANDONED_CAMP_MAP, MapDecorationTypes.ABANDONED_CAMP);
-			case "mineshaft", "mineshaft_mesa" -> new Kind(Items.BURIED_MINESHAFT_MAP, MapDecorationTypes.MINESHAFT);
-			case "ocean_ruin_warm" -> new Kind(Items.WARM_OCEAN_RUINS_MAP, MapDecorationTypes.OCEAN_RUIN_WARM);
-			case "buried_treasure" -> new Kind(Items.BURIED_TREASURE_MAP, MapDecorationTypes.RED_X);
-			case "village_desert" -> new Kind(Items.DESERT_VILLAGE_MAP, MapDecorationTypes.DESERT_VILLAGE);
-			case "village_plains" -> new Kind(Items.PLAINS_VILLAGE_MAP, MapDecorationTypes.PLAINS_VILLAGE);
-			case "village_savanna" -> new Kind(Items.SAVANNA_VILLAGE_MAP, MapDecorationTypes.SAVANNA_VILLAGE);
-			case "village_snowy" -> new Kind(Items.SNOWY_VILLAGE_MAP, MapDecorationTypes.SNOWY_VILLAGE);
-			case "village_taiga" -> new Kind(Items.TAIGA_VILLAGE_MAP, MapDecorationTypes.TAIGA_VILLAGE);
-			default -> new Kind(null, MapDecorationTypes.RED_X);
+			case "mansion" -> MapDecorationTypes.WOODLAND_MANSION;
+			case "monument" -> MapDecorationTypes.OCEAN_MONUMENT;
+			case "trial_chambers" -> MapDecorationTypes.TRIAL_CHAMBERS;
+			case "jungle_pyramid" -> MapDecorationTypes.JUNGLE_TEMPLE;
+			case "swamp_hut" -> MapDecorationTypes.SWAMP_HUT;
+			case "village_desert" -> MapDecorationTypes.DESERT_VILLAGE;
+			case "village_plains" -> MapDecorationTypes.PLAINS_VILLAGE;
+			case "village_savanna" -> MapDecorationTypes.SAVANNA_VILLAGE;
+			case "village_snowy" -> MapDecorationTypes.SNOWY_VILLAGE;
+			case "village_taiga" -> MapDecorationTypes.TAIGA_VILLAGE;
+			default -> MapDecorationTypes.RED_X;
 		};
 	}
+
 	private static List<ServerLevel> searchOrder(MinecraftServer server, ServerLevel here) {
 		List<ServerLevel> out = new ArrayList<>();
 		out.add(here);
@@ -257,7 +242,9 @@ public final class Maps {
 		Optional<Holder.Reference<Structure>> holder = level.registryAccess().lookupOrThrow(Registries.STRUCTURE)
 			.get(ResourceKey.create(Registries.STRUCTURE, id));
 		if (holder.isEmpty()) return null;
-		return level.findNearestMapStructure(HolderSet.direct(holder.get()), origin, STRUCTURE_RADIUS, false);
+		Pair<BlockPos, Holder<Structure>> found = level.getChunkSource().getGenerator()
+			.findNearestMapStructure(level, HolderSet.direct(holder.get()), origin, STRUCTURE_RADIUS, false);
+		return found != null ? found.getFirst() : null;
 	}
 
 	private static BlockPos findBiome(ServerLevel level, Objective o, BlockPos origin) {
