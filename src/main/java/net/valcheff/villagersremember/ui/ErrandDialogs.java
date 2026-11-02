@@ -75,8 +75,8 @@ public final class ErrandDialogs {
 	private static final int TEXT_WIDTH = 320;
 	/** Buttons of the bell menu, two in a row. */
 	private static final int MENU_WIDTH = 155;
-	/** Greeting buttons: a third of the old 220, two to a row. */
-	private static final int GREET_WIDTH = 74;
+	/** Greeting buttons, two to a row: wide enough for "Tasks (12) ✔" in every language the mod has. */
+	private static final int GREET_WIDTH = 100;
 	private static final double REACH = 8.0;
 
 	/** Where a detail screen was opened from: what the player may do there and how to get back. */

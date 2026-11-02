@@ -19,7 +19,7 @@ public final class ErrandsConfig {
 
 	public static ErrandsConfig INSTANCE = new ErrandsConfig();
 
-	/** "auto" uses each player's client language; or force one, e.g. "en_us" / "bg_bg". */
+	/** "auto" uses each player's client language; or force one of {@link Lang#LANGUAGES}, e.g. "en_us" / "bg_bg". */
 	public String language = "auto";
 	/** Errands a villager offers per day, by villager level 1..5. */
 	public int[] errandsPerLevel = {1, 2, 2, 3, 3};
