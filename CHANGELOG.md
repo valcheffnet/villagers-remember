@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.13.3-beta
 
+- Runs on Minecraft 26.2, 26.1.2 and 1.21.11 too, on Fabric, NeoForge and Paper. The file name now says the Minecraft version, for example `villagers-remember-fabric-26.2-0.13.3-beta.jar`. A world upgraded from 1.21.11 to 26.x keeps the villagers' memory.
+- On 1.21.11, village waystones get their village's name as well. Waystones 21.11.9 drops the name another mod gives a waystone, so the mod sets it again right after the first activation.
 - Admins (and the owner of a single player world) see a line when they join if a newer version is out, with a link to its download page. The server checks GitHub once at start. Each time they join they also get a line with the Discord link for questions and bugs. Both can be turned off in the settings (`updateCheck`, `supportMessage`).
 
 ## 0.13.2-beta

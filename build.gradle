@@ -3,7 +3,7 @@ plugins {
 }
 
 base {
-	archivesName = 'villagers-remember-fabric'
+	archivesName = "villagers-remember-fabric-${project.minecraft_version}"
 }
 
 repositories {

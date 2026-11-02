@@ -14,7 +14,7 @@ version = rootProps.getProperty('version')
 group = 'net.valcheff'
 
 base {
-	archivesName = 'villagers-remember-paper'
+	archivesName = "villagers-remember-paper-${project.minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
