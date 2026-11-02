@@ -22,7 +22,8 @@ import java.util.Map;
  * and are translated by the client itself.
  */
 public final class Lang {
-	private static final String[] LANGUAGES = {"en_us", "bg_bg"};
+	/** Languages with their own text files. A client language without one uses its family's (es_mx: es_es), then English. */
+	public static final List<String> LANGUAGES = List.of("en_us", "bg_bg", "de_de", "es_es", "fr_fr", "pt_br", "ru_ru");
 	private static final Map<String, Map<String, String>> STRINGS = new HashMap<>();
 	private static final Map<String, List<String>> VILLAGER_NAMES = new HashMap<>();
 	private static final Map<String, List<String>> VILLAGE_NAMES = new HashMap<>();
@@ -63,7 +64,11 @@ public final class Lang {
 	public static String language(ServerPlayer player) {
 		String forced = ErrandsConfig.INSTANCE.language.toLowerCase(Locale.ROOT);
 		String lang = forced.equals("auto") ? player.clientInformation().language().toLowerCase(Locale.ROOT) : forced;
-		return STRINGS.containsKey(lang) ? lang : "en_us";
+		if (STRINGS.containsKey(lang)) return lang;
+		int cut = lang.indexOf('_');
+		String family = (cut < 0 ? lang : lang.substring(0, cut)) + "_";
+		for (String known : LANGUAGES) if (known.startsWith(family) && STRINGS.containsKey(known)) return known;
+		return "en_us";
 	}
 
 	public static String raw(String lang, String key) {
