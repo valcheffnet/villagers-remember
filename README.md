@@ -4,7 +4,7 @@
 
 **Server-side. Vanilla clients welcome.**
 
-**Download 0.13.2-beta:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.2-beta/villagers-remember-fabric-0.13.2-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.2-beta/villagers-remember-neoforge-0.13.2-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.2-beta/villagers-remember-paper-0.13.2-beta.jar). Older versions are on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
+**Download 0.13.3-beta for Minecraft 26.3:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.3-beta/villagers-remember-fabric-26.3-0.13.3-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.3-beta/villagers-remember-neoforge-26.3-0.13.3-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.3-beta/villagers-remember-paper-26.3-0.13.3-beta.jar). The jars for 26.2, 26.1.2 and 1.21.11 are on the [0.13.3-beta release page](https://github.com/valcheffnet/villagers-remember/releases/tag/v0.13.3-beta), older versions on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
 
 **Questions, bugs or ideas? Come to [Discord](https://discord.com/invite/X6yxJpk9Fz).**
 
@@ -100,11 +100,11 @@ Villagers who trust you put a share of their work aside for you every day. The t
 
 ## Install
 
-Minecraft 26.3, on Fabric, NeoForge or Paper. Each version comes as three files, so take the one for your server:
+Minecraft 26.3, 26.2, 26.1.2 or 1.21.11, on Fabric, NeoForge or Paper. Each release has a jar for every loader and Minecraft version, and the file name says which, so take the one that matches your server:
 
-- **Fabric:** `villagers-remember-fabric-<version>.jar`, with Fabric Loader 0.19 or newer and Fabric API.
-- **NeoForge:** `villagers-remember-neoforge-<version>.jar`, with NeoForge 26.3. Nothing else is needed.
-- **Paper:** `villagers-remember-paper-<version>.jar`, a plugin for Paper 26.3.
+- **Fabric:** `villagers-remember-fabric-<minecraft>-<version>.jar`, with Fabric Loader 0.19 or newer and Fabric API.
+- **NeoForge:** `villagers-remember-neoforge-<minecraft>-<version>.jar`, with NeoForge for that Minecraft version. Nothing else is needed.
+- **Paper:** `villagers-remember-paper-<minecraft>-<version>.jar`, a plugin for Paper of that Minecraft version.
 
 Drop the jar into the server's `mods` folder (`plugins` on Paper). Players join with a vanilla client either way. In single player it works the same when installed on the client.
 
