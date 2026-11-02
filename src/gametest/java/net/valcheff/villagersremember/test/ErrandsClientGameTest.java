@@ -646,6 +646,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			names(context, sp, villagers);
 			tradeFromGreeting(context, sp, villagers);
 			prices(context, sp, villagers);
+			languages(context, sp, villagers, bell);
 			endGame(context, sp, villagers, bell);
 			gradualTrust(sp, villagers, bell);
 		}
@@ -797,6 +798,57 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	}
 
 	/**
+	 * Every language of the mod, forced on the server in turn: the greeting, a villager's errand list and the bell
+	 * menu open, and every button label fits its button with the client's own font. Screenshots per language.
+	 */
+	private static void languages(ClientGameTestContext context, TestSingleplayerContext sp, List<UUID> villagers, BlockPos bell) {
+		UUID id = villagers.get(6);
+		try {
+			for (String lang : Lang.LANGUAGES) {
+				sp.getServer().runOnServer(server -> ErrandsConfig.INSTANCE.language = lang);
+				Vec3 eyes = sp.getServer().computeOnServer(server -> villager(server, id).getEyePosition());
+				Vec3 feet = sp.getServer().computeOnServer(server -> villager(server, id).position());
+				walkTo(context, sp, feet.add(0, 0, 2));
+				context.runOnClient(mc -> mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, eyes));
+				context.waitTicks(3);
+				context.getInput().pressKey(options -> options.keyUse);
+				waitForDialog(context, null);
+				checkLabelsFit(context, lang + " greeting");
+				context.takeScreenshot("lang-" + lang + "-1-greeting");
+				// The errand list sits behind the first button, the one with the count in brackets.
+				press(context, label -> label.contains("("));
+				checkLabelsFit(context, lang + " errands");
+				context.takeScreenshot("lang-" + lang + "-2-errands");
+				closeScreen(context);
+				walkTo(context, sp, Vec3.atCenterOf(bell).add(0, -0.5, -2));
+				context.getInput().lookAt(bell);
+				context.waitTicks(2);
+				context.getInput().pressKey(options -> options.keyUse);
+				waitForDialog(context, null);
+				checkLabelsFit(context, lang + " bell menu");
+				context.takeScreenshot("lang-" + lang + "-3-board");
+				closeScreen(context);
+			}
+		} finally {
+			sp.getServer().runOnServer(server -> ErrandsConfig.INSTANCE.language = "auto");
+		}
+	}
+
+	/** Every button label of the open dialog fits its button, with the margin vanilla leaves on both sides. */
+	private static void checkLabelsFit(ClientGameTestContext context, String where) {
+		String result = context.computeOnClient(mc -> {
+			if (!(mc.gui.screen() instanceof DialogScreen<?> screen)) return "no dialog";
+			List<String> wide = new ArrayList<>();
+			for (ActionButton b : buttons(dialog(screen))) {
+				int need = mc.font.width(b.button().label());
+				if (need > b.button().width() - 8) wide.add(b.button().label().getString() + " (" + need + " > " + (b.button().width() - 8) + ")");
+			}
+			return wide.isEmpty() ? "ok" : String.join(", ", wide);
+		});
+		check(result.equals("ok"), where + ": labels wider than their button: " + result);
+	}
+
+	/**
 	 * Prices by standing: the trading screen shows the discount (and a surcharge for a grudge), and gossip written
 	 * by older versions is taken back the first time.
 	 */
@@ -907,7 +959,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			});
 			check(progress == 32, "village order got " + progress + " of 32 " + kind);
 		} else {
-			// A monster killed inside the village counts.
+			// A monster killed inside the village counts. Monsters that died there earlier in the run count too, so
+			// only the difference is checked.
+			int before = sp.getServer().computeOnServer(server -> {
+				ServerPlayer player = player(server);
+				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
+				return GroupOrder.current(server, village).orElseThrow().order().progress;
+			});
 			int progress = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
 				var zombie = EntityTypes.ZOMBIE.create(server.overworld(), EntitySpawnReason.COMMAND);
@@ -917,7 +975,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				var village = VillageRegistry.get(server).villageAt(player.level().dimension(), player.blockPosition()).orElseThrow();
 				return GroupOrder.current(server, village).orElseThrow().order().progress;
 			});
-			check(progress == 1, "defend order counted " + progress);
+			check(progress - before == 1, "defend order counted " + (progress - before) + " for one kill");
 		}
 		// The patron names the village through the dialog's text field (a command template runs /errands input).
 		press(context, label -> label.equals("Back"));

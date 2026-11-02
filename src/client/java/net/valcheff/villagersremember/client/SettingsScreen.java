@@ -25,6 +25,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.valcheff.villagersremember.ConfigSync;
 import net.valcheff.villagersremember.ErrandsConfig;
+import net.valcheff.villagersremember.Lang;
 import net.valcheff.villagersremember.Platform;
 
 import java.lang.reflect.Field;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Every setting of the mod in one scrolling list. In a world whose server runs the mod (single player too), it shows
@@ -50,7 +52,7 @@ public class SettingsScreen extends Screen {
 	/** Sections in screen order; settings not listed here end up under "Other". */
 	private static final Map<String, List<String>> SECTIONS = new LinkedHashMap<>();
 	private static final Map<String, List<String>> CHOICES = Map.of(
-		"language", List.of("auto", "en_us", "bg_bg"),
+		"language", Stream.concat(Stream.of("auto"), Lang.LANGUAGES.stream()).toList(),
 		"chartLook", List.of("auto", "globe", "dnt"),
 		"villagerNames", List.of("always", "look", "off"));
 
