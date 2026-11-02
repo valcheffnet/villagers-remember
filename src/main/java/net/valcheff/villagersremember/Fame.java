@@ -122,7 +122,7 @@ public final class Fame {
 	 * them, the trader keeps them until it leaves).
 	 */
 	public static void legendGoods(ServerPlayer player, WanderingTrader trader) {
-		if (title(ErrandService.state(player)) < MAX_TITLE || trader.entityTags().contains(LEGEND_TAG)) return;
+		if (title(ErrandService.state(player)) < MAX_TITLE || trader.getTags().contains(LEGEND_TAG)) return;
 		trader.addTag(LEGEND_TAG);
 		List<Object[]> goods = new ArrayList<>(List.of(LEGEND_GOODS));
 		Collections.shuffle(goods, new Random(trader.getUUID().getLeastSignificantBits()));

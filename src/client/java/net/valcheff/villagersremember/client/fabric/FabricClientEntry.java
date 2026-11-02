@@ -2,7 +2,7 @@ package net.valcheff.villagersremember.client.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.valcheff.villagersremember.ConfigSync;
@@ -25,13 +25,13 @@ public class FabricClientEntry implements ClientModInitializer {
 			}
 		});
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSync.Settings.TYPE, (payload, context) -> {
-			if (context.client().gui.screen() instanceof SettingsScreen screen) screen.receive(payload);
+			if (context.client().screen instanceof SettingsScreen screen) screen.receive(payload);
 		});
 		// /villagersremember opens the settings without Mod Menu. Queued, so the chat screen closes first.
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(
-			ClientCommands.literal("villagersremember").executes(ctx -> {
+			ClientCommandManager.literal("villagersremember").executes(ctx -> {
 				var client = ctx.getSource().getClient();
-				client.schedule(() -> client.gui.setScreen(new SettingsScreen(null)));
+				client.schedule(() -> client.setScreen(new SettingsScreen(null)));
 				return 1;
 			})));
 	}

@@ -40,8 +40,8 @@ public final class Actions {
 			if (ErrandService.canHandIn(player, active)) Hud.ready(player, active);
 		}
 		Objective o = shownActive.errand.objectives().get(shownIndex);
-		player.sendOverlayMessage(Component.empty().append(ErrandText.objective(player, o).withStyle(ChatFormatting.YELLOW))
-			.append("  ").append(ErrandText.bar(shownActive.progress[shownIndex], o.needed(), 8)));
+		player.displayClientMessage(Component.empty().append(ErrandText.objective(player, o).withStyle(ChatFormatting.YELLOW))
+			.append("  ").append(ErrandText.bar(shownActive.progress[shownIndex], o.needed(), 8)), true);
 		Hud.refresh(player);
 	}
 }

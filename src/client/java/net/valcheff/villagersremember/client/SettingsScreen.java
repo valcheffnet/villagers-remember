@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -149,7 +149,7 @@ public class SettingsScreen extends Screen {
 		if (!settings.allowed()) {
 			mode = Mode.DENIED;
 		} else if (settings.saved()) {
-			minecraft.gui.setScreen(parent);
+			minecraft.setScreen(parent);
 			return;
 		} else {
 			try {
@@ -203,7 +203,7 @@ public class SettingsScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		minecraft.gui.setScreen(parent);
+		minecraft.setScreen(parent);
 	}
 
 	/** For the game test: sets one value as if typed or clicked. */
@@ -265,8 +265,8 @@ public class SettingsScreen extends Screen {
 		}
 
 		@Override
-		public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
-			graphics.centeredText(font, text, getContentXMiddle(), getContentY() + (getContentHeight() - 9) / 2, 0xFFFFFFFF);
+		public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+			graphics.drawCenteredString(font, text, getContentXMiddle(), getContentY() + (getContentHeight() - 9) / 2, 0xFFFFFFFF);
 		}
 
 		@Override
@@ -290,11 +290,11 @@ public class SettingsScreen extends Screen {
 		}
 
 		@Override
-		public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+		public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
 			int y = getContentY() + (getContentHeight() - 9) / 2;
-			graphics.text(font, font.substrByWidth(label, ROW_WIDTH - FIELD_WIDTH - 8).getString(), getContentX(), y, 0xFFFFFFFF);
+			graphics.drawString(font, font.substrByWidth(label, ROW_WIDTH - FIELD_WIDTH - 8).getString(), getContentX(), y, 0xFFFFFFFF);
 			widget.setPosition(getContentRight() - FIELD_WIDTH, getContentY());
-			widget.extractRenderState(graphics, mouseX, mouseY, partialTick);
+			widget.render(graphics, mouseX, mouseY, partialTick);
 		}
 
 		@Override

@@ -114,7 +114,7 @@ public final class NeoForgeEntry {
 		// Lowest priority and only when nobody cancelled it: the entity really dies.
 		bus.addListener(EventPriority.LOWEST, false, LivingDeathEvent.class, e -> Tracking.onDeath(e.getEntity(), e.getSource()));
 		bus.addListener(LivingDamageEvent.Post.class, e ->
-			Tracking.onDamage(e.getEntity(), e.getSource(), e.getOriginalDamage(), e.getInflictedDamage(), e.getBlockedDamage() > 0));
+			Tracking.onDamage(e.getEntity(), e.getSource(), e.getOriginalDamage(), e.getNewDamage(), e.getBlockedDamage() > 0));
 		bus.addListener(LivingConversionEvent.Post.class, e -> {
 			if (e.getEntity() instanceof Mob previous && e.getOutcome() instanceof Mob converted) Tracking.onConversion(previous, converted);
 		});

@@ -57,9 +57,9 @@ public final class FabricEntry implements ModInitializer {
 		});
 		VillagersRemember.init();
 
-		PayloadTypeRegistry.serverboundPlay().register(ConfigSync.Request.TYPE, ConfigSync.Request.CODEC);
-		PayloadTypeRegistry.serverboundPlay().register(ConfigSync.Update.TYPE, ConfigSync.Update.CODEC);
-		PayloadTypeRegistry.clientboundPlay().register(ConfigSync.Settings.TYPE, ConfigSync.Settings.CODEC);
+		PayloadTypeRegistry.playC2S().register(ConfigSync.Request.TYPE, ConfigSync.Request.CODEC);
+		PayloadTypeRegistry.playC2S().register(ConfigSync.Update.TYPE, ConfigSync.Update.CODEC);
+		PayloadTypeRegistry.playS2C().register(ConfigSync.Settings.TYPE, ConfigSync.Settings.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSync.Request.TYPE, (payload, context) ->
 			context.responseSender().sendPacket(ConfigSync.answerRequest(context.player())));
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSync.Update.TYPE, (payload, context) ->

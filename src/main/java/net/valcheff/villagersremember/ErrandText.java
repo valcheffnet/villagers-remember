@@ -223,7 +223,7 @@ public final class ErrandText {
 			case ITEM -> firstItem(o).copy();
 			case ENTITY -> {
 				Optional<EntityType<?>> type = o.tag() ? Optional.empty() : BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(o.target()));
-				Optional<Holder<Item>> egg = type.flatMap(SpawnEggItem::byId);
+				Optional<SpawnEggItem> egg = type.map(SpawnEggItem::byId);
 				yield egg.map(ItemStack::new).orElse(new ItemStack(o.type() == Objective.Type.KILL ? Items.IRON_SWORD : Items.LEAD));
 			}
 			case BLOCK -> o.tag() ? new ItemStack(Items.IRON_PICKAXE)

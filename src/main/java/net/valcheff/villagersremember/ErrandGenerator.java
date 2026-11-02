@@ -39,7 +39,7 @@ public final class ErrandGenerator {
 	}
 
 	public static long day(ServerLevel level) {
-		return Math.floorDiv(level.getOverworldClockTime(), 24000L);
+		return Math.floorDiv(level.getDayTime(), 24000L);
 	}
 
 	public static boolean givesErrands(Villager villager) {

@@ -13,7 +13,7 @@ version = rootProps.getProperty('version')
 group = 'net.valcheff'
 
 base {
-	archivesName = 'villagers-remember-neoforge'
+	archivesName = "villagers-remember-neoforge-${project.minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
@@ -83,11 +83,11 @@ neoForge.ideSyncTask generateModMetadata
 
 processResources {
 	filesMatching('villagersremember.mixins.json') {
-		expand 'java_version': '25'
+		expand 'java_version': '21'
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
-	options.release = 25
+	options.release = 21
 }

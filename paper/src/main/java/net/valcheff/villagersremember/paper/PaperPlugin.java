@@ -76,7 +76,7 @@ public final class PaperPlugin extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		MinecraftServer server = MinecraftServer.getServer();
-		server.getDataStorage().saveAndJoin();
+		server.overworld().getDataStorage().saveAndJoin();
 		VillagersRemember.serverStopped(server);
 	}
 

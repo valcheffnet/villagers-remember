@@ -40,7 +40,6 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.TagValueInput;
@@ -332,12 +331,12 @@ public final class Hud {
 			if (!always) continue;
 			Integer plate = hud.nameplates.get(v.getId());
 			if (plate == null) {
-				Display.TextDisplay display = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
+				Display.TextDisplay display = EntityType.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
 				if (display == null) return;
 				plate = display.getId();
 				Vec3 pos = v.position().add(0, v.getBbHeight(), 0);
 				player.connection.send(new ClientboundAddEntityPacket(plate, UUID.randomUUID(), pos.x, pos.y, pos.z, 0, 0,
-					EntityTypes.TEXT_DISPLAY, 0, Vec3.ZERO, 0));
+					EntityType.TEXT_DISPLAY, 0, Vec3.ZERO, 0));
 				hud.nameplates.put(v.getId(), plate);
 				resend = true;
 			}
@@ -388,12 +387,12 @@ public final class Hud {
 			if (hud.markers.containsKey(v.getId())) continue;
 			Mark mark = mark(player, level, state, v);
 			if (mark == Mark.NONE) continue;
-			Display.TextDisplay display = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
+			Display.TextDisplay display = EntityType.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
 			if (display == null) return;
 			int id = display.getId();
 			Vec3 pos = v.position().add(0, v.getBbHeight(), 0);
 			player.connection.send(new ClientboundAddEntityPacket(id, UUID.randomUUID(), pos.x, pos.y, pos.z, 0, 0,
-				EntityTypes.TEXT_DISPLAY, 0, Vec3.ZERO, 0));
+				EntityType.TEXT_DISPLAY, 0, Vec3.ZERO, 0));
 			player.connection.send(new ClientboundSetEntityDataPacket(id, markData(level, mark)));
 			hud.markers.put(v.getId(), new Marker(id, mark));
 			player.connection.send(passengers(v, hud));
@@ -448,7 +447,7 @@ public final class Hud {
 		transformation.put("scale", list(FloatTag.valueOf(scale), FloatTag.valueOf(scale), FloatTag.valueOf(scale)));
 		transformation.put("right_rotation", list(FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(0), FloatTag.valueOf(1)));
 		tag.put("transformation", transformation);
-		Display.TextDisplay display = EntityTypes.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
+		Display.TextDisplay display = EntityType.TEXT_DISPLAY.create(level, EntitySpawnReason.COMMAND);
 		display.load(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
 		List<SynchedEntityData.DataValue<?>> values = display.getEntityData().getNonDefaultValues();
 		return values != null ? values : List.of();

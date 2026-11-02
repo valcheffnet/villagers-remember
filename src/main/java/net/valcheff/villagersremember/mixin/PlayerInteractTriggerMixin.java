@@ -1,6 +1,6 @@
 package net.valcheff.villagersremember.mixin;
 
-import net.minecraft.advancements.triggers.PlayerInteractTrigger;
+import net.minecraft.advancements.criterion.PlayerInteractTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;

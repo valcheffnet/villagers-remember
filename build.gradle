@@ -1,9 +1,9 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'fabric-loom' version "${loom_version}"
 }
 
 base {
-	archivesName = 'villagers-remember-fabric'
+	archivesName = "villagers-remember-fabric-${project.minecraft_version}"
 }
 
 repositories {
@@ -45,25 +45,28 @@ fabricApi {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Optional: Mod Menu shows the settings button. Not bundled, not required.
-	clientCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modClientCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 
 	// Optional: Waystones (BlayTheNinth) names village waystones after the village. Compiled against, never bundled.
-	compileOnly "maven.modrinth:waystones:${project.waystones_version}"
-	compileOnly "maven.modrinth:balm:${project.balm_version}"
+	modCompileOnly "maven.modrinth:waystones:${project.waystones_version}"
+	modCompileOnly "maven.modrinth:balm:${project.balm_version}"
 	// The game test runs with Waystones to check the real naming; it is never part of the mod.
-	gametestCompileOnly "maven.modrinth:waystones:${project.waystones_version}"
-	gametestCompileOnly "maven.modrinth:balm:${project.balm_version}"
-	gametestRuntimeOnly "maven.modrinth:waystones:${project.waystones_version}"
-	gametestRuntimeOnly "maven.modrinth:balm:${project.balm_version}"
-	gametestRuntimeOnly "maven.modrinth:shogi:${project.shogi_version}"
+	modGametestCompileOnly "maven.modrinth:waystones:${project.waystones_version}"
+	modGametestCompileOnly "maven.modrinth:balm:${project.balm_version}"
+	modGametestRuntimeOnly "maven.modrinth:waystones:${project.waystones_version}"
+	modGametestRuntimeOnly "maven.modrinth:balm:${project.balm_version}"
 	// RightClickHarvest (our server has it): harvests that replant instead of breaking must count.
-	gametestRuntimeOnly "maven.modrinth:rightclickharvest:${project.rightclickharvest_version}"
-	gametestRuntimeOnly "maven.modrinth:jamlib:${project.jamlib_version}"
-	localRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modGametestRuntimeOnly "maven.modrinth:rightclickharvest:${project.rightclickharvest_version}"
+	modGametestRuntimeOnly "maven.modrinth:jamlib:${project.jamlib_version}"
+	modGametestRuntimeOnly "maven.modrinth:architectury-api:${project.architectury_version}"
+	// JamLib carries Jankson as a nested jar, which this Loom does not load from a dependency in dev
+	gametestRuntimeOnly "blue.endless:jankson:1.2.3"
+	modLocalRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 def templateProps = [

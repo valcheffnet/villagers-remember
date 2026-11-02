@@ -13,7 +13,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.LevelResource;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -26,7 +29,7 @@ import java.util.UUID;
 /** Per-player errand state and reputation, saved in {@code <world>/data/villagersremember/errands.dat}. */
 public final class ErrandsData extends SavedData {
 	public static final SavedDataType<ErrandsData> TYPE = new SavedDataType<>(
-		VillagersRemember.id("errands"),
+		VillagersRemember.MOD_ID + "/errands",
 		ErrandsData::new,
 		CompoundTag.CODEC.xmap(ErrandsData::load, ErrandsData::save),
 		DataFixTypes.SAVED_DATA_COMMAND_STORAGE);
@@ -154,7 +157,19 @@ public final class ErrandsData extends SavedData {
 	}
 
 	public static ErrandsData get(MinecraftServer server) {
-		return server.getDataStorage().computeIfAbsent(TYPE);
+		return server.overworld().getDataStorage().computeIfAbsent(TYPE);
+	}
+
+	/**
+	 * Our data files are {@code data/villagersremember/*.dat}, where 26.x keeps them, so a world keeps its data when
+	 * it is upgraded. This version writes {@code data/<id>.dat} without creating the folder.
+	 */
+	public static void createFolder(MinecraftServer server) {
+		try {
+			Files.createDirectories(server.getWorldPath(LevelResource.ROOT).resolve("data").resolve(VillagersRemember.MOD_ID));
+		} catch (IOException e) {
+			VillagersRemember.LOG.error("Could not create the data folder, progress will not be saved", e);
+		}
 	}
 
 	public static String villageKey(GlobalPos pos) {

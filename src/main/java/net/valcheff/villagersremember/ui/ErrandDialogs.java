@@ -28,7 +28,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.Vec3;
@@ -341,7 +340,7 @@ public final class ErrandDialogs {
 		} else if (Patron.qualifies(state, village)) {
 			text.append("\n").append(Lang.tr(player, "patron.challenge").withStyle(ChatFormatting.YELLOW));
 		}
-		return new ItemBody(ItemStackTemplate.fromNonEmptyStack(head), Optional.of(new PlainMessage(text, 220)), false, false, 16, 16);
+		return new ItemBody(head, Optional.of(new PlainMessage(text, 220)), false, false, 16, 16);
 	}
 
 	/** The patron names the village: a text field and Save. */
@@ -632,7 +631,7 @@ public final class ErrandDialogs {
 			long left = (ErrandGenerator.week(today) + 1) * 7 - today;
 			heading.append("\n").append(Lang.tr(player, "contract.days_left", left).withStyle(ChatFormatting.GRAY));
 		}
-		body.add(new ItemBody(ItemStackTemplate.fromNonEmptyStack(icon), Optional.of(new PlainMessage(heading, 220)),
+		body.add(new ItemBody(icon, Optional.of(new PlainMessage(heading, 220)),
 			true, true, 16, 16));
 
 		// One line per objective, with its own bar once accepted. The client centres every line, so TextWidth pads

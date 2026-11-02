@@ -2,8 +2,8 @@ package net.valcheff.villagersremember.test;
 
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import net.blay09.mods.waystones.api.WaystoneKinds;
 import net.blay09.mods.waystones.api.WaystoneOrigin;
+import net.blay09.mods.waystones.api.WaystoneTypes;
 import net.blay09.mods.waystones.api.WaystoneVisibility;
 import net.blay09.mods.waystones.core.PlayerWaystoneManager;
 import net.blay09.mods.waystones.core.WaystoneImpl;
@@ -13,7 +13,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.screens.Screen;
@@ -60,7 +60,7 @@ import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.gossip.GossipType;
@@ -68,7 +68,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.inventory.MerchantMenu;
@@ -213,7 +213,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			press(context, label -> label.contains(deliverLabel));
 			context.takeScreenshot("dlg-2-detail");
 			press(context, label -> label.equals("Accept"));
-			sp.getServer().waitFor(server -> active(server).size() == 1, 40);
+			waitFor(context, sp, server -> active(server).size() == 1, 40);
 			context.takeScreenshot("dlg-3-accepted");
 			// With a full journal the giver keeps a grey "?" (no "!" for new work).
 			check(sp.getServer().computeOnServer(server -> {
@@ -251,10 +251,10 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			press(context, label -> label.contains(deliverLabel));
 			context.takeScreenshot("dlg-3b-detail-ready");
 			press(context, label -> label.equals("Complete"));
-			sp.getServer().waitFor(server -> active(server).isEmpty(), 40);
+			waitFor(context, sp, server -> active(server).isEmpty(), 40);
 			context.waitTicks(10);
 			context.takeScreenshot("dlg-4-after-hand-in");
-			Screen after = context.computeOnClient(mc -> mc.gui.screen());
+			Screen after = context.computeOnClient(mc -> mc.screen);
 			check(after instanceof DialogScreen<?>, "after hand-in the screen is " + after);
 			int emeraldsAfter = sp.getServer().computeOnServer(server -> countEmeralds(player(server)));
 			check(emeraldsAfter - emeraldsBefore == deliver.emeralds(), "emeralds " + (emeraldsAfter - emeraldsBefore) + " vs " + deliver.emeralds());
@@ -268,7 +268,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			press(context, label -> label.contains(killLabel));
 			press(context, label -> label.equals("Complete"));
 			context.waitTicks(10);
-			after = context.computeOnClient(mc -> mc.gui.screen());
+			after = context.computeOnClient(mc -> mc.screen);
 			check(after instanceof DialogScreen<?>, "after a failed hand-in the screen is " + after);
 			closeScreen(context);
 
@@ -277,7 +277,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			context.waitTicks(10);
 			context.takeScreenshot("hud-4-hunt-ready");
 			walkTo(context, sp, Vec3.atCenterOf(bell).add(0, -0.5, -2));
-			context.getInput().lookAt(bell);
+			lookAt(context, bell);
 			context.waitTicks(2);
 			context.getInput().pressKey(options -> options.keyUse);
 			waitForDialog(context, null);
@@ -296,9 +296,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("dlg-5c-board-errands");
 			press(context, label -> label.contains(killLabel));
 			press(context, label -> label.equals("Complete"));
-			sp.getServer().waitFor(server -> active(server).isEmpty(), 40);
+			waitFor(context, sp, server -> active(server).isEmpty(), 40);
 			context.waitTicks(10);
-			check(context.computeOnClient(mc -> mc.gui.screen()) instanceof DialogScreen<?>, "no dialog after board hand-in");
+			check(context.computeOnClient(mc -> mc.screen) instanceof DialogScreen<?>, "no dialog after board hand-in");
 			check(sp.getServer().computeOnServer(server -> Reputation.village(state(server),
 				ErrandGenerator.village(villager(server, kill.villager())))) == deliver.reputation() + kill.reputation(), "village rep");
 
@@ -423,14 +423,14 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				BlockPos ore = base.offset(-4, 0, 4);
 				level.setBlockAndUpdate(ore, Blocks.COAL_ORE.defaultBlockState());
 				player.gameMode.destroyBlock(ore);
-				var cow = EntityTypes.COW.create(level, EntitySpawnReason.COMMAND);
-				var calf = EntityTypes.COW.create(level, EntitySpawnReason.COMMAND);
+				var cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
+				var calf = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
 				CriteriaTriggers.BRED_ANIMALS.trigger(player, cow, cow, calf);
-				var cat = EntityTypes.CAT.create(level, EntitySpawnReason.COMMAND);
+				var cat = EntityType.CAT.create(level, EntitySpawnReason.COMMAND);
 				CriteriaTriggers.TAME_ANIMAL.trigger(player, cat);
-				var sheep = EntityTypes.SHEEP.create(level, EntitySpawnReason.COMMAND);
+				var sheep = EntityType.SHEEP.create(level, EntitySpawnReason.COMMAND);
 				CriteriaTriggers.PLAYER_INTERACTED_WITH_ENTITY.trigger(player, new ItemStack(Items.SHEARS), sheep);
-				var hook = EntityTypes.FISHING_BOBBER.create(level, EntitySpawnReason.COMMAND);
+				var hook = EntityType.FISHING_BOBBER.create(level, EntitySpawnReason.COMMAND);
 				CriteriaTriggers.FISHING_ROD_HOOKED.trigger(player, new ItemStack(Items.FISHING_ROD), hook,
 					List.of(new ItemStack(Items.COD, 2)));
 				CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, base, new ItemStack(Items.BONE_MEAL));
@@ -575,7 +575,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("dlg-8-reforge");
 			String reforgeText = context.computeOnClient(mc -> {
 				StringBuilder text = new StringBuilder();
-				if (mc.gui.screen() instanceof DialogScreen<?> screen) {
+				if (mc.screen instanceof DialogScreen<?> screen) {
 					for (var body : dialog(screen).common().body()) {
 						if (body instanceof PlainMessage m) text.append(m.contents().getString()).append('\n');
 					}
@@ -585,9 +585,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			check(reforgeText.contains("1× Enchanted Diamond Chestplate"), "reforge reward name: " + reforgeText);
 			press(context, label -> label.equals("Back"));
 			press(context, label -> label.contains("Errand chronicle"));
-			context.waitFor(mc -> mc.gui.screen() instanceof BookViewScreen, 60);
+			context.waitFor(mc -> mc.screen instanceof BookViewScreen, 60);
 			context.takeScreenshot("book-1");
-			context.runOnClient(mc -> mc.gui.screen().keyPressed(new KeyEvent(262, 0, 0)));
+			context.runOnClient(mc -> mc.screen.keyPressed(new KeyEvent(262, 0, 0)));
 			context.waitTicks(3);
 			context.takeScreenshot("book-2");
 			closeScreen(context);
@@ -618,7 +618,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				}
 			});
 			walkTo(context, sp, Vec3.atCenterOf(bell).add(0, -0.5, -2));
-			context.getInput().lookAt(bell);
+			lookAt(context, bell);
 			context.waitTicks(2);
 			context.getInput().pressKey(options -> options.keyUse);
 			waitForDialog(context, null);
@@ -686,7 +686,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 	private static void press(ClientGameTestContext context, Predicate<String> label, boolean waitDialog) {
 		Screen before = context.computeOnClient(mc -> {
-			if (!(mc.gui.screen() instanceof DialogScreen<?> screen)) throw new AssertionError("no dialog open: " + mc.gui.screen());
+			if (!(mc.screen instanceof DialogScreen<?> screen)) throw new AssertionError("no dialog open: " + mc.screen);
 			ActionButton found = null;
 			List<String> labels = new ArrayList<>();
 			for (ActionButton b : buttons(dialog(screen))) {
@@ -704,7 +704,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 	private static void waitForDialog(ClientGameTestContext context, Screen previous) {
 		context.waitFor(mc -> {
-			Screen s = mc.gui.screen();
+			Screen s = mc.screen;
 			return s != previous && (s instanceof DialogScreen<?> || s instanceof BookViewScreen);
 		}, 60);
 		context.waitTicks(3);
@@ -717,7 +717,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	}
 
 	private static void closeScreen(ClientGameTestContext context) {
-		context.runOnClient(mc -> mc.gui.setScreen(null));
+		context.runOnClient(mc -> mc.setScreen(null));
 		context.waitTicks(3);
 	}
 
@@ -762,7 +762,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	/** The objective lines of the open errand screen: every one exactly as wide as the others, so they line up. */
 	private static void checkColumns(ClientGameTestContext context) {
 		String result = context.computeOnClient(mc -> {
-			if (!(mc.gui.screen() instanceof DialogScreen<?> screen)) return "no dialog";
+			if (!(mc.screen instanceof DialogScreen<?> screen)) return "no dialog";
 			List<DialogBody> body = dialog(screen).common().body();
 			if (body.size() < 3 || !(body.get(2) instanceof PlainMessage message)) {
 				return "no objectives body";
@@ -789,9 +789,9 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		context.waitTicks(3);
 		context.getInput().pressKey(options -> options.keyUse);
 		waitForDialog(context, null);
-		Screen greeting = context.computeOnClient(mc -> mc.gui.screen());
+		Screen greeting = context.computeOnClient(mc -> mc.screen);
 		press(context, label -> label.contains("Trade"), false);
-		context.waitFor(mc -> mc.gui.screen() instanceof MerchantScreen, 60);
+		context.waitFor(mc -> mc.screen instanceof MerchantScreen, 60);
 		context.takeScreenshot("dlg-13-trade");
 		closeTrade(context);
 	}
@@ -843,7 +843,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	 */
 	private static void endGame(ClientGameTestContext context, TestSingleplayerContext sp, List<UUID> villagers, BlockPos bell) {
 		walkTo(context, sp, Vec3.atCenterOf(bell).add(0, -0.5, -2));
-		context.getInput().lookAt(bell);
+		lookAt(context, bell);
 		context.waitTicks(2);
 		sp.getServer().runCommand("errands standing @p 4");
 		String patron = sp.getServer().computeOnServer(server -> {
@@ -910,7 +910,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			// A monster killed inside the village counts.
 			int progress = sp.getServer().computeOnServer(server -> {
 				ServerPlayer player = player(server);
-				var zombie = EntityTypes.ZOMBIE.create(server.overworld(), EntitySpawnReason.COMMAND);
+				var zombie = EntityType.ZOMBIE.create(server.overworld(), EntitySpawnReason.COMMAND);
 				zombie.snapTo(player.getX() + 2, player.getY(), player.getZ(), 0, 0);
 				server.overworld().addFreshEntity(zombie);
 				zombie.hurtServer(server.overworld(), player.damageSources().playerAttack(player), 1000);
@@ -925,7 +925,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		context.takeScreenshot("dlg-16-rename");
 		// What the Save button does with the text typed in the field: its command template filled in.
 		Screen renameScreen = context.computeOnClient(mc -> {
-			DialogScreen<?> screen = (DialogScreen<?>) mc.gui.screen();
+			DialogScreen<?> screen = (DialogScreen<?>) mc.screen;
 			ActionButton save = buttons(dialog(screen)).stream().filter(x -> x.button().label().getString().equals("Save")).findFirst().orElseThrow();
 			Optional<ClickEvent> click = save.action().orElseThrow().createAction(Map.of("name",
 				Action.ValueGetter.of("Bodilovo Upper")));
@@ -1052,7 +1052,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "errands fame " + player.getScoreboardName() + " set 1600");
 			team = server.getScoreboard().getPlayersTeam(player.getScoreboardName());
 			if (!team.getPlayerPrefix().getString().contains("Legend")) return "legend prefix " + team.getPlayerPrefix().getString();
-			var trader = EntityTypes.WANDERING_TRADER.create(server.overworld(), EntitySpawnReason.COMMAND);
+			var trader = EntityType.WANDERING_TRADER.create(server.overworld(), EntitySpawnReason.COMMAND);
 			trader.snapTo(player.getX() + 1, player.getY(), player.getZ(), 0, 0);
 			trader.setNoAi(true);
 			server.overworld().addFreshEntity(trader);
@@ -1082,13 +1082,13 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			return missing.toString();
 		});
 		check(advancements.isEmpty(), "advancements not granted:" + advancements);
-		context.runOnClient(mc -> mc.gui.setScreen(new AdvancementsScreen(mc.player.connection.getAdvancements())));
+		context.runOnClient(mc -> mc.setScreen(new AdvancementsScreen(mc.player.connection.getAdvancements())));
 		context.waitTicks(10);
 		context.takeScreenshot("adv-1-tree");
 		closeScreen(context);
 		context.runOnClient(mc -> mc.player.connection.sendCommand("errands book"));
-		context.waitFor(mc -> mc.gui.screen() instanceof BookViewScreen, 60);
-		context.runOnClient(mc -> mc.gui.screen().keyPressed(new KeyEvent(262, 0, 0)));
+		context.waitFor(mc -> mc.screen instanceof BookViewScreen, 60);
+		context.runOnClient(mc -> mc.screen.keyPressed(new KeyEvent(262, 0, 0)));
 		context.waitTicks(3);
 		context.takeScreenshot("book-3-fame");
 		closeScreen(context);
@@ -1103,7 +1103,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		context.getInput().pressKey(options -> options.keyUse);
 		waitForDialog(context, null);
 		press(context, label -> label.contains("Trade"), false);
-		context.waitFor(mc -> mc.gui.screen() instanceof MerchantScreen, 60);
+		context.waitFor(mc -> mc.screen instanceof MerchantScreen, 60);
 		context.waitTicks(5);
 		context.takeScreenshot("trade-" + what);
 		String result = context.computeOnClient(mc -> {
@@ -1128,7 +1128,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		UUID id = villagers.get(5);
 		Vec3 at = sp.getServer().computeOnServer(server -> villager(server, id).position());
 		walkTo(context, sp, at.add(0, 0, 4));
-		context.getInput().lookAt(BlockPos.containing(at.add(0, 1.5, 0)));
+		lookAt(context, BlockPos.containing(at.add(0, 1.5, 0)));
 		context.waitTicks(260);
 		context.takeScreenshot("hud-6-names");
 		String expected = sp.getServer().computeOnServer(server -> ErrandText.villagerName(player(server), id, villager(server, id)));
@@ -1268,7 +1268,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			ServerLevel level = server.overworld();
 			ServerPlayer player = player(server);
 			ErrandsData.PlayerState state = state(server);
-			Villager v = EntityTypes.VILLAGER.create(level, EntitySpawnReason.COMMAND);
+			Villager v = EntityType.VILLAGER.create(level, EntitySpawnReason.COMMAND);
 			v.setVillagerData(v.getVillagerData().withProfession(level.registryAccess(), VillagerProfession.FARMER).withLevel(3));
 			v.setPos(Vec3.atCenterOf(base.offset(4, 0, -4)));
 			v.setNoAi(true);
@@ -1286,10 +1286,10 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (v.getVillagerData().level() != 5 || v.getOffers().size() <= tradesBefore) {
 				return "levelup: level " + v.getVillagerData().level() + ", trades " + tradesBefore + " -> " + v.getOffers().size();
 			}
-			var zombie = v.convertTo(EntityTypes.ZOMBIE_VILLAGER,
+			var zombie = v.convertTo(EntityType.ZOMBIE_VILLAGER,
 				ConversionParams.single(v, true, true), z -> { });
 			if (zombie == null) return "no zombie";
-			var cured = zombie.convertTo(EntityTypes.VILLAGER,
+			var cured = zombie.convertTo(EntityType.VILLAGER,
 				ConversionParams.single(zombie, false, false), c -> { });
 			if (cured == null) return "no cure";
 			UUID now = cured.getUUID();
@@ -1363,7 +1363,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	/** Treasury: the formula, the day cap, the ender chest, and that the village was discovered on the way in. */
 	private static void treasury(ClientGameTestContext context, TestSingleplayerContext sp, BlockPos bell) {
 		walkTo(context, sp, Vec3.atCenterOf(bell).add(0, -0.5, -2));
-		context.getInput().lookAt(bell);
+		lookAt(context, bell);
 		context.waitTicks(2);
 		String result = sp.getServer().computeOnServer(server -> {
 			ServerPlayer player = player(server);
@@ -1471,19 +1471,19 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 
 	/** The settings screen of a client with the mod reads and saves the server's settings; players without level 3 can't. */
 	private static void settingsScreen(ClientGameTestContext context, TestSingleplayerContext sp) {
-		context.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
-		context.waitFor(mc -> mc.gui.screen() instanceof SettingsScreen s && s.loaded(), 100);
+		context.runOnClient(mc -> mc.setScreen(new SettingsScreen(null)));
+		context.waitFor(mc -> mc.screen instanceof SettingsScreen s && s.loaded(), 100);
 		context.takeScreenshot("settings-1-server");
 		// Waystones is in the test runtime, so the waystone setting is offered.
-		check(context.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).showsWaystones()),
+		check(context.computeOnClient(mc -> ((SettingsScreen) mc.screen).showsWaystones()),
 			"waystone setting hidden with Waystones installed");
 		context.runOnClient(mc -> {
-			var screen = (SettingsScreen) mc.gui.screen();
+			var screen = (SettingsScreen) mc.screen;
 			screen.setForTest("xpMultiplier", new JsonPrimitive(1.5));
 			screen.setForTest("emeraldRewards", new JsonPrimitive(false));
 			screen.saveForTest();
 		});
-		context.waitFor(mc -> !(mc.gui.screen() instanceof SettingsScreen), 100);
+		context.waitFor(mc -> !(mc.screen instanceof SettingsScreen), 100);
 		String result = sp.getServer().computeOnServer(server -> {
 			ErrandsConfig cfg = ErrandsConfig.INSTANCE;
 			if (cfg.xpMultiplier != 1.5 || cfg.emeraldRewards) return "server has x" + cfg.xpMultiplier + " emeralds " + cfg.emeraldRewards;
@@ -1565,7 +1565,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			if (village == null) return "no village at the bell";
 			String oldName = village.name;
 			var store = SavedDataWaystonesStore.get(server);
-			var waystone = new WaystoneImpl(WaystoneKinds.WAYSTONE,
+			var waystone = new WaystoneImpl(WaystoneTypes.WAYSTONE,
 				UUID.randomUUID(), level.dimension(), bell.offset(-3, 0, 0), WaystoneOrigin.VILLAGE,
 				Component.empty(), WaystoneVisibility.ACTIVATION);
 			store.addWaystone(waystone);
@@ -1608,7 +1608,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 			player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 		});
 		walkTo(context, sp, Vec3.atBottomCenterOf(crop).add(0, 0, -2));
-		context.getInput().lookAt(crop);
+		lookAt(context, crop);
 		context.waitTicks(3);
 		context.getInput().pressKey(options -> options.keyUse);
 		context.waitTicks(10);
@@ -1694,10 +1694,10 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				Villager victim = second;
 				int points = Reputation.villager(fresh, victim.getUUID());
 				var villagerData = victim.getVillagerData();
-				var zombie = victim.convertTo(EntityTypes.ZOMBIE_VILLAGER, ConversionParams.single(victim, true, true), z -> {});
+				var zombie = victim.convertTo(EntityType.ZOMBIE_VILLAGER, ConversionParams.single(victim, true, true), z -> {});
 				if (zombie == null || !circle.zombies.containsKey(zombie.getUUID())) return "the zombie isn't known as a zombified member";
 				if (open.get().size() != 3) return "with a zombified member " + open.get().size() + " open, expected 3";
-				Villager cured = zombie.convertTo(EntityTypes.VILLAGER, ConversionParams.single(zombie, true, true), v -> {});
+				Villager cured = zombie.convertTo(EntityType.VILLAGER, ConversionParams.single(zombie, true, true), v -> {});
 				if (cured == null) return "no cure";
 				// A real cure gives the villager back their trade (ZombieVillager.finishConversion); a bare conversion doesn't.
 				cured.setVillagerData(villagerData);
@@ -2033,7 +2033,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 	/** The list buttons of the open dialog: labels of one width, so names and bars line up. */
 	private static void checkButtonColumns(ClientGameTestContext context) {
 		String result = context.computeOnClient(mc -> {
-			if (!(mc.gui.screen() instanceof DialogScreen<?> screen)) return "no dialog";
+			if (!(mc.screen instanceof DialogScreen<?> screen)) return "no dialog";
 			List<Integer> widths = new ArrayList<>();
 			int limit = 0;
 			for (ActionButton b : buttons(dialog(screen))) {
@@ -2091,7 +2091,7 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		player.teleportTo(base.getX() + 0.5, base.getY(), base.getZ() + 0.5);
 		GlobalPos meeting = GlobalPos.of(level.dimension(), bell);
 		for (int i = 0; i < PROFESSIONS.size(); i++) {
-			Villager v = EntityTypes.VILLAGER.create(level, EntitySpawnReason.COMMAND);
+			Villager v = EntityType.VILLAGER.create(level, EntitySpawnReason.COMMAND);
 			v.setVillagerData(v.getVillagerData()
 				.withProfession(level.registryAccess(), PROFESSIONS.get(i))
 				.withType(level.registryAccess(), ResourceKey.create(Registries.VILLAGER_TYPE, Identifier.withDefaultNamespace(TYPES[i % TYPES.length])))
@@ -2148,12 +2148,12 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 				result = "no slab recipe";
 			} else {
 				int recipe = menu.getSelectedRecipeIndex();
-				menu.clicked(StonecutterMenu.RESULT_SLOT, 0, ContainerInput.QUICK_MOVE, player);
+				menu.clicked(StonecutterMenu.RESULT_SLOT, 0, ClickType.QUICK_MOVE, player);
 				int shifted = state(server).find(slabs.id()).progress[0];
 				int inInventory = player.getInventory().countItem(Items.STONE_SLAB);
 				menu.getSlot(StonecutterMenu.INPUT_SLOT).set(new ItemStack(Items.STONE, 1));
 				menu.clickMenuButton(player, recipe);
-				menu.clicked(StonecutterMenu.RESULT_SLOT, 0, ContainerInput.PICKUP, player);
+				menu.clicked(StonecutterMenu.RESULT_SLOT, 0, ClickType.PICKUP, player);
 				int clicked = state(server).find(slabs.id()).progress[0];
 				menu.setCarried(ItemStack.EMPTY);
 				result = shifted == 10 && inInventory == 10 && clicked == 12 ? "ok"
@@ -2318,6 +2318,20 @@ public class ErrandsClientGameTest implements FabricClientGameTest {
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalStateException(e);
 		}
+	}
+
+	/** Waits up to {@code ticks} ticks for a condition on the server; this Fabric API has no TestServerContext.waitFor. */
+	private static void waitFor(ClientGameTestContext context, TestSingleplayerContext sp, Predicate<MinecraftServer> done, int ticks) {
+		for (int i = 0; i < ticks; i++) {
+			if (sp.getServer().computeOnServer(done::test)) return;
+			context.waitTick();
+		}
+		if (!sp.getServer().computeOnServer(done::test)) throw new AssertionError("server condition not met in " + ticks + " ticks");
+	}
+
+	/** Turns the player to face the middle of a block; this Fabric API's TestInput has no lookAt. */
+	private static void lookAt(ClientGameTestContext context, BlockPos pos) {
+		context.runOnClient(mc -> mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, Vec3.atCenterOf(pos)));
 	}
 
 	private static void check(boolean ok, String message) {

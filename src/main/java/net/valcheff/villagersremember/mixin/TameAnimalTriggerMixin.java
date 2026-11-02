@@ -1,6 +1,6 @@
 package net.valcheff.villagersremember.mixin;
 
-import net.minecraft.advancements.triggers.TameAnimalTrigger;
+import net.minecraft.advancements.criterion.TameAnimalTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.Animal;
 import net.valcheff.villagersremember.Actions;

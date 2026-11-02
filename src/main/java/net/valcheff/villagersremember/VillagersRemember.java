@@ -65,6 +65,7 @@ public final class VillagersRemember {
 	}
 
 	public static void serverStarted(MinecraftServer s) {
+		ErrandsData.createFolder(s);
 		ErrandPools.reload(s);
 		UpdateCheck.start();
 	}

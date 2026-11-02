@@ -5,19 +5,28 @@ import net.blay09.mods.waystones.api.Waystone;
 import net.blay09.mods.waystones.api.WaystoneOrigin;
 import net.blay09.mods.waystones.api.WaystonesAPI;
 import net.blay09.mods.waystones.api.event.GenerateWaystoneNameEvent;
+import net.blay09.mods.waystones.api.event.WaystoneActivatedEvent;
 import net.blay09.mods.waystones.core.WaystoneSyncManager;
 import net.blay09.mods.waystones.store.SavedDataWaystonesStore;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Waystones gives a generated waystone its name when a player first activates it, through GenerateWaystoneNameEvent.
  * A village's waystone gets the village's English name there (or the name its patron gave it). Waystones that already
  * have a name, and ones a player renamed later, are left alone. Only loaded when the mod is installed.
+ *
+ * <p>Waystones 21.11.9 passes the listeners a copy of the event and keeps its own name, so a name set there is lost.
+ * The name is set again from WaystoneActivatedEvent, which the same activation fires right after.
  */
 final class BlayWaystonesImpl {
+	private static final Map<UUID, String> NAMED = new HashMap<>();
+
 	static void register() {
 		GenerateWaystoneNameEvent.EVENT.register(event -> {
 			if (!ErrandsConfig.INSTANCE.waystoneNames) return;
@@ -30,9 +39,19 @@ final class BlayWaystonesImpl {
 			if (village.isEmpty()) return;
 			String name = Waystones.name(registry, village.get()).getString();
 			event.setName(Component.literal(name));
+			NAMED.put(waystone.getWaystoneUid(), name);
 			village.get().waystone = waystone.getWaystoneUid();
 			village.get().waystoneName = name;
 			registry.setDirty();
+		});
+		WaystoneActivatedEvent.EVENT.register(event -> {
+			String name = NAMED.remove(event.waystone().getWaystoneUid());
+			if (name == null || !(event.waystone() instanceof MutableWaystone mutable)) return;
+			MinecraftServer server = VillagersRemember.server();
+			if (server == null) return;
+			mutable.setName(Component.literal(name));
+			SavedDataWaystonesStore.get(server).setDirty();
+			WaystoneSyncManager.sendWaystoneUpdateToAll(server, event.waystone());
 		});
 	}
 
