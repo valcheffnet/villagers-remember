@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.ObjectContents;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.valcheff.villagersremember.Lang;
 import net.valcheff.villagersremember.VillagersRemember;
 
 import java.io.InputStream;
@@ -52,7 +53,7 @@ public final class TextWidth {
 		} catch (Exception e) {
 			VillagersRemember.LOG.warn("Could not read font widths: {}", e.toString());
 		}
-		for (String lang : List.of("en_us", "bg_bg")) {
+		for (String lang : Lang.LANGUAGES) {
 			try (InputStream in = TextWidth.class.getClassLoader().getResourceAsStream("assets/villagersremember/vanilla_names/" + lang + ".json")) {
 				if (in == null) continue;
 				JsonObject json = JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();
