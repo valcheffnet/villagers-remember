@@ -4,7 +4,7 @@
 
 **Server-side. Vanilla clients welcome.**
 
-**Download 0.13.3-beta for Minecraft 26.3:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.3-beta/villagers-remember-fabric-26.3-0.13.3-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.3-beta/villagers-remember-neoforge-26.3-0.13.3-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.13.3-beta/villagers-remember-paper-26.3-0.13.3-beta.jar). The jars for 26.2, 26.1.2 and 1.21.11 are on the [0.13.3-beta release page](https://github.com/valcheffnet/villagers-remember/releases/tag/v0.13.3-beta), older versions on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
+**Download 0.14.0-beta for Minecraft 26.3:** [Fabric jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.14.0-beta/villagers-remember-fabric-26.3-0.14.0-beta.jar), [NeoForge jar](https://github.com/valcheffnet/villagers-remember/releases/download/v0.14.0-beta/villagers-remember-neoforge-26.3-0.14.0-beta.jar), [Paper plugin](https://github.com/valcheffnet/villagers-remember/releases/download/v0.14.0-beta/villagers-remember-paper-26.3-0.14.0-beta.jar). The jars for 26.2, 26.1.2 and 1.21.11 are on the [0.14.0-beta release page](https://github.com/valcheffnet/villagers-remember/releases/tag/v0.14.0-beta), older versions on the [releases page](https://github.com/valcheffnet/villagers-remember/releases), and the mod is also on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/villagers-remember-quests-trust-fair-trades).
 
 **Questions, bugs or ideas? Come to [Discord](https://discord.com/invite/X6yxJpk9Fz).**
 
@@ -90,7 +90,8 @@ Villagers who trust you put a share of their work aside for you every day. The t
 
 ## Everything else
 
-- 230 village names (Bulgarian villages, many of them real) and 314 villager names, mostly old Bulgarian ones, the same name in both languages (Мария is Maria in English). More languages can be added as lang files.
+- In English, Bulgarian, German, Spanish, French, Brazilian Portuguese and Russian, each player in their own game language. More languages can be added as lang files.
+- 230 village names (Bulgarian villages, many of them real) and 314 villager names, mostly old Bulgarian ones. Bulgarian has them in Cyrillic, the other languages in Latin letters (Мария is Maria).
 - Villager names above their heads and in Jade, for each player in their language.
 - A sidebar tracker for the errands you follow. Over villagers: "!" when they have work for you and your journal has room, a yellow "?" when you can hand something in, a grey "?" when you carry one of their errands.
 - A chronicle book with your errands, villages, fame and collection (`/errands book`).
@@ -116,7 +117,7 @@ The same settings live in `config/villagersremember.json`, created on first star
 
 | Setting | Default | |
 |---|---|---|
-| `language` | `auto` | Each player's client language, or force one (`en_us`, `bg_bg`). |
+| `language` | `auto` | Each player's client language, or force one (`en_us`, `bg_bg`, `de_de`, `es_es`, `fr_fr`, `pt_br`, `ru_ru`). |
 | `talkMenu` | `true` | Right-click greets; `false` keeps vanilla right-click trading and puts errands on sneak + right-click. |
 | `maxActiveErrands` | `5` | Errands one player can carry at once. |
 | `tradeDiscounts` | `true` | Prices by standing. `maxDiscount` 0.40, `maxSurcharge` 0.50, `patronDiscount` 0.45. |
