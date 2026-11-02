@@ -16,8 +16,7 @@ public abstract class VillagerPricesMixin {
 		Prices.beforeVanilla((Villager) (Object) this, player);
 	}
 
-	@Inject(method = "updateSpecialPrices", at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/npc/villager/Villager;getTradingPlayer()Lnet/minecraft/world/entity/player/Player;"))
+	@Inject(method = "updateSpecialPrices", at = @At("TAIL"))
 	private void villagersremember$prices(Player player, CallbackInfo ci) {
 		Prices.apply((Villager) (Object) this, player);
 	}

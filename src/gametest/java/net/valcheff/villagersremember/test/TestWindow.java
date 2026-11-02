@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.sdl.SDLVideo;
+import org.lwjgl.glfw.GLFW;
 
 import java.nio.IntBuffer;
 
@@ -29,11 +29,11 @@ public class TestWindow implements ClientModInitializer {
 
 	static boolean move(Minecraft mc, int x, int y) {
 		long handle = mc.getWindow().handle();
-		boolean moved = SDLVideo.SDL_SetWindowPosition(handle, x, y);
-		SDLVideo.SDL_SyncWindow(handle);
+		GLFW.glfwSetWindowPos(handle, x, y);
 		IntBuffer nx = BufferUtils.createIntBuffer(1);
 		IntBuffer ny = BufferUtils.createIntBuffer(1);
-		SDLVideo.SDL_GetWindowPosition(handle, nx, ny);
+		GLFW.glfwGetWindowPos(handle, nx, ny);
+		boolean moved = nx.get(0) == x && ny.get(0) == y;
 		System.out.println("ERRANDS-WINDOW wanted " + x + "," + y + " moved=" + moved + " now " + nx.get(0) + "," + ny.get(0));
 		return moved;
 	}

@@ -38,13 +38,13 @@ public final class NeoForgeClientEntry {
 
 		modBus.addListener(RegisterClientPayloadHandlersEvent.class, event ->
 			event.register(ConfigSync.Settings.TYPE, (payload, context) -> {
-				if (Minecraft.getInstance().gui.screen() instanceof SettingsScreen screen) screen.receive(payload);
+				if (Minecraft.getInstance().screen instanceof SettingsScreen screen) screen.receive(payload);
 			}));
 		// /villagersremember opens the settings. Queued, so the chat screen closes first.
 		NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event -> event.getDispatcher().register(
 			Commands.literal("villagersremember").executes(ctx -> {
 				Minecraft mc = Minecraft.getInstance();
-				mc.schedule(() -> mc.gui.setScreen(new SettingsScreen(null)));
+				mc.schedule(() -> mc.setScreen(new SettingsScreen(null)));
 				return 1;
 			})));
 	}

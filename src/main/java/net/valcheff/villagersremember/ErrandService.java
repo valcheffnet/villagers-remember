@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
@@ -373,7 +372,7 @@ public final class ErrandService {
 		while (amount > 0) {
 			ItemStack stack = template.copyWithCount(Math.min(amount, template.getMaxStackSize()));
 			amount -= stack.getCount();
-			if (!player.getInventory().add(stack)) player.drop(stack, false, Prediction.SERVER_ONLY);
+			if (!player.getInventory().add(stack)) player.drop(stack, false);
 		}
 	}
 

@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.datafix.DataFixTypes;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
@@ -287,7 +287,7 @@ public final class VillageRegistry extends SavedData {
 		VillageRegistry registry = get(server);
 		for (ServerLevel level : server.getAllLevels()) {
 			long day = ErrandGenerator.day(level);
-			for (Villager villager : level.getEntities(EntityTypes.VILLAGER, v -> v.isAlive())) {
+			for (Villager villager : level.getEntities(EntityType.VILLAGER, v -> v.isAlive())) {
 				registry.observe(server, villager, day);
 			}
 		}

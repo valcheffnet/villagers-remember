@@ -1,6 +1,6 @@
 package net.valcheff.villagersremember.mixin;
 
-import net.minecraft.advancements.triggers.FilledBucketTrigger;
+import net.minecraft.advancements.criterion.FilledBucketTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.valcheff.villagersremember.Actions;

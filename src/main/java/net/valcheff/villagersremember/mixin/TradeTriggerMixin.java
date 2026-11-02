@@ -1,6 +1,6 @@
 package net.valcheff.villagersremember.mixin;
 
-import net.minecraft.advancements.triggers.TradeTrigger;
+import net.minecraft.advancements.criterion.TradeTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.item.ItemStack;

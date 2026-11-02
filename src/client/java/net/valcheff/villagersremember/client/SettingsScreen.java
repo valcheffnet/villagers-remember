@@ -149,7 +149,7 @@ public class SettingsScreen extends Screen {
 		if (!settings.allowed()) {
 			mode = Mode.DENIED;
 		} else if (settings.saved()) {
-			minecraft.gui.setScreen(parent);
+			minecraft.setScreen(parent);
 			return;
 		} else {
 			try {
@@ -203,7 +203,7 @@ public class SettingsScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		minecraft.gui.setScreen(parent);
+		minecraft.setScreen(parent);
 	}
 
 	/** For the game test: sets one value as if typed or clicked. */
