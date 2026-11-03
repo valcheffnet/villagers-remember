@@ -2,7 +2,7 @@
 
 ## 0.14.0-beta
 
-- The mod now speaks German, Spanish, French, Brazilian Portuguese and Russian, besides English and Bulgarian. Each player gets their own game language: dialogs, quests, chat, the sidebar, advancements and the settings screen. Players with Mexican Spanish, Portuguese from Portugal and other close languages get the nearest one.
+- The mod now speaks German, Spanish, French, Brazilian Portuguese and Russian, besides English and Bulgarian. Each player gets their own game language: dialogs, quests, chat, the sidebar, advancements and the settings screen. Players with Mexican Spanish, Portuguese from Portugal and other close languages get the nearest one. Maur0 (Mauro0805) checked the Spanish and Brazilian Portuguese.
 - The Tasks and Trade buttons in the greeting are wider, so a long label with a check mark fits.
 
 ## 0.13.3-beta
