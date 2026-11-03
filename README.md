@@ -144,7 +144,7 @@ Everything goes to the `#villagers-remember` channel on [Discord](https://discor
 
 ## Credits
 
-Villager head textures come from [minecraft-heads.com](https://minecraft-heads.com) and are used with their permission. Item and block names shown in the screens are Minecraft's own translations and belong to Mojang.
+Villager head textures come from [minecraft-heads.com](https://minecraft-heads.com) and are used with their permission. Maur0 ([Mauro0805](https://github.com/Mauro0805)) checked the Spanish and Brazilian Portuguese translations. Item and block names shown in the screens are Minecraft's own translations and belong to Mojang.
 
 ## License
 
